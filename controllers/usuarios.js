@@ -2,10 +2,16 @@ const { response, request } = require('express');
 const bcryptjs = require('bcryptjs');
 
 
+const path = require('path');
+const fs   = require('fs');
+const cloudinary = require('cloudinary').v2
+cloudinary.config( process.env.CLOUDINARY_URL );
+
+
 const Usuario = require('../models/usuario');
 
 
-
+//Obtener Usuarios
 const usuariosGet = async(req = request, res = response) => {
 
     const { limite = 5, desde = 0 } = req.query;
@@ -24,14 +30,25 @@ const usuariosGet = async(req = request, res = response) => {
     });
 }
 
+//Crear Usuarios
 const usuariosPost = async(req, res = response) => {
     
     const { nombre, correo, password, rol } = req.body;
-    const usuario = new Usuario({ nombre, correo, password, rol });
+
+    if (req.files.archivo)
+    {
+        const { tempFilePath } = req.files.archivo
+        const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+        img = secure_url;
+    }
+
+    const usuario = new Usuario({ nombre, correo, password, rol, img });
+
 
     // Encriptar la contraseña
     const salt = bcryptjs.genSaltSync();
     usuario.password = bcryptjs.hashSync( password, salt );
+
 
     // Guardar en BD
     await usuario.save();
@@ -41,10 +58,26 @@ const usuariosPost = async(req, res = response) => {
     });
 }
 
+//Actualizar Usuario
 const usuariosPut = async(req, res = response) => {
 
     const { id } = req.params;
     const { _id, password, google, correo, ...resto } = req.body;
+
+    modelo = await Usuario.findById(id);
+
+    if ( modelo.img ) {
+        const nombreArr = modelo.img.split('/');
+        const nombre    = nombreArr[ nombreArr.length - 1 ];
+        const [ public_id ] = nombre.split('.');
+        cloudinary.uploader.destroy( public_id );
+    }
+
+    const { tempFilePath } = req.files.archivo
+    const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+    modelo.img = secure_url;
+
+    await modelo.save();
 
     if ( password ) {
         // Encriptar la contraseña
@@ -55,6 +88,7 @@ const usuariosPut = async(req, res = response) => {
     const usuario = await Usuario.findByIdAndUpdate( id, resto );
 
     res.json(usuario);
+    
 }
 
 const usuariosPatch = (req, res = response) => {
