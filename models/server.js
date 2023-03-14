@@ -15,12 +15,14 @@ class Server {
         this.io     = require('socket.io')(this.server)
 
         this.paths = {
-            auth:       '/api/auth',
-            buscar:     '/api/buscar',
-            categorias: '/api/categorias',
-            productos:  '/api/productos',
-            usuarios:   '/api/usuarios',
-            uploads:    '/api/uploads',
+            auth:             '/api/auth',
+            buscar:           '/api/buscar',
+            categorias:       '/api/categorias',
+            productos:        '/api/productos',
+            usuarios:         '/api/usuarios',
+            uploads:          '/api/uploads',
+            acercaCasagri:    '/api/acercaCasagri',
+            nosotros:         '/api/nosotros',
         }
 
 
@@ -70,6 +72,8 @@ class Server {
         this.app.use( this.paths.productos, require('../routes/productos'));
         this.app.use( this.paths.usuarios, require('../routes/usuarios'));
         this.app.use( this.paths.uploads, require('../routes/uploads'));
+        this.app.use( this.paths.acercaCasagri, require('../routes/acerca-casagri'));
+        this.app.use( this.paths.nosotros, require('../routes/nosotros'));
         
     }
 
