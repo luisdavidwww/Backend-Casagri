@@ -1,11 +1,14 @@
 
 const { Router } = require('express');
 const { check } = require('express-validator');
+const multer = require('multer');
+const path = require('path');
+
 
 const {
     validarCampos,
     validarArchivoSubir,
-    validarArchivoSubir2,
+    validarArchivoSubirTotal,
     validarJWT,
     esAdminRole,
     tieneRole
@@ -17,6 +20,8 @@ const { esRoleValido, emailExiste, existeBannersPorId, existeBannersPorNombre } 
 const { bannersGet,
         bannerGet,
         bannersPost,
+        bannersMulterPost,
+        uploadImage,
         bannersPut,
         bannersDelete,
         bannersPatch,
@@ -24,6 +29,24 @@ const { bannersGet,
             } = require('../controllers/banners');
 
 const router = Router();
+
+
+
+
+
+
+const storage = multer.diskStorage({
+    destination: path.join(__dirname, '../storage/banners'),
+    filename:  (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+})
+const uploadImageT = multer({
+    storage,
+    limits: {fileSize: 1000000}
+}).single('image');
+
+
 
 
 
@@ -44,9 +67,20 @@ router.post('/',[
     validarCampos
 ], bannersPost );
 
+router.post('/images', (req, res) => {
+    uploadImageT(req, res, (err) => {
+        if (err) {
+            err.message = 'The file is so heavy for my service';
+            return res.send(err);
+        }
+        console.log(req.file);
+        res.send('uploaded');
+    });
+});;
+
 //--------------------ACTUALIZAR REGISTRO---------------------------//
 router.put('/:id',[
-    validarArchivoSubir,
+    validarArchivoSubirTotal,
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom( existeBannersPorId ),
     check('nombre_interno', 'El nombre interno es obligatorio').not().isEmpty(),

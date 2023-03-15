@@ -1,5 +1,6 @@
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+var multer = require('multer');
 
 const subirArchivo = ( files, extensionesValidas = ['png','jpg','jpeg','gif'], carpeta = '' ) => {
 
@@ -15,7 +16,7 @@ const subirArchivo = ( files, extensionesValidas = ['png','jpg','jpeg','gif'], c
         }
         
         const nombreTemp = uuidv4() + '.' + extension;
-        const uploadPath = path.join( __dirname, '../uploads/', carpeta, nombreTemp );
+        const uploadPath = path.join( __dirname, '../storage/', carpeta, nombreTemp );
 
         archivo.mv(uploadPath, (err) => {
             if (err) {
@@ -30,7 +31,7 @@ const subirArchivo = ( files, extensionesValidas = ['png','jpg','jpeg','gif'], c
 }
 
 
-
 module.exports = {
-    subirArchivo
+    subirArchivo,
 }
+

@@ -35,14 +35,15 @@ const usuariosPost = async(req, res = response) => {
     
     const { nombre, correo, password, rol } = req.body;
 
+
     if (req.files.archivo)
     {
         const { tempFilePath } = req.files.archivo
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
         img = secure_url;
     }
-
-    const usuario = new Usuario({ nombre, correo, password, rol, img });
+    
+    const usuario = new Usuario({ nombre, correo, password, rol });
 
 
     // Encriptar la contraseña

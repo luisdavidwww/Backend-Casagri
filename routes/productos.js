@@ -6,6 +6,7 @@ const { validarJWT, validarCampos, esAdminRole } = require('../middlewares');
 const { crearProducto,
         obtenerProductos,
         obtenerProducto,
+        obtenerProductoCategoria,
         actualizarProducto, 
         borrarProducto } = require('../controllers/productos');
 
@@ -26,6 +27,13 @@ router.get('/:id',[
     check('id').custom( existeProductoPorId ),
     validarCampos,
 ], obtenerProducto );
+
+// Obtener producto por categoria
+router.get('/categoria/:id',[
+    check('id', 'No es un id de Mongo válido').isMongoId(),
+    //check('categoria').custom( existeProductoPorId ),
+    validarCampos,
+], obtenerProductoCategoria );
 
 // Crear categoria - privado - cualquier persona con un token válido
 router.post('/', [ 

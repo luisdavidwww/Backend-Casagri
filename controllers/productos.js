@@ -33,6 +33,22 @@ const obtenerProducto = async(req, res = response ) => {
 
 }
 
+const obtenerProductoCategoria = async(req, res = response ) => {
+
+    const { id } = req.params;
+    const query = { categoria: id };
+
+    const [ total, productos ] = await Promise.all([
+        Producto.countDocuments(query),
+        Producto.find(query)
+    ]);
+
+    res.json({
+        productos
+    });
+
+}
+
 const crearProducto = async(req, res = response ) => {
 
     const { estado, usuario, ...body } = req.body;
@@ -93,6 +109,7 @@ module.exports = {
     crearProducto,
     obtenerProductos,
     obtenerProducto,
+    obtenerProductoCategoria,
     actualizarProducto,
     borrarProducto
 }

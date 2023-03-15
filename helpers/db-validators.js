@@ -53,6 +53,18 @@ const existeProductoPorId = async( id ) => {
 
 
 /**
+ * Productos por categoria
+ */
+const existeProductoPorCategoria = async( id ) => {
+
+    // Verificar si el correo existe
+    const existeCategoria = await Categoria.findById(id);
+    if ( !existeCategoria ) {
+        throw new Error(`El id no existe ${ id }`);
+    }
+}
+
+/**
  * AcercaCasagri
  */
 
@@ -126,6 +138,7 @@ module.exports = {
     existeUsuarioPorId,
     existeCategoriaPorId,
     existeProductoPorId,
+    existeProductoPorCategoria,
     existeAcercaCasagriPorId,
     existeNosotrosPorId,
     existeBannersPorId,
