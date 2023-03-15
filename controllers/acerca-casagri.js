@@ -4,20 +4,19 @@ const AcercaCasagri = require('../models/acerca-casagri');
 
 
 
-//--------------------OBTENER LISTADO---------------------------//
+//--------------------OBTENER REGISTRO---------------------------//
 const acercaCasagriGet = async(req = request, res = response) => {
 
-    const { limite = 5, desde = 0 } = req.query;
     const query = { estado: true };
 
-    const [ total, acercaCasagri ] = await Promise.all([
+    const [ total, data ] = await Promise.all([
         AcercaCasagri.countDocuments(query),
-        AcercaCasagri.find(query)
-            .skip( Number( desde ) )
-            .limit(Number( limite ))
+        AcercaCasagri.findOne(query),
     ]);
 
-    res.json(acercaCasagri);
+    res.json({
+        data
+    });
 }
 
 
@@ -26,13 +25,13 @@ const acercaCasagriPost = async(req, res = response) => {
     
     const { titulo, texto } = req.body;
 
-    const acercaCasagri = new AcercaCasagri({ titulo, texto });
+    const data = new AcercaCasagri({ titulo, texto });
 
     // Guardar en BD
-    await acercaCasagri.save();
+    await data.save();
 
     res.json({
-        acercaCasagri
+        data
     });
 }
 
@@ -41,11 +40,13 @@ const acercaCasagriPost = async(req, res = response) => {
 const acercaCasagriPut = async(req, res = response) => {
 
     const { id } = req.params;
-    const { _id, ...data } = req.body;
+    const { _id, ...resto } = req.body;
 
-    const acercaCasagri = await AcercaCasagri.findByIdAndUpdate( id, data );
+    const data = await AcercaCasagri.findByIdAndUpdate( id, resto );
 
-    res.json(acercaCasagri);
+    res.json({
+        data
+    });
     
 }
 
@@ -54,9 +55,11 @@ const acercaCasagriPut = async(req, res = response) => {
 const acercaCasagriDelete = async(req, res = response) => {
 
     const { id } = req.params;
-    const acercaCasagri = await AcercaCasagri.findByIdAndUpdate( id, { estado: false } );
+    const data = await AcercaCasagri.findByIdAndUpdate( id, { estado: false } );
     
-    res.json(acercaCasagri);
+    res.json({
+        data
+    });
 }
 
 

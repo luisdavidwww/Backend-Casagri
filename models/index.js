@@ -8,6 +8,7 @@ const Server   = require('./server');
 const Usuario  = require('./usuario');
 const AcercaCasagri  = require('./acerca-casagri');
 const Nosotros  = require('./nosotros');
+const Banners  = require('./banners');
 
 
 
@@ -20,5 +21,6 @@ module.exports = {
     Usuario,
     AcercaCasagri,
     Nosotros,
+    Banners,
 }
 

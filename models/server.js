@@ -23,6 +23,7 @@ class Server {
             uploads:          '/api/uploads',
             acercaCasagri:    '/api/acercaCasagri',
             nosotros:         '/api/nosotros',
+            banners:         '/api/banners',
         }
 
 
@@ -74,6 +75,7 @@ class Server {
         this.app.use( this.paths.uploads, require('../routes/uploads'));
         this.app.use( this.paths.acercaCasagri, require('../routes/acerca-casagri'));
         this.app.use( this.paths.nosotros, require('../routes/nosotros'));
+        this.app.use( this.paths.banners, require('../routes/banners'));
         
     }
 

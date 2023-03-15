@@ -1,14 +1,16 @@
 
 const { Schema, model } = require('mongoose');
 
-const NosotrosSchema = Schema({
+const BannersSchema = Schema({
     titulo: {
         type: String,
-        required: [true, 'El titulo es obligatorio']
     },
     texto: {
         type: String,
-        required: [true, 'El texto es obligatorio'],
+    },
+    nombre_interno:{
+        type: String,
+        required: [true, 'El nombre interno es obligatorio']
     },
     img: {
         type: String,
@@ -22,4 +24,4 @@ const NosotrosSchema = Schema({
 
 
 
-module.exports = model( 'Nosotros', NosotrosSchema );
+module.exports = model( 'Banners', BannersSchema );

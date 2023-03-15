@@ -1,5 +1,5 @@
 const Role = require('../models/role');
-const { Usuario, Categoria, Producto, AcercaCasagri, Nosotros } = require('../models');
+const { Usuario, Categoria, Producto, AcercaCasagri, Nosotros, Banners } = require('../models');
 
 const esRoleValido = async(rol = '') => {
 
@@ -70,11 +70,38 @@ const existeAcercaCasagriPorId = async( id ) => {
 
 const existeNosotrosPorId = async( id ) => {
     // Verificar si el correo existe
-    const nosotrosCasagri = await Nosotros.findById(id);
-    if ( !nosotrosCasagri ) {
+    const nosotros = await Nosotros.findById(id);
+    if ( !nosotros ) {
         throw new Error(`El id no existe ${ id }`);
     }
 }
+
+
+/**
+ * Banners
+ */
+
+const existeBannersPorId = async( id ) => {
+    // Verificar si el correo existe
+    const banners = await Banners.findById(id);
+    if ( !banners ) {
+        throw new Error(`El id no existe ${ id }`);
+    }
+}
+
+
+/**
+ * Banners
+ */
+
+const existeBannersPorNombre = async( nombre_interno ) => {
+    // Verificar si el correo existe
+    const banners = await Banners.findOne({nombre_interno});
+    if ( !banners ) {
+        throw new Error(`El banner ${ nombre_interno }  no existe`);
+    }
+}
+
 
 
 
@@ -101,6 +128,8 @@ module.exports = {
     existeProductoPorId,
     existeAcercaCasagriPorId,
     existeNosotrosPorId,
+    existeBannersPorId,
+    existeBannersPorNombre,
     coleccionesPermitidas
 }
 
