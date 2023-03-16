@@ -10,8 +10,8 @@ cloudinary.config( process.env.CLOUDINARY_URL );
 
 
 //-------------------- CREAR CATEGORIA ---------------------------//
-const crearCategoria = async(req, res = response ) => {
-
+/*const crearCategoria = async(req, res = response ) => {
+    
     const nombre = req.body.nombre
 
     const categoriaDB = await Categoria.findOne({ nombre });
@@ -42,6 +42,43 @@ const crearCategoria = async(req, res = response ) => {
     });
 
 
+}*/
+
+//-------------------- CREAR CATEGORIA ---------------------------//
+const crearCategoria = async(req, res = response ) => {
+    
+    const { estado, ...body } = req.body;
+
+    const categoriaDB = await Categoria.findOne({ nombre: body.nombre  });
+
+    
+
+    //validamos si existe una categoria con el mismo nombre
+    if ( categoriaDB ) {
+        return res.status(400).json({
+            msg: `La categoria ${ categoriaDB.nombre }, ya existe`
+        });
+    }
+
+    //cargamos el archivo
+    if (req.files.archivo)
+    {
+        const { tempFilePath } = req.files.archivo
+        const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+        body.imagen_principal = secure_url;
+    }
+
+    // Generamos la data a guardar
+    const data = new Categoria({ ...body, });
+
+    // Guardar DB
+    await data.save();
+
+    res.status(201).json({
+        data
+    });
+
+
 }
 
 
@@ -56,12 +93,12 @@ const actualizarCategoria = async( req, res = response ) => {
     modelo = await Categoria.findById(id);
 
     //validamos que no exista una categoria con el mismo nombre
-    const existeCategoria = await Categoria.findOne({nombre});
+    /*const existeCategoria = await Categoria.findOne({nombre});
     if ( existeCategoria ) {
         return res.status(400).json({
             msg: `La categoria: ${ nombre }, ya existe`
         });
-    }
+    }*/
 
 
     // Limpiar imágenes previas

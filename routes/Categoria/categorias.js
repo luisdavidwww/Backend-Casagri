@@ -28,14 +28,16 @@ router.get('/:id',[
 router.post('/', [ 
     //validarJWT,
     validarArchivoSubir,
-    check('nombre','El nombre es obligatorio').not().isEmpty(),
+    check('nombre','El nombre de la categoria es obligatorio').not().isEmpty(),
+    check('nombre').custom( existeCategoriaPorNombre ),
+    validarCampos,
 ], crearCategoria );
 
 //-------------------- ACTUALIZAR CATEGORIA ---------------------------//
 router.put('/:id',[
     //validarJWT,
     validarArchivoSubir,
-    check('nombre','El nombre es obligatorio').not().isEmpty(),
+    check('nombre','El nombre de la categoria es obligatorio').not().isEmpty(),
     check('id').custom( existeCategoriaPorId ),
     //check('nombre').custom( existeCategoriaPorNombre ),
     validarCampos

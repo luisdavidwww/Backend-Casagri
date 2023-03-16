@@ -8,7 +8,7 @@ const cloudinary = require('cloudinary').v2
 cloudinary.config( process.env.CLOUDINARY_URL );
 
 
-const Nosotros = require('../../models/Empresa/nosotros');
+const Trayectoria = require('../../models/Empresa/trayectoria');
 
 
 //--------------------OBTENER LISTADO---------------------------//
@@ -18,8 +18,8 @@ const nosotrosGet = async(req = request, res = response) => {
     const query = { estado: true };
 
     const [ total, data ] = await Promise.all([
-        Nosotros.countDocuments(query),
-        Nosotros.find(query)
+        Trayectoria.countDocuments(query),
+        Trayectoria.find(query)
             .skip( Number( desde ) )
             .limit(Number( limite ))
     ]);
@@ -41,14 +41,14 @@ const nosotrosPost = async(req, res = response) => {
         img = secure_url;
     }
 
-    const nosotros = new Nosotros({ titulo, texto, img });
+    const data = new Trayectoria({ titulo, texto, img });
 
 
     // Guardar en BD
-    await nosotros.save();
+    await data.save();
 
     res.json({
-        nosotros
+        data
     });
 }
 
@@ -56,9 +56,9 @@ const nosotrosPost = async(req, res = response) => {
 const nosotrosPut = async(req, res = response) => {
 
     const { id } = req.params;
-    const { _id, ...data } = req.body;
+    const { _id, ...resto } = req.body;
 
-    modelo = await Nosotros.findById(id);
+    modelo = await Trayectoria.findById(id);
 
     //eliminamos la imagen anterior
     if ( modelo.img ) {
@@ -77,9 +77,9 @@ const nosotrosPut = async(req, res = response) => {
 
     await modelo.save();
 
-    const nosotros = await Nosotros.findByIdAndUpdate( id, data );
+    const data = await Trayectoria.findByIdAndUpdate( id, resto );
 
-    res.json(nosotros);
+    res.json({data});
     
 }
 
@@ -89,16 +89,16 @@ const NosotrosDelete = async(req, res = response) => {
     const { id } = req.params;
 
     //Buscamos la Categoria 
-    modelo = await Nosotros.findById(id);
+    modelo = await Trayectoria.findById(id);
 
     //fecha de eliminación
     modelo.eliminado = Date.now();
     // Guardar DB
     await modelo.save();
 
-    const nosotros = await Nosotros.findByIdAndUpdate( id, { estado: false } );
+    const data = await Trayectoria.findByIdAndUpdate( id, { estado: false } );
     
-    res.json(nosotros);
+    res.json({data});
 
 }
 

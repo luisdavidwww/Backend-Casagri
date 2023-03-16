@@ -7,6 +7,7 @@ const LineaProductos    = require('./Categoria/linea-producto');
 // SECCION EMPRESA //
 const AcercaCasagri  = require('./Empresa/acerca-casagri');
 const Nosotros  = require('./Empresa/nosotros');
+const Trayectoria  = require('./Empresa/trayectoria');
 
 // SERVER //
 const Server   = require('./server');
@@ -38,6 +39,7 @@ module.exports = {
     Usuario,
     AcercaCasagri,
     Nosotros,
+    Trayectoria,
     Banners,
 }
 

@@ -3,82 +3,97 @@ const { LineaProductos } = require('../../models');
 
 
 
-//--------------------CREAR REGISTRO---------------------------//
+//-------------------- CREAR LINEA DE PRODUCTO ---------------------------//
 const crearLineasProductos = async(req, res = response ) => {
+
+    const { estado, ...body } = req.body;
 
     const nombre = req.body.nombre;
 
-    const LineaProductosDB = await LineaProductos.findOne({ nombre });
+    const lineaProductoDB = await LineaProductos.findOne({ nombre });
 
-    if ( LineaProductosDB ) {
+    //validamos si existe una LineaProducto con el mismo nombre
+    if ( lineaProductoDB ) {
         return res.status(400).json({
-            msg: `La categoria ${ LineaProductosDB.nombre }, ya existe`
+            msg: `La subcategoria ${ lineaProductoDB.nombre }, ya existe`
         });
     }
 
-    // Generar la data a guardar
+    // Generamos la data a guardar
     const lineaProducto = {
-        nombre
+        ...body,
     }
 
-    const data = new LineaProductos( lineaProducto );
+    //const producto = new Producto( data );
+    const data = new LineaProductos(lineaProducto);
 
     // Guardar DB
     await data.save();
-
-    res.status(201).json(data);
 
     res.json({
         data
     });
 
+
 }
 
 
-//--------------------OBTENER LISTADO---------------------------//
+//-------------------- OBTENER LISTADO LINEA DE PRODUCTO ---------------------------//
 const obtenerLineasProductos = async(req, res = response ) => {
 
-    const { limite = 5, desde = 0 } = req.query;
     const query = { estado: true };
 
     const [ total, data ] = await Promise.all([
         LineaProductos.countDocuments(query),
         LineaProductos.find(query)
-            .skip( Number( desde ) )
-            .limit(Number( limite ))
+        .populate('subcategoria', 'nombre')
     ]);
 
     res.json({
+        total,
         data
     });
 }
 
-const obtenerCategoria = async(req, res = response ) => {
+//-------------------- OBTENER 1 LINEA DE PRODUCTO ---------------------------//
+const obtenerLineaProducto = async(req, res = response ) => {
 
     const { id } = req.params;
-    const categoria = await Categoria.findById( id )
-                            .populate('usuario', 'nombre');
+    const data = await LineaProductos.findById( id )
+                                     .populate('subcategoria', 'nombre')
 
-    res.json( categoria );
+    res.json({ data });
 
 }
 
-
-const actualizarCategoria = async( req, res = response ) => {
+//-------------------- ACTUALIZAR LINEA DE PRODUCTO ---------------------------//
+const actualizarLineaProducto = async( req, res = response ) => {
 
     const { id } = req.params;
-    const { estado, usuario, ...data } = req.body;
+    const { estado, ...resto } = req.body;
 
-    data.nombre  = data.nombre.toUpperCase();
-    data.usuario = req.usuario._id;
+    //Buscamos la LineaProducto 
+    modelo = await LineaProductos.findById(id);
 
-    const categoria = await Categoria.findByIdAndUpdate(id, data, { new: true });
+    //fecha de actualización
+    modelo.actualizado = Date.now();
 
-    res.json( categoria );
+    
+   // Generamos la data a guardar
+   const lineaProducto = {
+    ...resto
+    }
+
+    const data = await LineaProductos.findByIdAndUpdate(id, lineaProducto);
+
+    res.json({
+        data
+    });
 
 }
 
-const borrarCategoria = async(req, res =response ) => {
+//-------------------- ELIMINAR LINEA DE PRODUCTO ---------------------------//
+const borrarLineaProducto = async(req, res =response ) => {
 
     const { id } = req.params;
     const categoriaBorrada = await Categoria.findByIdAndUpdate( id, { estado: false }, {new: true });
@@ -92,7 +107,7 @@ const borrarCategoria = async(req, res =response ) => {
 module.exports = {
     crearLineasProductos,
     obtenerLineasProductos,
-    obtenerCategoria,
-    actualizarCategoria,
-    borrarCategoria
+    obtenerLineaProducto,
+    actualizarLineaProducto,
+    borrarLineaProducto
 }

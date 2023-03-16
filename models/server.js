@@ -25,6 +25,7 @@ class Server {
             uploads:          '/api/uploads',
             acercaCasagri:    '/api/acercaCasagri',
             nosotros:         '/api/nosotros',
+            trayectoria:      '/api/trayectoria',
             banners:          '/api/banners',
         }
 
@@ -81,6 +82,7 @@ class Server {
         this.app.use( this.paths.uploads, require('../routes/uploads'));
         this.app.use( this.paths.acercaCasagri, require('../routes/Empresa/acerca-casagri'));
         this.app.use( this.paths.nosotros, require('../routes/Empresa/nosotros'));
+        this.app.use( this.paths.trayectoria, require('../routes/Empresa/trayectoria'));
         this.app.use( this.paths.banners, require('../routes/Banners/banners'));
         
     }

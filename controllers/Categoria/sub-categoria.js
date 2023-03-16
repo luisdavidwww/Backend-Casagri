@@ -14,22 +14,13 @@ const crearSubCategoria = async(req, res = response ) => {
     const { estado, ...body } = req.body;
 
     const nombre = req.body.nombre;
-    const query = { estado: false };
 
     const subcategoriaDB = await SubCategoria.findOne({ nombre });
-    const categoriaDB = await Categoria.findOne(query);
 
     //validamos si existe una subcategoria con el mismo nombre
     if ( subcategoriaDB ) {
         return res.status(400).json({
             msg: `La subcategoria ${ subcategoriaDB.nombre }, ya existe`
-        });
-    }
-
-    //validamos si la categoria está disponible
-    if ( categoriaDB ) {
-        return res.status(400).json({
-            msg: `La categoria ${ categoriaDB.nombre }, no está disponible`
         });
     }
 
@@ -107,6 +98,7 @@ const actualizarCategoria = async( req, res = response ) => {
 
     //fecha de actualización
     modelo.actualizado = Date.now();
+    await modelo.save();
     
    // Generamos la data a guardar
    const subCategoria = {
@@ -115,7 +107,6 @@ const actualizarCategoria = async( req, res = response ) => {
 
     const data = await SubCategoria.findByIdAndUpdate(id, subCategoria);
 
-
     res.json({
         data
     });
@@ -123,11 +114,31 @@ const actualizarCategoria = async( req, res = response ) => {
 }
 
 
-//-------------------- OBTENER LISTADO DE CATEGORIAS ---------------------------//
+//-------------------- OBTENER LISTADO DE SUB-CATEGORIAS ---------------------------//
 const obtenerSubCategorias = async(req, res = response ) => {
 
 
     const query = { estado: true };
+
+    const [ total, data ] = await Promise.all([
+        SubCategoria.countDocuments(query),
+        SubCategoria.find(query)
+        .populate('categoria', 'nombre')
+    ]);
+
+    res.json({
+        total,
+        data
+    });
+}
+
+
+//-------------------- FILTRAR SUB-CATEGORIAS POR CATEGORIA ---------------------------//
+const filtrarSubCategorias = async(req, res = response ) => {
+
+    //obtenemos el id por parámetro
+    const { id } = req.params;
+    const query = { categoria: id };
 
     const [ total, data ] = await Promise.all([
         SubCategoria.countDocuments(query),
@@ -147,6 +158,7 @@ const obtenerCategoria = async(req, res = response ) => {
 
     const { id } = req.params;
     const data = await Categoria.findById( id )
+                                .populate('categoria', 'nombre')
 
     res.json({
         data
@@ -181,6 +193,7 @@ module.exports = {
     crearSubCategoria,
     obtenerSubCategorias,
     obtenerCategoria,
+    filtrarSubCategorias,
     actualizarCategoria,
     borrarCategoria
 }

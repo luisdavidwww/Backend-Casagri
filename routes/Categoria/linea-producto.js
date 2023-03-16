@@ -5,50 +5,50 @@ const { validarJWT, validarCampos, esAdminRole } = require('../../middlewares');
 
 const { crearLineasProductos,
         obtenerLineasProductos,
-        obtenerCategoria,
-        actualizarCategoria, 
-        borrarCategoria } = require('../../controllers/Categoria/linea-producto');
-const { existeCategoriaPorId } = require('../../helpers/db-validators');
+        obtenerLineaProducto,
+        actualizarLineaProducto, 
+        borrarLineaProducto } = require('../../controllers/Categoria/linea-producto');
+const { existeCategoriaPorId, existeLineaProductoPorNombre, existeLineaProductoPorId } = require('../../helpers/db-validators');
 
 const router = Router();
 
-/**
- * {{url}}/api/categorias
- */
 
-//  Obtener todas las categorias - publico
+//-------------------- OBTENER LISTADO LINEA DE PRODUCTO ---------------------------//
 router.get('/', obtenerLineasProductos );
 
-// Obtener una categoria por id - publico
+//-------------------- OBTENER 1 LINEA DE PRODUCTO ---------------------------//
 router.get('/:id',[
     check('id', 'No es un id de Mongo válido').isMongoId(),
-    check('id').custom( existeCategoriaPorId ),
+    check('id').custom( existeLineaProductoPorId ),
     validarCampos,
-], obtenerCategoria );
+], obtenerLineaProducto );
 
-// Crear categoria - privado - cualquier persona con un token válido
+//-------------------- CREAR LINEA DE PRODUCTO ---------------------------//
 router.post('/', [ 
     //validarJWT,
     check('nombre','El nombre es obligatorio').not().isEmpty(),
+    check('subcategoria','La subcategoria es obligatorio').not().isEmpty(),
+    check('nombre').custom( existeLineaProductoPorNombre ),
     validarCampos
 ], crearLineasProductos );
 
-// Actualizar - privado - cualquiera con token válido
+//-------------------- ACTUALIZAR LINEA DE PRODUCTO ---------------------------//
 router.put('/:id',[
-    validarJWT,
+    //validarJWT,
     check('nombre','El nombre es obligatorio').not().isEmpty(),
-    check('id').custom( existeCategoriaPorId ),
+    check('subcategoria','La subcategoria es obligatorio').not().isEmpty(),
+    check('id').custom( existeLineaProductoPorId ),
     validarCampos
-],actualizarCategoria );
+], actualizarLineaProducto );
 
-// Borrar una categoria - Admin
+//-------------------- ELIMINAR LINEA DE PRODUCTO ---------------------------//
 router.delete('/:id',[
     validarJWT,
     esAdminRole,
     check('id', 'No es un id de Mongo válido').isMongoId(),
     check('id').custom( existeCategoriaPorId ),
     validarCampos,
-],borrarCategoria);
+], borrarLineaProducto );
 
 
 

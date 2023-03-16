@@ -4,15 +4,30 @@ const LineaProductosSchema = Schema({
     nombre: {
         type: String,
         required: [true, 'El nombre es obligatorio'],
-        unique: true
     },
-    created_at: {
+    descripcion: {
+        type: String,
+    },
+    subcategoria: {
+        type: Schema.Types.ObjectId,
+        ref: 'SubCategoria',
+        required: true
+    },
+    creado: {
         type: Date, 
         default: Date.now()
     },
+    actualizado: {
+        type: Date,
+        default: Date.now()
+    },
+    eliminado: {
+        type: Date, 
+    },
     estado: {
         type: Boolean,
-        default: true
+        default: true,
+        required: true
     },
 });
 

@@ -1,5 +1,5 @@
 const Role = require('../models/role');
-const { Usuario, Categoria, SubCategoria, Producto, AcercaCasagri, Nosotros, Banners } = require('../models');
+const { Usuario, Categoria, SubCategoria, LineaProductos, Producto, AcercaCasagri, Nosotros, Banners } = require('../models');
 
 
 
@@ -44,8 +44,8 @@ const existeCategoriaPorId = async( id ) => {
 //categoria por nombre
 const existeCategoriaPorNombre = async( nombre ) => {
     // Verificar si la categoria existe
-    const existeCategoria = await Categoria.findOne(nombre);
-    if ( !existeCategoria ) {
+    const existeCategoria = await Categoria.findOne({nombre});
+    if ( existeCategoria ) {
         throw new Error(`La categoria ${ nombre }, ya existe`);
     }
 }
@@ -55,6 +55,38 @@ const existeSubCategoriaPorId = async( id ) => {
     const existeSubCategoria = await SubCategoria.findById(id);
     if ( !existeSubCategoria ) {
         throw new Error(`El id no existe ${ id }`);
+    }
+}
+//subcategoria por id
+const existeSubCategoriaPorIdNombre = async( categoria ) => {
+    // Verificar si la categoria existe
+    const existeSubCategoria = await SubCategoria.findById(categoria);
+    if ( !existeSubCategoria ) {
+        throw new Error(`El id no existe ${ categoria }`);
+    }
+}
+//subcategoria por nombre
+const existeSubCategoriaPorNombre = async( nombre ) => {
+    // Verificar si la categoria existe
+    const existeSubCategoria = await SubCategoria.findOne({nombre});
+    if ( existeSubCategoria ) {
+        throw new Error(`La Subcategoria ${ nombre }, ya existe`);
+    }
+}
+//Linea Producto por id
+const existeLineaProductoPorId = async( id ) => {
+    // Verificar si la Linea de Producto existe
+    const existeLineaProducto = await LineaProductos.findById(id);
+    if ( !existeLineaProducto ) {
+        throw new Error(`El id no existe ${ id }`);
+    }
+}
+//Linea Producto por nombre
+const existeLineaProductoPorNombre = async( nombre ) => {
+    // Verificar si la categoria existe
+    const existeSubCategoria = await LineaProductos.findOne({nombre});
+    if ( existeSubCategoria ) {
+        throw new Error(`La Linea de Producto: ${ nombre }, ya existe`);
     }
 }
 
@@ -146,7 +178,11 @@ module.exports = {
     //Metodos Categoria
     existeCategoriaPorId,
     existeCategoriaPorNombre,
+    existeSubCategoriaPorIdNombre,
     existeSubCategoriaPorId,
+    existeSubCategoriaPorNombre,
+    existeLineaProductoPorId,
+    existeLineaProductoPorNombre,
 
     //Metodos Producto
     existeProductoPorId,
