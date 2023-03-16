@@ -1,5 +1,5 @@
 const { response } = require('express');
-const { LineaProductos } = require('../models');
+const { LineaProductos } = require('../../models');
 
 
 

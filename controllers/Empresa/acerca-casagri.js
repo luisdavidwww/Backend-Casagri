@@ -1,6 +1,6 @@
 const { response, request } = require('express');
 
-const AcercaCasagri = require('../models/acerca-casagri');
+const AcercaCasagri = require('../../models/Empresa/acerca-casagri');
 
 
 

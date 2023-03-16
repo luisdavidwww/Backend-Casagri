@@ -12,39 +12,21 @@ const {
     validarJWT,
     esAdminRole,
     tieneRole
-} = require('../middlewares');
+} = require('../../middlewares');
 
 
-const { esRoleValido, emailExiste, existeBannersPorId, existeBannersPorNombre } = require('../helpers/db-validators');
+const { esRoleValido, emailExiste, existeBannersPorId, existeBannersPorNombre } = require('../../helpers/db-validators');
 
 const { bannersGet,
         bannerGet,
         bannersPost,
-        bannersMulterPost,
-        uploadImage,
         bannersPut,
         bannersDelete,
         bannersPatch,
         mostrarImagen,
-            } = require('../controllers/banners');
+            } = require('../../controllers/Banners/banners');
 
 const router = Router();
-
-
-
-
-
-
-const storage = multer.diskStorage({
-    destination: path.join(__dirname, '../storage/banners'),
-    filename:  (req, file, cb) => {
-        cb(null, file.originalname);
-    }
-})
-const uploadImageT = multer({
-    storage,
-    limits: {fileSize: 1000000}
-}).single('image');
 
 
 
@@ -62,7 +44,7 @@ router.get('/:nombre_interno',[
 
 //--------------------CREAR REGISTRO---------------------------//
 router.post('/',[
-    validarArchivoSubir,
+    validarArchivoSubirTotal,
     check('nombre_interno', 'El nombre interno es obligatorio').not().isEmpty(),
     validarCampos
 ], bannersPost );

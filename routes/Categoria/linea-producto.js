@@ -1,14 +1,14 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { validarJWT, validarCampos, esAdminRole } = require('../middlewares');
+const { validarJWT, validarCampos, esAdminRole } = require('../../middlewares');
 
 const { crearLineasProductos,
         obtenerLineasProductos,
         obtenerCategoria,
         actualizarCategoria, 
-        borrarCategoria } = require('../controllers/linea-producto');
-const { existeCategoriaPorId } = require('../helpers/db-validators');
+        borrarCategoria } = require('../../controllers/Categoria/linea-producto');
+const { existeCategoriaPorId } = require('../../helpers/db-validators');
 
 const router = Router();
 

@@ -1,23 +1,36 @@
 
+// CATEGORIA //
+const Categoria         = require('./Categoria/categoria');
+const SubCategoria    = require('./Categoria/sub-categoria');
+const LineaProductos    = require('./Categoria/linea-producto');
 
-const Categoria    = require('./categoria');
-const LineaProductos    = require('./linea-producto');
+// SECCION EMPRESA //
+const AcercaCasagri  = require('./Empresa/acerca-casagri');
+const Nosotros  = require('./Empresa/nosotros');
+
+// SERVER //
+const Server   = require('./server');
+
+// USUARIO //
+const Role     = require('./role');
+const Usuario  = require('./usuario');
+
+// PRODUCTO //
+const Producto = require('./producto');
+
+// BANNERS //
+const Banners  = require('./Banners/banners');
 
 
 const ChatMensajes = require('./chat-mensajes')
-const Producto = require('./producto');
-const Role     = require('./role');
-const Server   = require('./server');
-const Usuario  = require('./usuario');
-const AcercaCasagri  = require('./acerca-casagri');
-const Nosotros  = require('./nosotros');
-const Banners  = require('./banners');
+
 
 
 
 module.exports = {
     Categoria,
     LineaProductos,
+    SubCategoria,
     ChatMensajes,
     Producto,
     Role,

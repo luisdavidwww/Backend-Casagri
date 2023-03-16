@@ -1,50 +1,50 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { validarJWT, validarCampos, esAdminRole } = require('../middlewares');
+const { validarJWT, validarCampos, esAdminRole, validarArchivoSubir } = require('../../middlewares');
 
 const { crearCategoria,
         obtenerCategorias,
         obtenerCategoria,
         actualizarCategoria, 
-        borrarCategoria } = require('../controllers/categorias');
-const { existeCategoriaPorId } = require('../helpers/db-validators');
+        borrarCategoria } = require('../../controllers/Categoria/categorias');
+
+const { existeCategoriaPorId, existeCategoriaPorNombre } = require('../../helpers/db-validators');
 
 const router = Router();
 
-/**
- * {{url}}/api/categorias
- */
 
-//  Obtener todas las categorias - publico
+//--------------------OBTENER LISTADO DE CATEGORIAS---------------------------//
 router.get('/', obtenerCategorias );
 
-// Obtener una categoria por id - publico
+//--------------------OBTENER 1 CATEGORIAS---------------------------
 router.get('/:id',[
     check('id', 'No es un id de Mongo válido').isMongoId(),
     check('id').custom( existeCategoriaPorId ),
     validarCampos,
 ], obtenerCategoria );
 
-// Crear categoria - privado - cualquier persona con un token válido
+//-------------------- CREAR CATEGORIA ---------------------------//
 router.post('/', [ 
-    validarJWT,
+    //validarJWT,
+    validarArchivoSubir,
     check('nombre','El nombre es obligatorio').not().isEmpty(),
-    validarCampos
 ], crearCategoria );
 
-// Actualizar - privado - cualquiera con token válido
+//-------------------- ACTUALIZAR CATEGORIA ---------------------------//
 router.put('/:id',[
-    validarJWT,
+    //validarJWT,
+    validarArchivoSubir,
     check('nombre','El nombre es obligatorio').not().isEmpty(),
     check('id').custom( existeCategoriaPorId ),
+    //check('nombre').custom( existeCategoriaPorNombre ),
     validarCampos
-],actualizarCategoria );
+], actualizarCategoria );
 
-// Borrar una categoria - Admin
+//-------------------- ELIMINAR CATEGORIA ---------------------------//
 router.delete('/:id',[
-    validarJWT,
-    esAdminRole,
+    //validarJWT,
+    //esAdminRole,
     check('id', 'No es un id de Mongo válido').isMongoId(),
     check('id').custom( existeCategoriaPorId ),
     validarCampos,

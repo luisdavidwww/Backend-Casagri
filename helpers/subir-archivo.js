@@ -1,6 +1,5 @@
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
-var multer = require('multer');
 
 const subirArchivo = ( files, extensionesValidas = ['png','jpg','jpeg','gif'], carpeta = '' ) => {
 

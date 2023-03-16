@@ -1,6 +1,6 @@
 
 const { Schema, model } = require('mongoose');
-const { appconfig } = require('../config');
+const { appconfig } = require('../../config');
 
 const BannersSchema = Schema({
     titulo: {

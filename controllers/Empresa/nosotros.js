@@ -8,7 +8,7 @@ const cloudinary = require('cloudinary').v2
 cloudinary.config( process.env.CLOUDINARY_URL );
 
 
-const Nosotros = require('../models/nosotros');
+const Nosotros = require('../../models/Empresa/nosotros');
 
 
 //--------------------OBTENER LISTADO---------------------------//

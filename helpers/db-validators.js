@@ -1,5 +1,7 @@
 const Role = require('../models/role');
-const { Usuario, Categoria, Producto, AcercaCasagri, Nosotros, Banners } = require('../models');
+const { Usuario, Categoria, SubCategoria, Producto, AcercaCasagri, Nosotros, Banners } = require('../models');
+
+
 
 const esRoleValido = async(rol = '') => {
 
@@ -11,37 +13,53 @@ const esRoleValido = async(rol = '') => {
 
 const emailExiste = async( correo = '' ) => {
 
-    // Verificar si el correo existe
     const existeEmail = await Usuario.findOne({ correo });
     if ( existeEmail ) {
         throw new Error(`El correo: ${ correo }, ya está registrado`);
     }
 }
 
+
+
+//--------------------  USUARIO ---------------------------//
 const existeUsuarioPorId = async( id ) => {
 
-    // Verificar si el correo existe
+    // Verificar si el usuario existe
     const existeUsuario = await Usuario.findById(id);
     if ( !existeUsuario ) {
         throw new Error(`El id no existe ${ id }`);
     }
 }
 
-/**
- * Categorias
- */
-const existeCategoriaPorId = async( id ) => {
 
-    // Verificar si el correo existe
+//-------------------- CATEGORIA ---------------------------//
+//categoria por id
+const existeCategoriaPorId = async( id ) => {
+    // Verificar si la categoria existe
     const existeCategoria = await Categoria.findById(id);
     if ( !existeCategoria ) {
         throw new Error(`El id no existe ${ id }`);
     }
 }
+//categoria por nombre
+const existeCategoriaPorNombre = async( nombre ) => {
+    // Verificar si la categoria existe
+    const existeCategoria = await Categoria.findOne(nombre);
+    if ( !existeCategoria ) {
+        throw new Error(`La categoria ${ nombre }, ya existe`);
+    }
+}
+//subcategoria por id
+const existeSubCategoriaPorId = async( id ) => {
+    // Verificar si la categoria existe
+    const existeSubCategoria = await SubCategoria.findById(id);
+    if ( !existeSubCategoria ) {
+        throw new Error(`El id no existe ${ id }`);
+    }
+}
 
-/**
- * Productos
- */
+
+//-------------------- PRODUCTOS ---------------------------//
 const existeProductoPorId = async( id ) => {
 
     // Verificar si el correo existe
@@ -50,11 +68,6 @@ const existeProductoPorId = async( id ) => {
         throw new Error(`El id no existe ${ id }`);
     }
 }
-
-
-/**
- * Productos por categoria
- */
 const existeProductoPorCategoria = async( id ) => {
 
     // Verificar si el correo existe
@@ -64,24 +77,21 @@ const existeProductoPorCategoria = async( id ) => {
     }
 }
 
-/**
- * AcercaCasagri
- */
 
+
+
+//-------------------- SECCIÓN EMPRESA ---------------------------//
+// Acerca Casagri
 const existeAcercaCasagriPorId = async( id ) => {
-    // Verificar si el correo existe
+    // Verificar si existe el registro solicitado
     const existeAcercaCasagri = await AcercaCasagri.findById(id);
     if ( !existeAcercaCasagri ) {
         throw new Error(`El id no existe ${ id }`);
     }
 }
-
-/**
- * Nosotros
- */
-
+// Nosotros
 const existeNosotrosPorId = async( id ) => {
-    // Verificar si el correo existe
+    // Verificar si existe el registro solicitado
     const nosotros = await Nosotros.findById(id);
     if ( !nosotros ) {
         throw new Error(`El id no existe ${ id }`);
@@ -89,25 +99,18 @@ const existeNosotrosPorId = async( id ) => {
 }
 
 
-/**
- * Banners
- */
-
+//-------------------- BANNERS PRINCIPALES ---------------------------//
+// Banner por id
 const existeBannersPorId = async( id ) => {
-    // Verificar si el correo existe
+    // Verificar si existe el Banner
     const banners = await Banners.findById(id);
     if ( !banners ) {
         throw new Error(`El id no existe ${ id }`);
     }
 }
-
-
-/**
- * Banners
- */
-
+// Banner por nombre
 const existeBannersPorNombre = async( nombre_interno ) => {
-    // Verificar si el correo existe
+    // Verificar si existe el Banner
     const banners = await Banners.findOne({nombre_interno});
     if ( !banners ) {
         throw new Error(`El banner ${ nombre_interno }  no existe`);
@@ -132,15 +135,28 @@ const coleccionesPermitidas = ( coleccion = '', colecciones = []) => {
 }
 
 
+
+
 module.exports = {
+    //Metodos Usuario
     esRoleValido,
     emailExiste,
     existeUsuarioPorId,
+
+    //Metodos Categoria
     existeCategoriaPorId,
+    existeCategoriaPorNombre,
+    existeSubCategoriaPorId,
+
+    //Metodos Producto
     existeProductoPorId,
     existeProductoPorCategoria,
+
+    //Metodos Sección Empresa
     existeAcercaCasagriPorId,
     existeNosotrosPorId,
+
+    //Metodos Banners
     existeBannersPorId,
     existeBannersPorNombre,
     coleccionesPermitidas

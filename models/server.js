@@ -18,6 +18,7 @@ class Server {
             auth:             '/api/auth',
             buscar:           '/api/buscar',
             categorias:       '/api/categorias',
+            subcategorias:    '/api/subcategorias',
             lineaProducto:    '/api/lineaProductos',
             productos:        '/api/productos',
             usuarios:         '/api/usuarios',
@@ -72,14 +73,15 @@ class Server {
         
         this.app.use( this.paths.auth, require('../routes/auth'));
         this.app.use( this.paths.buscar, require('../routes/buscar'));
-        this.app.use( this.paths.categorias, require('../routes/categorias'));
-        this.app.use( this.paths.lineaProducto, require('../routes/linea-producto'));
+        this.app.use( this.paths.categorias, require('../routes/Categoria/categorias'));
+        this.app.use( this.paths.subcategorias, require('../routes/Categoria/sub-categoria'));
+        this.app.use( this.paths.lineaProducto, require('../routes/Categoria/linea-producto'));
         this.app.use( this.paths.productos, require('../routes/productos'));
         this.app.use( this.paths.usuarios, require('../routes/usuarios'));
         this.app.use( this.paths.uploads, require('../routes/uploads'));
-        this.app.use( this.paths.acercaCasagri, require('../routes/acerca-casagri'));
-        this.app.use( this.paths.nosotros, require('../routes/nosotros'));
-        this.app.use( this.paths.banners, require('../routes/banners'));
+        this.app.use( this.paths.acercaCasagri, require('../routes/Empresa/acerca-casagri'));
+        this.app.use( this.paths.nosotros, require('../routes/Empresa/nosotros'));
+        this.app.use( this.paths.banners, require('../routes/Banners/banners'));
         
     }
 
