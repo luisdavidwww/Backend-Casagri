@@ -38,10 +38,10 @@ const nosotrosPost = async(req, res = response) => {
     {
         const { tempFilePath } = req.files.archivo
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-        img = secure_url;
+        imagen_principal = secure_url;
     }
 
-    const nosotros = new Nosotros({ titulo, texto, img });
+    const nosotros = new Nosotros({ titulo, texto, imagen_principal });
 
 
     // Guardar en BD
@@ -56,30 +56,38 @@ const nosotrosPost = async(req, res = response) => {
 const nosotrosPut = async(req, res = response) => {
 
     const { id } = req.params;
-    const { _id, ...data } = req.body;
+    const { _id, ...body } = req.body;
 
     modelo = await Nosotros.findById(id);
 
-    //eliminamos la imagen anterior
-    if ( modelo.img ) {
-        const nombreArr = modelo.img.split('/');
+    if ( !req.files ) {
+        //fecha de actualización
+        modelo.actualizado = Date.now();
+        await modelo.save();
+
+        const data = await Nosotros.findByIdAndUpdate( id, body );
+        res.json({data});
+        
+    }
+    else{
+        //eliminamos la imagen anterior
+        const nombreArr = modelo.imagen_principal.split('/');
         const nombre    = nombreArr[ nombreArr.length - 1 ];
         const [ public_id ] = nombre.split('.');
         cloudinary.uploader.destroy( public_id );
+        //Cargamos lanueva imagen
+        const { tempFilePath } = req.files.archivo
+        const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+        modelo.imagen_principal = secure_url;
+
+        //fecha de actualización
+        modelo.actualizado = Date.now();
+        await modelo.save();
+
+        const data = await Nosotros.findByIdAndUpdate( id, body );
+        res.json({data});
+
     }
-
-    const { tempFilePath } = req.files.archivo
-    const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-    modelo.img = secure_url;
-
-    //fecha de actualización
-    modelo.actualizado = Date.now();
-
-    await modelo.save();
-
-    const nosotros = await Nosotros.findByIdAndUpdate( id, data );
-
-    res.json(nosotros);
     
 }
 

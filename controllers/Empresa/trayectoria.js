@@ -11,7 +11,8 @@ cloudinary.config( process.env.CLOUDINARY_URL );
 const Trayectoria = require('../../models/Empresa/trayectoria');
 
 
-//--------------------OBTENER LISTADO---------------------------//
+
+//--------------------OBTENER LISTADO DE TRAYECTORIAS ---------------------------//
 const nosotrosGet = async(req = request, res = response) => {
 
     const { limite = 6, desde = 0 } = req.query;
@@ -38,10 +39,10 @@ const nosotrosPost = async(req, res = response) => {
     {
         const { tempFilePath } = req.files.archivo
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-        img = secure_url;
+        imagen_principal = secure_url;
     }
 
-    const data = new Trayectoria({ titulo, texto, img });
+    const data = new Trayectoria({ titulo, texto, imagen_principal });
 
 
     // Guardar en BD
@@ -52,34 +53,43 @@ const nosotrosPost = async(req, res = response) => {
     });
 }
 
-//--------------------ACTUALIZAR REGISTRO---------------------------//
+//-------------------- ACTUALIZAR REGISTRO ---------------------------//
 const nosotrosPut = async(req, res = response) => {
 
     const { id } = req.params;
-    const { _id, ...resto } = req.body;
+    const { _id, ...body } = req.body;
 
     modelo = await Trayectoria.findById(id);
 
-    //eliminamos la imagen anterior
-    if ( modelo.img ) {
-        const nombreArr = modelo.img.split('/');
+    if ( !req.files ) {
+        //fecha de actualización
+        modelo.actualizado = Date.now();
+        await modelo.save();
+
+        const data = await Trayectoria.findByIdAndUpdate( id, body );
+        res.json({data});
+        
+    }
+    else{
+        //eliminamos la imagen anterior
+        const nombreArr = modelo.imagen_principal.split('/');
         const nombre    = nombreArr[ nombreArr.length - 1 ];
         const [ public_id ] = nombre.split('.');
         cloudinary.uploader.destroy( public_id );
+        //Cargamos lanueva imagen
+        const { tempFilePath } = req.files.archivo
+        const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+        modelo.imagen_principal = secure_url;
+
+        //fecha de actualización
+        modelo.actualizado = Date.now();
+        await modelo.save();
+
+        const data = await Trayectoria.findByIdAndUpdate( id, body );
+        res.json({data});
+
     }
 
-    const { tempFilePath } = req.files.archivo
-    const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-    modelo.img = secure_url;
-
-    //fecha de actualización
-    modelo.actualizado = Date.now();
-
-    await modelo.save();
-
-    const data = await Trayectoria.findByIdAndUpdate( id, resto );
-
-    res.json({data});
     
 }
 

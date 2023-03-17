@@ -15,6 +15,7 @@ const acercaCasagriGet = async(req = request, res = response) => {
     ]);
 
     res.json({
+        total,
         data
     });
 }
@@ -41,6 +42,12 @@ const acercaCasagriPut = async(req, res = response) => {
 
     const { id } = req.params;
     const { _id, ...resto } = req.body;
+
+    modelo = await AcercaCasagri.findById(id);
+
+    //fecha de actualización
+    modelo.actualizado = Date.now();
+    await modelo.save();
 
     const data = await AcercaCasagri.findByIdAndUpdate( id, resto );
 

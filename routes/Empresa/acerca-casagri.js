@@ -12,7 +12,7 @@ const {
 } = require('../../middlewares');
 
 
-const { esRoleValido, emailExiste, existeAcercaCasagriPorId } = require('../../helpers/db-validators');
+const { esRoleValido, emailExiste, existeAcercaCasagriPorId, existeAcercaCasagriPorNombre } = require('../../helpers/db-validators');
 
 const { acercaCasagriGet,
         acercaCasagriPost,
@@ -30,22 +30,27 @@ router.get('/', acercaCasagriGet );
 
 //--------------------CREAR REGISTRO---------------------------//
 router.post('/',[
+    //validarJWT,
     check('titulo', 'El titulo es obligatorio').not().isEmpty(),
     check('texto', 'El texto es obligatorio').not().isEmpty(),
+    check('titulo').custom( existeAcercaCasagriPorNombre ),
     validarCampos
 ], acercaCasagriPost );
 
 //--------------------ACTUALIZAR REGISTRO---------------------------//
 router.put('/:id',[
+    //validarJWT,
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom( existeAcercaCasagriPorId ),
+    check('titulo', 'El titulo es obligatorio').not().isEmpty(),
+    check('texto', 'El texto es obligatorio').not().isEmpty(),
     validarCampos
 ], acercaCasagriPut );
 
 //--------------------ELIMINAR REGISTRO---------------------------//
 router.delete('/:id',[
     //validarJWT,
-    //tieneRole('ADMIN_ROLE', 'VENTAR_ROLE','OTRO_ROLE'),
+    //tieneRole('ADMIN_ROLE'),
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom( existeAcercaCasagriPorId ),
     validarCampos

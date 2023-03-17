@@ -10,7 +10,7 @@ const TrayectoriaSchema = Schema({
         type: String,
         required: [true, 'El texto es obligatorio'],
     },
-    img: {
+    imagen_principal: {
         type: String,
         required: [true, 'La imagen es obligatoria'],
     },

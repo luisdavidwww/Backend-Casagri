@@ -1,5 +1,5 @@
 const Role = require('../models/role');
-const { Usuario, Categoria, SubCategoria, LineaProductos, Producto, AcercaCasagri, Nosotros, Banners } = require('../models');
+const { Usuario, Categoria, SubCategoria, LineaProductos, Producto, AcercaCasagri, Nosotros, Trayectoria, Banners } = require('../models');
 
 
 
@@ -113,7 +113,7 @@ const existeProductoPorCategoria = async( id ) => {
 
 
 //-------------------- SECCIÓN EMPRESA ---------------------------//
-// Acerca Casagri
+// Acerca Casagri por ID
 const existeAcercaCasagriPorId = async( id ) => {
     // Verificar si existe el registro solicitado
     const existeAcercaCasagri = await AcercaCasagri.findById(id);
@@ -121,7 +121,15 @@ const existeAcercaCasagriPorId = async( id ) => {
         throw new Error(`El id no existe ${ id }`);
     }
 }
-// Nosotros
+// Acerca Casagri por Nombre
+const existeAcercaCasagriPorNombre = async( titulo ) => {
+    // Verificar si existe el registro solicitado
+    const existeAcercaCasagri = await AcercaCasagri.findOne({titulo});
+    if ( existeAcercaCasagri ) {
+        throw new Error(`El titulo '${ titulo }' ya existe`);
+    }
+}
+// Nosotros por id
 const existeNosotrosPorId = async( id ) => {
     // Verificar si existe el registro solicitado
     const nosotros = await Nosotros.findById(id);
@@ -129,7 +137,30 @@ const existeNosotrosPorId = async( id ) => {
         throw new Error(`El id no existe ${ id }`);
     }
 }
-
+// Nosotros por id
+const existeNosotrosPorNombre = async( titulo ) => {
+    // Verificar si existe el registro solicitado
+    const nosotros = await Nosotros.findOne({titulo});
+    if ( nosotros ) {
+        throw new Error(`El titulo '${ titulo }' ya existe`);
+    }
+}
+// Trayectoria por ID
+const existeTrayectoriaPorId = async( id ) => {
+    // Verificar si existe el registro solicitado
+    const trayectoria = await Trayectoria.findById(id);
+    if ( !trayectoria ) {
+        throw new Error(`El id no existe ${ id }`);
+    }
+}
+// Trayectoria por Nombre
+const existeTrayectoriaPorNombre = async( titulo ) => {
+    // Verificar si existe el registro solicitado
+    const trayectoria = await Trayectoria.findOne({titulo});
+    if ( trayectoria ) {
+        throw new Error(`El titulo '${ titulo }' ya existe`);
+    }
+}
 
 //-------------------- BANNERS PRINCIPALES ---------------------------//
 // Banner por id
@@ -190,7 +221,11 @@ module.exports = {
 
     //Metodos Sección Empresa
     existeAcercaCasagriPorId,
+    existeAcercaCasagriPorNombre,
     existeNosotrosPorId,
+    existeNosotrosPorNombre,
+    existeTrayectoriaPorId,
+    existeTrayectoriaPorNombre,
 
     //Metodos Banners
     existeBannersPorId,

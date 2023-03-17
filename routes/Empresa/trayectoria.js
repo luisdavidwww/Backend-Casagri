@@ -11,7 +11,7 @@ const {
 } = require('../../middlewares');
 
 
-const { esRoleValido, emailExiste, existeNosotrosPorId } = require('../../helpers/db-validators');
+const { esRoleValido, emailExiste, existeTrayectoriaPorId, existeTrayectoriaPorNombre } = require('../../helpers/db-validators');
 
 const { nosotrosGet,
         nosotrosPut,
@@ -28,28 +28,32 @@ router.get('/', nosotrosGet );
 
 //--------------------CREAR REGISTRO---------------------------//
 router.post('/',[
+    //validarJWT,
+    //check('titulo', 'El titulo debe de ser más de 6 letras').isLength({ min: 6 }),
+    //check('texto', 'El texto debe de ser más de 6 letras').isLength({ min: 6 }),
     validarArchivoSubir,
     check('titulo', 'El titulo es obligatorio').not().isEmpty(),
     check('texto', 'El texto es obligatorio').not().isEmpty(),
+    check('titulo').custom( existeTrayectoriaPorNombre ),
     validarCampos
 ], nosotrosPost );
 
 //--------------------ACTUALIZAR REGISTRO---------------------------//
 router.put('/:id',[
-    validarArchivoSubir,
+    //validarArchivoSubir,
     check('id', 'No es un ID válido').isMongoId(),
-    check('id').custom( existeNosotrosPorId ),
+    check('id').custom( existeTrayectoriaPorId ),
     check('titulo', 'El titulo es obligatorio').not().isEmpty(),
     check('texto', 'El texto es obligatorio').not().isEmpty(),
     validarCampos
-    ],nosotrosPut );
+    ], nosotrosPut );
 
 //--------------------ELIMINAR REGISTRO---------------------------//
 router.delete('/:id',[
     //validarJWT,
-    //tieneRole('ADMIN_ROLE', 'VENTAR_ROLE','OTRO_ROLE'),
+    //tieneRole('ADMIN_ROLE'),
     check('id', 'No es un ID válido').isMongoId(),
-    check('id').custom( existeNosotrosPorId ),
+    check('id').custom( existeTrayectoriaPorId ),
     validarCampos
 ], NosotrosDelete );
 
