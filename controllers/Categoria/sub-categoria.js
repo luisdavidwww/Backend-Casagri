@@ -153,11 +153,24 @@ const filtrarSubCategorias = async(req, res = response ) => {
 }
 
 
-//-------------------- OBTENER 1 CATEGORIA ---------------------------//
+//-------------------- OBTENER 1 CATEGORIA POR ID ---------------------------//
 const obtenerCategoria = async(req, res = response ) => {
 
     const { id } = req.params;
     const data = await Categoria.findById( id )
+                                .populate('categoria', 'nombre')
+
+    res.json({
+        data
+    });
+
+}
+
+//-------------------- OBTENER 1 CATEGORIA POR NOMBRE ---------------------------//
+const obtenerCategoriaPorNombre = async(req, res = response ) => {
+
+    const { nombre } = req.params;
+    const data = await SubCategoria.findOne( {nombre} )
                                 .populate('categoria', 'nombre')
 
     res.json({
@@ -193,6 +206,7 @@ module.exports = {
     crearSubCategoria,
     obtenerSubCategorias,
     obtenerCategoria,
+    obtenerCategoriaPorNombre,
     filtrarSubCategorias,
     actualizarCategoria,
     borrarCategoria

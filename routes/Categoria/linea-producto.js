@@ -5,6 +5,7 @@ const { validarJWT, validarCampos, esAdminRole } = require('../../middlewares');
 
 const { crearLineasProductos,
         obtenerLineasProductos,
+        obtenerLineaProductoPorNombre,
         obtenerLineaProducto,
         actualizarLineaProducto, 
         borrarLineaProducto } = require('../../controllers/Categoria/linea-producto');
@@ -22,6 +23,11 @@ router.get('/:id',[
     check('id').custom( existeLineaProductoPorId ),
     validarCampos,
 ], obtenerLineaProducto );
+
+//-------------------- OBTENER 1 LINEA DE PRODUCTO por Nombre ---------------------------//
+router.get('/:nombre',[
+    validarCampos,
+], obtenerLineaProductoPorNombre );
 
 //-------------------- CREAR LINEA DE PRODUCTO ---------------------------//
 router.post('/', [ 

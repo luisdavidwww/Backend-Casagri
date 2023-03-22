@@ -66,6 +66,17 @@ const obtenerLineaProducto = async(req, res = response ) => {
 
 }
 
+//-------------------- OBTENER 1 LINEA DE PRODUCTO ---------------------------//
+const obtenerLineaProductoPorNombre = async(req, res = response ) => {
+
+    const { nombre } = req.params;
+    const data = await LineaProductos.findOne( nombre )
+                                     .populate('subcategoria', 'nombre')
+
+    res.json({ data });
+
+}
+
 //-------------------- ACTUALIZAR LINEA DE PRODUCTO ---------------------------//
 const actualizarLineaProducto = async( req, res = response ) => {
 
@@ -107,6 +118,7 @@ const borrarLineaProducto = async(req, res =response ) => {
 module.exports = {
     crearLineasProductos,
     obtenerLineasProductos,
+    obtenerLineaProductoPorNombre,
     obtenerLineaProducto,
     actualizarLineaProducto,
     borrarLineaProducto

@@ -119,6 +119,7 @@ const bannerGet = async(req = request, res = response) => {
     ]);
 
     res.json({
+        total,
         data
     });
 }

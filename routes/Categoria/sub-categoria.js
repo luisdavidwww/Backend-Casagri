@@ -7,6 +7,7 @@ const { crearSubCategoria,
         obtenerSubCategorias,
         filtrarSubCategorias,
         obtenerCategoria,
+        obtenerCategoriaPorNombre,
         actualizarCategoria, 
         borrarCategoria } = require('../../controllers/Categoria/sub-categoria');
 
@@ -23,12 +24,17 @@ const router = Router();
 router.get('/', obtenerSubCategorias );
 
 
-//--------------------OBTENER SUB-CATEGORIA---------------------------//
+//--------------------OBTENER SUB-CATEGORIA POR ID---------------------------//
 router.get('/:id',[
     check('id', 'No es un id de Mongo válido').isMongoId(),
     check('id').custom( existeSubCategoriaPorId ),
     validarCampos,
 ], obtenerCategoria );
+
+//--------------------OBTENER SUB-CATEGORIA POR NOMBRE---------------------------//
+router.get('/busca/:nombre',[
+    validarCampos,
+], obtenerCategoriaPorNombre );
 
 //--------------------FILTRAR SUB-CATEGORIAS POR CATEGORIAS---------------------------//
 router.get('/categoria/:id',[
