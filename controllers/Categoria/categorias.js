@@ -51,7 +51,6 @@ const crearCategoria = async(req, res = response ) => {
 
     const categoriaDB = await Categoria.findOne({ nombre: body.nombre  });
 
-    
 
     //validamos si existe una categoria con el mismo nombre
     if ( categoriaDB ) {
@@ -67,6 +66,19 @@ const crearCategoria = async(req, res = response ) => {
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
         body.imagen_principal = secure_url;
     }
+    if (req.files.bannerDesktop)
+    {
+        const { tempFilePath } = req.files.bannerDesktop
+        const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+        body.banner__desktop = secure_url;
+    }
+    if (req.files.bannerMovil)
+    {
+        const { tempFilePath } = req.files.bannerMovil
+        const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+        body.banner__movil = secure_url;
+    }
+    
 
     // Generamos la data a guardar
     const data = new Categoria({ ...body, });
@@ -112,6 +124,19 @@ const actualizarCategoria = async( req, res = response ) => {
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
         modelo.imagen_principal = secure_url;
     }
+    if (modelo.banner__desktop)
+    {
+        const { tempFilePath } = req.files.bannerDesktop
+        const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+        body.banner__desktop = secure_url;
+    }
+    if (modelo.banner__movil)
+    {
+        const { tempFilePath } = req.files.bannerMovil
+        const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+        body.banner__movil = secure_url;
+    }
+    
 
     //fecha de actualización
     modelo.actualizado = Date.now();

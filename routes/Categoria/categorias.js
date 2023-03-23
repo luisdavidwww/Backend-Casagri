@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { validarJWT, validarCampos, esAdminRole, validarArchivoSubir } = require('../../middlewares');
+const { validarJWT, validarCampos, esAdminRole, validarArchivoSubir, validarArchivoSubirPrincipal } = require('../../middlewares');
 
 const { crearCategoria,
         obtenerCategorias,
@@ -27,7 +27,8 @@ router.get('/:id',[
 //-------------------- CREAR CATEGORIA ---------------------------//
 router.post('/', [ 
     //validarJWT,
-    validarArchivoSubir,
+    //validarArchivoSubir,
+    validarArchivoSubirPrincipal,
     check('nombre','El nombre de la categoria es obligatorio').not().isEmpty(),
     check('nombre').custom( existeCategoriaPorNombre ),
     validarCampos,

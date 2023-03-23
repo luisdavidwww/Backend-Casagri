@@ -13,6 +13,14 @@ const CategoriaSchema = Schema({
         type: String,
         required: [true, 'La imagen es obligatoria'],
     },
+    banner__desktop: {
+        type: String,
+        required: [true, 'La imagen del Banner es obligatoria'],
+    },
+    banner__movil: {
+        type: String,
+        required: [true, 'La imagen del Banner es obligatoria'],
+    },
     creado: {
         type: Date, 
         default: Date.now()

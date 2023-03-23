@@ -24,35 +24,54 @@ const crearSubCategoria = async(req, res = response ) => {
         });
     }
 
-    //cargamos el archivo
-    if (req.files.archivo)
-    {
-        const { tempFilePath } = req.files.archivo
-        const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-        imagen_principal = secure_url;
-    }
-    if (req.files.archivoMovil)
+    //validamos si existe un archivo cargado
+    if (req.files)
     {
         const { tempFilePath } = req.files.archivoMovil
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
         imagen_movil = secure_url;
     }
-
-    // Generamos la data a guardar
-    const subCategoria = {
-        ...body, nombre, imagen_principal, imagen_movil
+    if (req.files)
+    {
+        const { tempFilePath } = req.files.archivo
+        const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+        imagen_principal = secure_url;
     }
 
-    //const producto = new Producto( data );
-    const data = new SubCategoria(subCategoria);
+    if (req.files)
+    {
+        // Generamos la data a guardar
+        const subCategoria = {
+            ...body, nombre, imagen_principal, imagen_movil,
+        }
 
-    // Guardar DB
-    await data.save();
+        //const producto = new Producto( data );
+        const data = new SubCategoria(subCategoria);
 
-    res.json({
-        data
-    });
+        // Guardar DB
+        await data.save();
 
+        res.json({
+            data
+        });
+    }
+    else
+    {
+        // Generamos la data a guardar
+        const subCategoria = {
+            ...body, nombre
+        }
+
+        //const producto = new Producto( data );
+        const data = new SubCategoria(subCategoria);
+
+        // Guardar DB
+        await data.save();
+
+        res.json({
+            data
+        });
+    }
 
 }
 
@@ -78,7 +97,6 @@ const actualizarCategoria = async( req, res = response ) => {
         const { tempFilePath } = req.files.archivo
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
         modelo.imagen_principal = secure_url;
-        
     }
     if ( modelo.imagen_movil ) {
         const nombreArr = modelo.imagen_movil.split('/');
@@ -86,10 +104,9 @@ const actualizarCategoria = async( req, res = response ) => {
         const [ public_id ] = nombre.split('.');
         cloudinary.uploader.destroy( public_id );
 
-        const { tempFilePath } = req.files.archivo
+        const { tempFilePath } = req.files.archivoMovil
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-        modelo.imagen_movil = secure_url;
-        
+        modelo.imagen_movil = secure_url; 
     }
 
     //variables alternas
@@ -112,6 +129,82 @@ const actualizarCategoria = async( req, res = response ) => {
     });
 
 }
+
+
+//-------------------- ACTUALIZAR SUB-CATEGORIA NUEVO ---------------------------//
+const actualizarCategoriaNuevo = async( req, res = response ) => {
+
+    const { id } = req.params;
+    const { estado, ...resto } = req.body;
+
+    //Buscamos la SubCategoria 
+    modelo = await SubCategoria.findById(id);
+
+    // Si hay archivo cargado para guardar Desktop
+    if ( req.files.archivo ) {
+
+        //No tiene un registro de Imagen Principal
+        if ( modelo.imagen_principal == "" ){
+            const { tempFilePath } = req.files.archivo
+            const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+            modelo.imagen_principal = secure_url;
+        }
+        //Si tiene un registro de Imagen Principal
+        else{
+            const nombreArr = modelo.imagen_principal.split('/');
+            const nombre    = nombreArr[ nombreArr.length - 1 ];
+            const [ public_id ] = nombre.split('.');
+            cloudinary.uploader.destroy( public_id );
+
+            const { tempFilePath } = req.files.archivo
+            const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+            modelo.imagen_principal = secure_url; 
+        }
+    }
+
+    // Si hay archivo cargado para guardar Movil
+    if ( req.files.archivoMovil ) {
+
+         //No tiene un registro de Imagen Movil
+         if ( modelo.imagen_movil == ""){
+            const { tempFilePath } = req.files.archivoMovil
+            const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+            modelo.imagen_movil = secure_url;
+        }
+        //Si tiene un registro de Imagen Movil
+        else{
+            const nombreArr = modelo.imagen_movil.split('/');
+            const nombre    = nombreArr[ nombreArr.length - 1 ];
+            const [ public_id ] = nombre.split('.');
+            cloudinary.uploader.destroy( public_id );
+
+            const { tempFilePath } = req.files.archivoMovil
+            const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+            modelo.imagen_movil = secure_url; 
+        }
+    }
+
+    //variables alternas
+    const imagen_principal = modelo.imagen_principal;
+    const imagen_movil = modelo.imagen_movil;
+
+    //fecha de actualización
+    modelo.actualizado = Date.now();
+    await modelo.save();
+    
+   // Generamos la data a guardar
+   const subCategoria = {
+    ...resto, imagen_principal, imagen_movil
+    }
+
+    const data = await SubCategoria.findByIdAndUpdate(id, subCategoria);
+
+    res.json({
+        data
+    });
+
+}
+
 
 
 //-------------------- OBTENER LISTADO DE SUB-CATEGORIAS ---------------------------//
@@ -170,12 +263,23 @@ const obtenerCategoria = async(req, res = response ) => {
 const obtenerCategoriaPorNombre = async(req, res = response ) => {
 
     const { nombre } = req.params;
-    const data = await SubCategoria.findOne( {nombre} )
-                                .populate('categoria', 'nombre')
+    let data = await SubCategoria.findOne( {nombre} ).populate('categoria', ['nombre', 'imagen_principal' ])
 
-    res.json({
-        data
-    });
+    //si la subcategoria no tiene Banner Asignado
+    if (data.imagen_principal == ""){
+        const subcategoria = await SubCategoria.findOne( {nombre} )
+        let nombreCategoria = subcategoria.categoria.nombre;
+        let data = await Categoria.findOne( {nombreCategoria} );
+        res.json({
+            data
+        });
+    }
+    else{
+        res.json({
+            data
+        });
+    }
+    
 
 }
 
@@ -209,5 +313,6 @@ module.exports = {
     obtenerCategoriaPorNombre,
     filtrarSubCategorias,
     actualizarCategoria,
+    actualizarCategoriaNuevo,
     borrarCategoria
 }

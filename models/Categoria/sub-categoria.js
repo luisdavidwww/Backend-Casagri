@@ -10,11 +10,13 @@ const SubCategoriaSchema = Schema({
     },
     imagen_principal: {
         type: String,
-        required: [true, 'La imagen es obligatoria'],
+        //required: [true, 'La imagen es obligatoria'],
+        default: "",
     },
     imagen_movil: {
         type: String,
-        required: [true, 'La imagen es obligatoria'],
+        //required: [true, 'La imagen es obligatoria'],
+        default: "",
     },
     categoria: {
         type: Schema.Types.ObjectId,

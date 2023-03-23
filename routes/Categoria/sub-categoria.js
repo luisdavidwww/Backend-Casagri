@@ -8,7 +8,8 @@ const { crearSubCategoria,
         filtrarSubCategorias,
         obtenerCategoria,
         obtenerCategoriaPorNombre,
-        actualizarCategoria, 
+        actualizarCategoria,
+        actualizarCategoriaNuevo,
         borrarCategoria } = require('../../controllers/Categoria/sub-categoria');
 
 const { existeCategoriaPorId,
@@ -46,7 +47,7 @@ router.get('/categoria/:id',[
 //-------------------- CREAR SUB-CATEGORIA ---------------------------//
 router.post('/', [ 
     //validarJWT,
-    validarArchivoSubirTotal,
+    //validarArchivoSubirTotal,
     check('nombre','El nombre es obligatorio').not().isEmpty(),
     check('categoria','La categoria es obligatorio').not().isEmpty(),
     check('categoria','No es un id de Mongo').isMongoId(),
@@ -57,14 +58,14 @@ router.post('/', [
 //-------------------- ACTUALIZAR SUB-CATEGORIA --------------------------- //
 router.put('/:id',[
     //validarJWT,
-    validarArchivoSubirTotal,
+    //validarArchivoSubirTotal,
     check('nombre','El nombre es obligatorio').not().isEmpty(),
     check('categoria','La categoria es obligatorio').not().isEmpty(),
     check('id').custom( existeSubCategoriaPorId ),
     check('categoria').custom( existeCategoriaPorId ),
     //check('nombre').custom( existeSubCategoriaPorNombre ),
     validarCampos
-], actualizarCategoria );
+], actualizarCategoriaNuevo /*actualizarCategoria*/ );
 
 //-------------------- ELIMINAR CATEGORIA ---------------------------//
 router.delete('/:id',[
