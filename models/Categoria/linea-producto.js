@@ -5,6 +5,9 @@ const LineaProductosSchema = Schema({
         type: String,
         required: [true, 'El nombre es obligatorio'],
     },
+    nombre_interno: {
+        type: String,
+    },
     descripcion: {
         type: String,
     },
@@ -12,6 +15,16 @@ const LineaProductosSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'SubCategoria',
         required: true
+    },
+    banner__desktop: {
+        type: String,
+        //required: [true, 'La imagen es obligatoria'],
+        default: "",
+    },
+    banner__movil: {
+        type: String,
+        //required: [true, 'La imagen es obligatoria'],
+        default: "",
     },
     creado: {
         type: Date, 

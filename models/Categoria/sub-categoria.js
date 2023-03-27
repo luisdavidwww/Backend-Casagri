@@ -5,15 +5,18 @@ const SubCategoriaSchema = Schema({
         type: String,
         required: [true, 'El nombre es obligatorio'],
     },
+    nombre_interno: {
+        type: String,
+    },
     descripcion: {
         type: String,
     },
-    imagen_principal: {
+    banner__desktop: {
         type: String,
         //required: [true, 'La imagen es obligatoria'],
         default: "",
     },
-    imagen_movil: {
+    banner__movil: {
         type: String,
         //required: [true, 'La imagen es obligatoria'],
         default: "",

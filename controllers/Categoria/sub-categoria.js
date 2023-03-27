@@ -29,20 +29,23 @@ const crearSubCategoria = async(req, res = response ) => {
     {
         const { tempFilePath } = req.files.archivoMovil
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-        imagen_movil = secure_url;
+        banner__movil = secure_url;
     }
     if (req.files)
     {
         const { tempFilePath } = req.files.archivo
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-        imagen_principal = secure_url;
+        banner__desktop = secure_url;
     }
 
     if (req.files)
     {
+        //asignamos el nombre interno
+        const nombre_interno = req.body.nombre.replace(/\s+/g, '');
+
         // Generamos la data a guardar
         const subCategoria = {
-            ...body, nombre, imagen_principal, imagen_movil,
+            ...body, nombre,bombre_interno, banner__desktop, banner__movil,
         }
 
         //const producto = new Producto( data );
@@ -57,9 +60,13 @@ const crearSubCategoria = async(req, res = response ) => {
     }
     else
     {
+
+        //asignamos el nombre interno
+        const nombre_interno = req.body.nombre.replace(/\s+/g, '');
+        
         // Generamos la data a guardar
         const subCategoria = {
-            ...body, nombre
+            ...body, nombre, nombre_interno
         }
 
         //const producto = new Producto( data );
@@ -88,30 +95,30 @@ const actualizarCategoria = async( req, res = response ) => {
 
 
     // Limpiar imágenes previas
-    if ( modelo.imagen_principal ) {
-        const nombreArr = modelo.imagen_principal.split('/');
+    if ( modelo.banner__desktop ) {
+        const nombreArr = modelo.banner__desktop.split('/');
         const nombre    = nombreArr[ nombreArr.length - 1 ];
         const [ public_id ] = nombre.split('.');
         cloudinary.uploader.destroy( public_id );
 
         const { tempFilePath } = req.files.archivo
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-        modelo.imagen_principal = secure_url;
+        modelo.banner__desktop = secure_url;
     }
-    if ( modelo.imagen_movil ) {
-        const nombreArr = modelo.imagen_movil.split('/');
+    if ( modelo.banner__movil ) {
+        const nombreArr = modelo.banner__movil.split('/');
         const nombre    = nombreArr[ nombreArr.length - 1 ];
         const [ public_id ] = nombre.split('.');
         cloudinary.uploader.destroy( public_id );
 
         const { tempFilePath } = req.files.archivoMovil
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-        modelo.imagen_movil = secure_url; 
+        modelo.banner__movil = secure_url; 
     }
 
     //variables alternas
-    const imagen_principal = modelo.imagen_principal;
-    const imagen_movil = modelo.imagen_movil;
+    const banner__desktop = modelo.banner__desktop;
+    const banner__movil = modelo.banner__movil;
 
     //fecha de actualización
     modelo.actualizado = Date.now();
@@ -119,7 +126,7 @@ const actualizarCategoria = async( req, res = response ) => {
     
    // Generamos la data a guardar
    const subCategoria = {
-    ...resto, imagen_principal, imagen_movil
+    ...resto, banner__desktop, banner__movil
     }
 
     const data = await SubCategoria.findByIdAndUpdate(id, subCategoria);
@@ -141,52 +148,52 @@ const actualizarCategoriaNuevo = async( req, res = response ) => {
     modelo = await SubCategoria.findById(id);
 
     // Si hay archivo cargado para guardar Desktop
-    if ( req.files.archivo ) {
+    if ( req.files ) {
 
-        //No tiene un registro de Imagen Principal
-        if ( modelo.imagen_principal == "" ){
+        //No tiene un registro de Banner Principal
+        if ( modelo.banner__desktop == "" ){
             const { tempFilePath } = req.files.archivo
             const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-            modelo.imagen_principal = secure_url;
+            modelo.banner__desktop = secure_url;
         }
-        //Si tiene un registro de Imagen Principal
+        //Si tiene un registro de Banner Principal
         else{
-            const nombreArr = modelo.imagen_principal.split('/');
+            const nombreArr = modelo.banner__desktop.split('/');
             const nombre    = nombreArr[ nombreArr.length - 1 ];
             const [ public_id ] = nombre.split('.');
             cloudinary.uploader.destroy( public_id );
 
             const { tempFilePath } = req.files.archivo
             const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-            modelo.imagen_principal = secure_url; 
+            modelo.banner__desktop = secure_url; 
         }
     }
 
     // Si hay archivo cargado para guardar Movil
-    if ( req.files.archivoMovil ) {
+    if ( req.files ) {
 
-         //No tiene un registro de Imagen Movil
-         if ( modelo.imagen_movil == ""){
+         //No tiene un registro de Banner Movil
+         if ( modelo.banner__movil == ""){
             const { tempFilePath } = req.files.archivoMovil
             const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-            modelo.imagen_movil = secure_url;
+            modelo.banner__movil = secure_url;
         }
-        //Si tiene un registro de Imagen Movil
+        //Si tiene un registro de Banner Movil
         else{
-            const nombreArr = modelo.imagen_movil.split('/');
+            const nombreArr = modelo.banner__movil.split('/');
             const nombre    = nombreArr[ nombreArr.length - 1 ];
             const [ public_id ] = nombre.split('.');
             cloudinary.uploader.destroy( public_id );
 
             const { tempFilePath } = req.files.archivoMovil
             const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-            modelo.imagen_movil = secure_url; 
+            modelo.banner__movil = secure_url; 
         }
     }
 
     //variables alternas
-    const imagen_principal = modelo.imagen_principal;
-    const imagen_movil = modelo.imagen_movil;
+    const banner__desktop = modelo.banner__desktop;
+    const banner__movil = modelo.banner__movil;
 
     //fecha de actualización
     modelo.actualizado = Date.now();
@@ -194,7 +201,7 @@ const actualizarCategoriaNuevo = async( req, res = response ) => {
     
    // Generamos la data a guardar
    const subCategoria = {
-    ...resto, imagen_principal, imagen_movil
+    ...resto, banner__desktop, banner__movil
     }
 
     const data = await SubCategoria.findByIdAndUpdate(id, subCategoria);
@@ -263,10 +270,10 @@ const obtenerCategoria = async(req, res = response ) => {
 const obtenerCategoriaPorNombre = async(req, res = response ) => {
 
     const { nombre } = req.params;
-    let data = await SubCategoria.findOne( {nombre} ).populate('categoria', ['nombre', 'imagen_principal' ])
+    let data = await SubCategoria.findOne( {nombre} ).populate('categoria', ['nombre', 'banner__desktop' ])
 
     //si la subcategoria no tiene Banner Asignado
-    if (data.imagen_principal == ""){
+    if (data.banner__desktop == ""){
         const subcategoria = await SubCategoria.findOne( {nombre} )
         let nombreCategoria = subcategoria.categoria.nombre;
         let data = await Categoria.findOne( {nombreCategoria} );

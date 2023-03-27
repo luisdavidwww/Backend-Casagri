@@ -15,11 +15,11 @@ const BannersSchema = Schema({
         type: String,
         required: [true, 'El nombre interno es obligatorio']
     },
-    img: {
+    banner__desktop: {
         type: String,
         required: [true, 'La imagen es obligatoria'],
     },
-    imgMini: {
+    banner__movil: {
         type: String,
         required: [true, 'La imagen es obligatoria'],
     },

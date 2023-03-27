@@ -6,9 +6,11 @@ const { validarJWT, validarCampos, esAdminRole } = require('../../middlewares');
 const { crearLineasProductos,
         obtenerLineasProductos,
         obtenerLineaProductoPorNombre,
+        obtenerLineaPorNombre,
         obtenerLineaProducto,
         actualizarLineaProducto, 
-        borrarLineaProducto } = require('../../controllers/Categoria/linea-producto');
+        } = require('../../controllers/Categoria/linea-producto');
+        
 const { existeCategoriaPorId, existeLineaProductoPorNombre, existeLineaProductoPorId } = require('../../helpers/db-validators');
 
 const router = Router();
@@ -25,9 +27,14 @@ router.get('/:id',[
 ], obtenerLineaProducto );
 
 //-------------------- OBTENER 1 LINEA DE PRODUCTO por Nombre ---------------------------//
-router.get('/:nombre',[
+router.get('/buscarBanner/:nombre_interno',[
     validarCampos,
 ], obtenerLineaProductoPorNombre );
+
+//-------------------- OBTENER 1 LINEA DE PRODUCTO por Nombre ---------------------------//
+router.get('/buscarLinea/:nombre',[
+    validarCampos,
+], obtenerLineaPorNombre );
 
 //-------------------- CREAR LINEA DE PRODUCTO ---------------------------//
 router.post('/', [ 
@@ -47,14 +54,7 @@ router.put('/:id',[
     validarCampos
 ], actualizarLineaProducto );
 
-//-------------------- ELIMINAR LINEA DE PRODUCTO ---------------------------//
-router.delete('/:id',[
-    validarJWT,
-    esAdminRole,
-    check('id', 'No es un id de Mongo válido').isMongoId(),
-    check('id').custom( existeCategoriaPorId ),
-    validarCampos,
-], borrarLineaProducto );
+
 
 
 

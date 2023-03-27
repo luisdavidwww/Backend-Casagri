@@ -20,19 +20,17 @@ const bannersPost = async(req, res = response) => {
     {
         const { tempFilePath } = req.files.archivo
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-        img = secure_url;
-        //data.setImgUrl(img);
+        banner__desktop = secure_url;
     }
 
     if (req.files.archivoMovil)
     {
         const { tempFilePath } = req.files.archivoMovil
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-        imgMini = secure_url;
-        //data.setImgUrl(img);
+        banner__movil = secure_url;
     }
 
-    const data = new Banners({ titulo, texto, nombre_interno, img, imgMini });
+    const data = new Banners({ titulo, texto, nombre_interno, banner__desktop, banner__movil });
 ;
 
     // Guardar en BD
@@ -55,26 +53,26 @@ const bannersPut = async(req, res = response) => {
 
 
     // Limpiar imágenes previas
-    if ( modelo.img ) {
-        const nombreArr = modelo.img.split('/');
+    if ( modelo.banner__desktop ) {
+        const nombreArr = modelo.banner__desktop.split('/');
         const nombre    = nombreArr[ nombreArr.length - 1 ];
         const [ public_id ] = nombre.split('.');
         cloudinary.uploader.destroy( public_id );
 
         const { tempFilePath } = req.files.archivo
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-        modelo.img = secure_url;
+        modelo.banner__desktop = secure_url;
     }
 
-    if ( modelo.imgMini ) {
-        const nombreArr = modelo.imgMini.split('/');
+    if ( modelo.banner__movil ) {
+        const nombreArr = modelo.banner__movil.split('/');
         const nombre    = nombreArr[ nombreArr.length - 1 ];
         const [ public_id ] = nombre.split('.');
         cloudinary.uploader.destroy( public_id );
 
         const { tempFilePath } = req.files.archivoMini
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-        modelo.imgMini = secure_url;
+        modelo.banner__movil = secure_url;
     }
 
     await modelo.save();
@@ -134,7 +132,7 @@ const mostrarImagen = async(req, res = response ) => {
     let modelo;
     modelo = await Banners.findOne({ nombre_interno })
 
-    const pathImagen = path.join( __dirname, '../uploads', coleccion, modelo.img );
+    const pathImagen = path.join( __dirname, '../uploads', coleccion, modelo.banner__desktop );
 
 
 

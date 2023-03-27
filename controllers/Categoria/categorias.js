@@ -78,10 +78,13 @@ const crearCategoria = async(req, res = response ) => {
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
         body.banner__movil = secure_url;
     }
-    
+
+    //asignamos el nombre interno
+    const nombre_interno = req.body.nombre.replace(/\s+/g, '');
+
 
     // Generamos la data a guardar
-    const data = new Categoria({ ...body, });
+    const data = new Categoria({ ...body, nombre_interno });
 
     // Guardar DB
     await data.save();
