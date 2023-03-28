@@ -6,6 +6,7 @@ const { validarJWT, validarCampos, esAdminRole } = require('../../middlewares');
 const { crearLineasProductos,
         obtenerLineasProductos,
         obtenerLineaProductoPorNombre,
+        obtenerCategorias,
         obtenerLineaPorNombre,
         obtenerLineaProducto,
         actualizarLineaProducto, 
@@ -30,6 +31,11 @@ router.get('/:id',[
 router.get('/buscarBanner/:nombre_interno',[
     validarCampos,
 ], obtenerLineaProductoPorNombre );
+
+//-------------------- OBTENER 1 LINEA DE PRODUCTO por Nombre ---------------------------//
+router.get('/buscarCategoria/:nombre_interno',[
+    validarCampos,
+], obtenerCategorias);
 
 //-------------------- OBTENER 1 LINEA DE PRODUCTO por Nombre ---------------------------//
 router.get('/buscarLinea/:nombre',[

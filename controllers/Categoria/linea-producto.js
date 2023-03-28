@@ -1,6 +1,11 @@
 const { response } = require('express');
 const { LineaProductos, SubCategoria, Categoria } = require('../../models');
 
+const path = require('path');
+const fs   = require('fs');
+const cloudinary = require('cloudinary').v2
+cloudinary.config( process.env.CLOUDINARY_URL );
+
 
 
 
@@ -267,11 +272,13 @@ const obtenerLineaProductoPorNombre = async(req, res = response ) => {
     //Se busca en Linea de Prod
     let { nombre_interno } = req.params;
     let data = await LineaProductos.findOne( {nombre_interno} )
+                                    .populate('subcategoria', ['nombre', 'categoria'])
+                                    
 
-    //No existe el nombre_interno en la Linea de Prod
+    //La consulta no es de Linea de Prod
     if (data == null){
 
-        let subcategoria = await SubCategoria.findOne( {nombre_interno} )
+        let subcategoria = await SubCategoria.findOne( {nombre_interno} ).populate('categoria', ['nombre'])
 
         //No existe el nombre_interno en la subCategoria 
         if (subcategoria == null){
@@ -292,6 +299,7 @@ const obtenerLineaProductoPorNombre = async(req, res = response ) => {
                 let data = await Categoria.findById( id );
 
                 res.json({
+                    subcategoria,
                     data
                 });
 
@@ -306,19 +314,36 @@ const obtenerLineaProductoPorNombre = async(req, res = response ) => {
 
         }
     }
-    //Existe el nombre_interno en la Linea de Prod
+    //La consulta es de Linea de Prod
     else{
         //La Linea de Prod No tiene Banner Asignado
         if (data.banner__desktop == ""){
 
-            let nombre = data.subcategoria.nombre;
-            let data = await SubCategoria.findOne( {nombre} );
+            let id = data.subcategoria._id;
+            let subcategoria = await SubCategoria.findById( id ).populate('categoria', ['nombre'])
 
-            res.json({
-                data
-            });
+
+            //La SubCategoria No tiene Banner Asignado
+            if (subcategoria.banner__desktop == ""){
+
+                let id = subcategoria.categoria._id;
+                let data = await Categoria.findById( id );
+
+                res.json({
+                    subcategoria,
+                    data
+                });
+
+            }
+            //La SubCategoria tiene Banner Asignado
+            else{
+                let data = subcategoria;
+                res.json({
+                    data
+                });
+            }
         }
-        //La Linea de Prod  tiene Banner Asignado
+        //La Linea de Prod tiene Banner Asignado
         else{
             res.json({
                 data
@@ -363,6 +388,48 @@ const obtenerLineaProductoPorNombre = async(req, res = response ) => {
 }
 
 //-------------------- OBTENER 1 CATEGORIA POR NOMBRE ---------------------------//
+const obtenerCategorias = async(req, res = response ) => {
+
+    //Se busca en Linea de Prod
+    let { nombre_interno } = req.params;
+    let data = await LineaProductos.findOne( {nombre_interno} )
+                                    .populate('subcategoria', ['nombre', 'categoria', ['nombre']])
+                                    
+
+    //La consulta no es de Linea de Prod
+    if (data == null){
+
+        let subcategoria = await SubCategoria.findOne( {nombre_interno} ).populate('categoria', ['nombre'])
+
+        //La consulta no es de subCategoria 
+        if (subcategoria == null){
+            let data = await Categoria.findOne( {nombre_interno} )
+            res.json({
+                data
+            });
+        }
+
+        //La consulta es de subCategoria 
+        else{
+            let data = subcategoria
+            res.json({
+                data,
+            });
+        }
+    }
+    //La consulta es de Linea de Prod
+    else{
+
+        res.json({
+            data
+        });  
+
+    }
+
+
+}
+
+//-------------------- OBTENER 1 CATEGORIA POR NOMBRE ---------------------------//
 const obtenerLineaPorNombre = async(req, res = response ) => {
 
     const { nombre } = req.params;
@@ -381,6 +448,7 @@ module.exports = {
     crearLineasProductos,
     obtenerLineasProductos,
     obtenerLineaProductoPorNombre,
+    obtenerCategorias,
     obtenerLineaPorNombre,
     obtenerLineaProducto,
     actualizarLineaProducto,
