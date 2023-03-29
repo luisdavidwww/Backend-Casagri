@@ -19,6 +19,7 @@ const { esRoleValido, emailExiste, existeBannersPorId, existeBannersPorNombre } 
 
 const { bannersGet,
         bannerGet,
+        bannersPublicitariosGet,
         bannersPost,
         bannersPut,
         bannersDelete,
@@ -33,8 +34,10 @@ const router = Router();
 
 
 //--------------------OBTENER LISTADO---------------------------//
-router.get('/', bannersGet );
+router.get('/bannerP/', bannersPublicitariosGet );
 
+//--------------------OBTENER LISTADO---------------------------//
+router.get('/', bannersGet );
 
 //--------------------OBTENER 1 BANNERS---------------------------//
 router.get('/:nombre_interno',[
@@ -45,7 +48,7 @@ router.get('/:nombre_interno',[
 //--------------------CREAR REGISTRO---------------------------//
 router.post('/',[
     validarArchivoSubirTotal,
-    check('nombre_interno', 'El nombre interno es obligatorio').not().isEmpty(),
+    check('nombre', 'El nombre  es obligatorio').not().isEmpty(),
     validarCampos
 ], bannersPost );
 

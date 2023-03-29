@@ -12,7 +12,7 @@ cloudinary.config( process.env.CLOUDINARY_URL );
 const bannersPost = async(req, res = response) => {
     
     const coleccion = "banners";
-    const { titulo, texto, nombre_interno } = req.body;
+    const { nombre, descripcion } = req.body;
 
     //const img = await subirArchivo( req.files, undefined, coleccion );
 
@@ -30,7 +30,10 @@ const bannersPost = async(req, res = response) => {
         banner__movil = secure_url;
     }
 
-    const data = new Banners({ titulo, texto, nombre_interno, banner__desktop, banner__movil });
+    //asignamos el nombre interno
+    const nombre_interno = req.body.nombre.replace(/\s+/g, '');
+
+    const data = new Banners({ nombre, nombre_interno, descripcion, banner__desktop, banner__movil });
 ;
 
     // Guardar en BD
@@ -75,6 +78,8 @@ const bannersPut = async(req, res = response) => {
         modelo.banner__movil = secure_url;
     }
 
+    //asignamos el nombre interno
+    modelo.nombre_interno = req.body.nombre.replace(/\s+/g, '');
     await modelo.save();
 
     const data = await Banners.findByIdAndUpdate( id, resto );
@@ -91,6 +96,24 @@ const bannersGet = async(req = request, res = response) => {
 
     const { limite = 6, desde = 0 } = req.query;
     const query = { estado: true };
+
+    const [ total, data ] = await Promise.all([
+        Banners.countDocuments(query),
+        Banners.find(query)
+            .skip( Number( desde ) )
+            .limit(Number( limite ))
+    ]);
+
+    res.json({
+        data
+    });
+}
+
+//-------------------- OBTENER BANNERS PUBLICITARIOS ---------------------------//
+const bannersPublicitariosGet = async(req = request, res = response) => {
+
+    const { limite = 6, desde = 0 } = req.query;
+    const query = { descripcion: "Publicidad" };
 
     const [ total, data ] = await Promise.all([
         Banners.countDocuments(query),
@@ -172,6 +195,7 @@ const bannersPatch = (req, res = response) => {
 module.exports = {
     bannersGet,
     bannerGet,
+    bannersPublicitariosGet,
     bannersPost,
     bannersPut,
     bannersDelete,

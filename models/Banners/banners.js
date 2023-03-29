@@ -3,7 +3,7 @@ const { Schema, model } = require('mongoose');
 const { appconfig } = require('../../config');
 
 const BannersSchema = Schema({
-    titulo: {
+    nombre: {
         type: String,
         default: "",
     },
@@ -13,7 +13,6 @@ const BannersSchema = Schema({
     },
     nombre_interno:{
         type: String,
-        required: [true, 'El nombre interno es obligatorio']
     },
     banner__desktop: {
         type: String,
