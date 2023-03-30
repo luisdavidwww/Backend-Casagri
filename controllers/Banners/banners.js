@@ -73,13 +73,13 @@ const bannersPut = async(req, res = response) => {
         const [ public_id ] = nombre.split('.');
         cloudinary.uploader.destroy( public_id );
 
-        const { tempFilePath } = req.files.archivoMini
+        const { tempFilePath } = req.files.archivoMovil
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
         modelo.banner__movil = secure_url;
     }
 
     //asignamos el nombre interno
-    modelo.nombre_interno = req.body.nombre.replace(/\s+/g, '');
+    //modelo.nombre_interno = req.body.nombre.replace(/\s+/g, '');
     await modelo.save();
 
     const data = await Banners.findByIdAndUpdate( id, resto );
@@ -100,8 +100,6 @@ const bannersGet = async(req = request, res = response) => {
     const [ total, data ] = await Promise.all([
         Banners.countDocuments(query),
         Banners.find(query)
-            .skip( Number( desde ) )
-            .limit(Number( limite ))
     ]);
 
     res.json({

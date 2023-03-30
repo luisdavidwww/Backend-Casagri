@@ -16,7 +16,8 @@ const crearLineasProductos = async(req, res = response ) => {
 
     const nombre = req.body.nombre;
 
-    const LineaProductoDB = await LineaProductos.findOne({ nombre });
+    const LineaProductoDB = await LineaProductos.findOne({ nombre })
+                                                .populate('subcategoria', ['nombre', 'categoria']);
 
     //validamos si existe una subcategoria con el mismo nombre
     if ( LineaProductoDB ) {
@@ -91,6 +92,7 @@ const actualizarLineaProducto = async( req, res = response ) => {
 
     //Buscamos la Linea de Producto 
     modelo = await LineaProductos.findById(id);
+                                 
 
 
     // Limpiar imágenes previas
@@ -128,8 +130,8 @@ const actualizarLineaProducto = async( req, res = response ) => {
     ...resto, banner__desktop, banner__movil
     }
 
-    const data = await LineaProductos.findByIdAndUpdate(id, LineaProducto);
-
+    const data = await LineaProductos.findByIdAndUpdate(id, LineaProducto)
+                                     .populate('subcategoria', ['nombre', 'categoria']);
     res.json({
         data
     });

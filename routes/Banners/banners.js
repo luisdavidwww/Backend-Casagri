@@ -68,7 +68,7 @@ router.put('/:id',[
     validarArchivoSubirTotal,
     check('id', 'No es un ID válido').isMongoId(),
     check('id').custom( existeBannersPorId ),
-    check('nombre_interno', 'El nombre interno es obligatorio').not().isEmpty(),
+    //check('nombre_interno', 'El nombre interno es obligatorio').not().isEmpty(),
     validarCampos
     ], bannersPut );
 
