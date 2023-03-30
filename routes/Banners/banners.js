@@ -20,6 +20,7 @@ const { esRoleValido, emailExiste, existeBannersPorId, existeBannersPorNombre } 
 const { bannersGet,
         bannerGet,
         bannersPublicitariosGet,
+        bannersPrincipalGet,
         bannersPost,
         bannersPut,
         bannersDelete,
@@ -35,6 +36,9 @@ const router = Router();
 
 //--------------------OBTENER LISTADO---------------------------//
 router.get('/bannerP/', bannersPublicitariosGet );
+
+//--------------------OBTENER LISTADO---------------------------//
+router.get('/bannerM/', bannersPrincipalGet );
 
 //--------------------OBTENER LISTADO---------------------------//
 router.get('/', bannersGet );

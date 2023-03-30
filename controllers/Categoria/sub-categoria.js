@@ -290,9 +290,56 @@ const obtenerCategoriaPorNombre = async(req, res = response ) => {
 
 }
 
+//-------------------- ELIMINAR BANNER Sub-CATEGORIA ---------------------------//
+const borrarBannerSubCategoria = async(req, res =response ) => {
+
+    const { id } = req.params;
+
+    //Buscamos la Sub-Categoria 
+    modelo = await SubCategoria.findById(id);
+
+    if ( modelo.banner__desktop ) {
+        //Eliminamos la imagen anterior
+        const nombreArr = modelo.banner__desktop.split('/');
+        const nombre    = nombreArr[ nombreArr.length - 1 ];
+        const [ public_id ] = nombre.split('.');
+        cloudinary.uploader.destroy( public_id );
+        
+        //Cargamos un string vacío
+        modelo.banner__desktop = "";
+    }
+    if ( modelo.banner__movil ) {
+        //Eliminamos la imagen anterior
+        const nombreArr = modelo.banner__movil.split('/');
+        const nombre    = nombreArr[ nombreArr.length - 1 ];
+        const [ public_id ] = nombre.split('.');
+        cloudinary.uploader.destroy( public_id );
+
+        //Cargamos un string vacío
+        modelo.banner__movil = ""; 
+    }
+
+    //variables alternas
+    const banner__desktop = modelo.banner__desktop;
+    const banner__movil = modelo.banner__movil;
+
+    //fecha de actualización
+    modelo.actualizado = Date.now();
+    // Guardar DB
+    await modelo.save();
+
+    // Generamos la data a guardar
+   const subCategoria = {
+        banner__desktop, banner__movil
+    }
+
+    const data = await Categoria.findByIdAndUpdate( id, subCategoria );
+
+    res.json( {data} );
+}
 
 
-//-------------------- ELIMINAR CATEGORIA ---------------------------//
+//-------------------- ELIMINAR Sub-CATEGORIA ---------------------------//
 const borrarCategoria = async(req, res =response ) => {
 
     const { id } = req.params;
@@ -321,5 +368,6 @@ module.exports = {
     filtrarSubCategorias,
     actualizarCategoria,
     actualizarCategoriaNuevo,
+    borrarBannerSubCategoria,
     borrarCategoria
 }

@@ -20,24 +20,24 @@ const router = Router();
 //-------------------- OBTENER LISTADO LINEA DE PRODUCTO ---------------------------//
 router.get('/', obtenerLineasProductos );
 
-//-------------------- OBTENER 1 LINEA DE PRODUCTO ---------------------------//
+//-------------------- BUSCAR 1 LINEA DE PRODUCTO POR ID ---------------------------//
 router.get('/:id',[
     check('id', 'No es un id de Mongo válido').isMongoId(),
     check('id').custom( existeLineaProductoPorId ),
     validarCampos,
 ], obtenerLineaProducto );
 
-//-------------------- OBTENER 1 LINEA DE PRODUCTO por Nombre ---------------------------//
+//-------------------- BUSCAR BANNER POR NOMBRE DE LINEA DE PRODUCTO ---------------------------//
 router.get('/buscarBanner/:nombre_interno',[
     validarCampos,
 ], obtenerLineaProductoPorNombre );
 
-//-------------------- OBTENER 1 LINEA DE PRODUCTO por Nombre ---------------------------//
+//-------------------- BUSCAR CATEGORIA POR NOMBRE ---------------------------//
 router.get('/buscarCategoria/:nombre_interno',[
     validarCampos,
 ], obtenerCategorias);
 
-//-------------------- OBTENER 1 LINEA DE PRODUCTO por Nombre ---------------------------//
+//-------------------- BUSCAR 1 LINEA DE PRODUCTO POR NOMBRE ---------------------------//
 router.get('/buscarLinea/:nombre',[
     validarCampos,
 ], obtenerLineaPorNombre );

@@ -131,13 +131,13 @@ const actualizarCategoria = async( req, res = response ) => {
     {
         const { tempFilePath } = req.files.bannerDesktop
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-        body.banner__desktop = secure_url;
+        modelo.banner__desktop = secure_url;
     }
     if (modelo.banner__movil)
     {
         const { tempFilePath } = req.files.bannerMovil
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
-        body.banner__movil = secure_url;
+        modelo.banner__movil = secure_url;
     }
     
 

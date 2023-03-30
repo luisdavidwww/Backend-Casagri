@@ -125,6 +125,24 @@ const bannersPublicitariosGet = async(req = request, res = response) => {
     });
 }
 
+//-------------------- OBTENER BANNERS HOME ---------------------------//
+const bannersPrincipalGet = async(req = request, res = response) => {
+
+    const { limite = 6, desde = 0 } = req.query;
+    const query = { descripcion: "Home" };
+
+    const [ total, data ] = await Promise.all([
+        Banners.countDocuments(query),
+        Banners.find(query)
+            .skip( Number( desde ) )
+            .limit(Number( limite ))
+    ]);
+
+    res.json({
+        data
+    });
+}
+
 
 //-------------------- OBTENER 1 BANNER POR NOMBRE ---------------------------//
 const bannerGet = async(req = request, res = response) => {
@@ -194,6 +212,7 @@ module.exports = {
     bannersGet,
     bannerGet,
     bannersPublicitariosGet,
+    bannersPrincipalGet,
     bannersPost,
     bannersPut,
     bannersDelete,

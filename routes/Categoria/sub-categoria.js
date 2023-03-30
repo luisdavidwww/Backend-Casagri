@@ -10,7 +10,9 @@ const { crearSubCategoria,
         obtenerCategoriaPorNombre,
         actualizarCategoria,
         actualizarCategoriaNuevo,
-        borrarCategoria } = require('../../controllers/Categoria/sub-categoria');
+        borrarCategoria,
+        borrarBannerSubCategoria,
+        } = require('../../controllers/Categoria/sub-categoria');
 
 const { existeCategoriaPorId,
         existeSubCategoriaPorIdNombre,
@@ -66,6 +68,18 @@ router.put('/:id',[
     //check('nombre').custom( existeSubCategoriaPorNombre ),
     validarCampos
 ], actualizarCategoriaNuevo /*actualizarCategoria*/ );
+
+
+
+
+//-------------------- ELIMINAR BANNER SUB CATEGORIA ---------------------------//
+router.delete('/borrarBannerSubCategoria/:id',[
+    //validarJWT,
+    //esAdminRole,
+    check('id', 'No es un id de Mongo válido').isMongoId(),
+    check('id').custom( existeSubCategoriaPorId ),
+    validarCampos,
+],borrarBannerSubCategoria);
 
 //-------------------- ELIMINAR CATEGORIA ---------------------------//
 router.delete('/:id',[
