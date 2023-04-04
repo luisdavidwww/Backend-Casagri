@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
 
-const { validarJWT, validarCampos, esAdminRole } = require('../middlewares');
+const { validarJWT, validarCampos,validarArchivoSubir, esAdminRole } = require('../middlewares');
 
 const { crearProducto,
         obtenerProductos,
@@ -22,10 +22,10 @@ const router = Router();
 router.get('/', obtenerProductos );
 
 // Obtener una categoria por id - publico
-router.get('/:id',[
-    check('id', 'No es un id de Mongo válido').isMongoId(),
-    check('id').custom( existeProductoPorId ),
-    validarCampos,
+router.get('/nombre/:CodigoProd',[
+    //check('id', 'No es un id de Mongo válido').isMongoId(),
+    //check('id').custom( existeProductoPorId ),
+    //validarCampos,
 ], obtenerProducto );
 
 // Obtener producto por categoria
@@ -38,10 +38,11 @@ router.get('/categoria/:id',[
 // Crear categoria - privado - cualquier persona con un token válido
 router.post('/', [ 
     //validarJWT,
-    //check('nombre','El nombre es obligatorio').not().isEmpty(),
+    validarArchivoSubir,
+    check('nombre','El nombre es obligatorio').not().isEmpty(),
     //check('categoria','No es un id de Mongo').isMongoId(),
     //check('categoria').custom( existeCategoriaPorId ),
-    validarCampos
+    //validarCampos
 ], crearProducto );
 
 // Actualizar - privado - cualquiera con token válido

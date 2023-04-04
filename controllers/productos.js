@@ -1,17 +1,20 @@
 const { response } = require('express');
 const { Producto } = require('../models');
 
+const path = require('path');
+const fs   = require('fs');
+const cloudinary = require('cloudinary').v2
+cloudinary.config( process.env.CLOUDINARY_URL );
+
 
 const obtenerProductos = async(req, res = response ) => {
 
     const { limite = 5, desde = 0 } = req.query;
-    const query = { Activo: "SI" };
+    const query = { estado: true };
 
     const [ total, productos ] = await Promise.all([
         Producto.countDocuments(query),
         Producto.find(query)
-            .populate('usuario', 'nombre')
-            .populate('categoria', 'nombre')
             //.skip( Number( desde ) )
             //.limit(Number( limite ))
     ]);
@@ -22,14 +25,14 @@ const obtenerProductos = async(req, res = response ) => {
     });
 }
 
+
+//Buscar 1 solo producto
 const obtenerProducto = async(req, res = response ) => {
 
-    const { id } = req.params;
-    const producto = await Producto.findById( id )
-                            .populate('usuario', 'nombre')
-                            .populate('categoria', 'nombre');
+    let { CodigoProd } = req.params;
+    const data = await Producto.findOne( {CodigoProd} )
 
-    res.json( producto );
+    res.json( {data} );
 
 }
 
@@ -61,9 +64,21 @@ const crearProducto = async(req, res = response ) => {
         });
     }
 
+    //cargamos el archivo
+    if (req.files.archivo)
+    {
+        const { tempFilePath } = req.files.archivo
+        const { secure_url } = await cloudinary.uploader.upload( tempFilePath );
+        body.imagen_principal = secure_url;
+    }
+
+    //asignamos el nombre interno
+    const nombre_interno = req.body.nombre.replace(/\s+/g, '');
+
+
     // Generar la data a guardar
     const data = {
-        ...body
+        ...body, nombre_interno
     }
 
     const producto = new Producto( data );
@@ -71,7 +86,7 @@ const crearProducto = async(req, res = response ) => {
     // Guardar DB
     await producto.save();
 
-    res.status(201).json(producto);
+    res.status(201).json({producto});
 
 }
 

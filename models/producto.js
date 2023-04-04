@@ -1,108 +1,42 @@
 const { Schema, model } = require('mongoose');
 
 const ProductoSchema = Schema({
-    counter: {
-        type: Number,
+    CodigoProd: { 
+        type: String,
+        required: [true, 'El codigo es obligatorio']
     },
-    IdApi: {
+    nombre: {
+        type: String,
+        required: [true, 'El nombre es obligatorio']
+    },
+    nombre_interno: { 
         type: String,
     },
-    CodigoProd: {
+    CodigoProd: { 
         type: String,
     },
-    ean: {
+    descripcion: {
         type: String,
     },
-    CodFabricante: {
+    imagen_principal: {
         type: String,
+        required: [true, 'La imagen es obligatoria'],
     },
-    Nombre: {
-        type: String,
-        required: [true, 'El nombre es obligatorio'],
+    creado: {
+        type: Date, 
+        default: Date.now()
     },
-    IdCat1: {
-        type: String,
-    },
-    cat1: {
-        type: String,
-    },
-    IdCat2: {
-        type: String,
-    },
-    cat2: {
-        type: String,
-    },
-    IdCat3: {
-        type: String,
-    },
-    Cat3: {
-        type: String,
-    },
-    IdCat4: {
-        type: String,
-    },
-    cat4: {
-        type: String,
-    },
-    IdCat5: {
-        type: String,
-    },
-    cat5: {
-        type: String,
-    },
-    IDMarca: {
-        type: String,
-    },
-    Marca: {
-        type: String,
-    },
-    IdCat4: {
-        type: String,
-    },
-    Imagen: {
-        type: String,
-    },
-    PesoKG: {
-        type: Number,
-    },
-    ManejaStock: {
-        type: String,
-    },
-    m2: {
-        type: String,
-    },
-    Decimales: {
-        type: String,
-    },
-    UndEnv: {
-        type: String,
-    },
-    UndPedido: {
-        type: String,
-    },
-    CompraMin: {
-        type: String,
-    },
-    StockMin: {
-        type: String,
-    },
-    Activo: {
-        type: String,
-    },
-    ManejaLotes: {
-        type: String,
-    },
-    LUpd_DateTime: {
+    actualizado: {
         type: Date,
+        default: Date.now()
     },
-    totalEntries: {
-        type: String,
+    eliminado: {
+        type: Date, 
     },
-    totalPages: {
-        type: Number,
-    },
-    errorMessage: {
-        type: String,
+    estado: {
+        type: Boolean,
+        default: true,
+        required: true
     },
 });
 
