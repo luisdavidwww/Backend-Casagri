@@ -5,15 +5,15 @@ const { Producto } = require('../models');
 const obtenerProductos = async(req, res = response ) => {
 
     const { limite = 5, desde = 0 } = req.query;
-    const query = { estado: true };
+    const query = { Activo: "SI" };
 
     const [ total, productos ] = await Promise.all([
         Producto.countDocuments(query),
         Producto.find(query)
             .populate('usuario', 'nombre')
             .populate('categoria', 'nombre')
-            .skip( Number( desde ) )
-            .limit(Number( limite ))
+            //.skip( Number( desde ) )
+            //.limit(Number( limite ))
     ]);
 
     res.json({
@@ -51,7 +51,7 @@ const obtenerProductoCategoria = async(req, res = response ) => {
 
 const crearProducto = async(req, res = response ) => {
 
-    const { estado, usuario, ...body } = req.body;
+    const { ...body } = req.body;
 
     const productoDB = await Producto.findOne({ nombre: body.nombre });
 
@@ -63,9 +63,7 @@ const crearProducto = async(req, res = response ) => {
 
     // Generar la data a guardar
     const data = {
-        ...body,
-        nombre: body.nombre.toUpperCase(),
-        usuario: req.usuario._id
+        ...body
     }
 
     const producto = new Producto( data );

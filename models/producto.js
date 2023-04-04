@@ -1,33 +1,109 @@
 const { Schema, model } = require('mongoose');
 
 const ProductoSchema = Schema({
-    nombre: {
+    counter: {
+        type: Number,
+    },
+    IdApi: {
+        type: String,
+    },
+    CodigoProd: {
+        type: String,
+    },
+    ean: {
+        type: String,
+    },
+    CodFabricante: {
+        type: String,
+    },
+    Nombre: {
         type: String,
         required: [true, 'El nombre es obligatorio'],
-        unique: true
     },
-    estado: {
-        type: Boolean,
-        default: true,
-        required: true
+    IdCat1: {
+        type: String,
     },
-    usuario: {
-        type: Schema.Types.ObjectId,
-        ref: 'Usuario',
-        required: true
+    cat1: {
+        type: String,
     },
-    precio: {
+    IdCat2: {
+        type: String,
+    },
+    cat2: {
+        type: String,
+    },
+    IdCat3: {
+        type: String,
+    },
+    Cat3: {
+        type: String,
+    },
+    IdCat4: {
+        type: String,
+    },
+    cat4: {
+        type: String,
+    },
+    IdCat5: {
+        type: String,
+    },
+    cat5: {
+        type: String,
+    },
+    IDMarca: {
+        type: String,
+    },
+    Marca: {
+        type: String,
+    },
+    IdCat4: {
+        type: String,
+    },
+    Imagen: {
+        type: String,
+    },
+    PesoKG: {
         type: Number,
-        default: 0
     },
-    categoria: {
-        type: Schema.Types.ObjectId,
-        ref: 'Categoria',
-        required: true
+    ManejaStock: {
+        type: String,
     },
-    descripcion: { type: String },
-    disponible: { type: Boolean, defult: true },
-    img: { type: String },
+    m2: {
+        type: String,
+    },
+    Decimales: {
+        type: String,
+    },
+    UndEnv: {
+        type: String,
+    },
+    UndPedido: {
+        type: String,
+    },
+    CompraMin: {
+        type: String,
+    },
+    StockMin: {
+        type: String,
+    },
+    Activo: {
+        type: String,
+    },
+    ManejaLotes: {
+        type: String,
+    },
+    LUpd_DateTime: {
+        type: Date,
+    },
+    totalEntries: {
+        type: String,
+    },
+    totalPages: {
+        type: Number,
+    },
+    errorMessage: {
+        type: String,
+    },
 });
 
 

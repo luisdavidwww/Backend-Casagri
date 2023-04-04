@@ -37,10 +37,10 @@ router.get('/categoria/:id',[
 
 // Crear categoria - privado - cualquier persona con un token válido
 router.post('/', [ 
-    validarJWT,
-    check('nombre','El nombre es obligatorio').not().isEmpty(),
-    check('categoria','No es un id de Mongo').isMongoId(),
-    check('categoria').custom( existeCategoriaPorId ),
+    //validarJWT,
+    //check('nombre','El nombre es obligatorio').not().isEmpty(),
+    //check('categoria','No es un id de Mongo').isMongoId(),
+    //check('categoria').custom( existeCategoriaPorId ),
     validarCampos
 ], crearProducto );
 
