@@ -21,6 +21,7 @@ class Server {
             subcategorias:    '/api/subcategorias',
             lineaProducto:    '/api/lineaProductos',
             productos:        '/api/productos',
+            articulos:        '/api/articulos',
             usuarios:         '/api/usuarios',
             uploads:          '/api/uploads',
             acercaCasagri:    '/api/acercaCasagri',
@@ -78,6 +79,7 @@ class Server {
         this.app.use( this.paths.subcategorias, require('../routes/Categoria/sub-categoria'));
         this.app.use( this.paths.lineaProducto, require('../routes/Categoria/linea-producto'));
         this.app.use( this.paths.productos, require('../routes/productos'));
+        this.app.use( this.paths.articulos, require('../routes/articulo'));
         this.app.use( this.paths.usuarios, require('../routes/usuarios'));
         this.app.use( this.paths.uploads, require('../routes/uploads'));
         this.app.use( this.paths.acercaCasagri, require('../routes/Empresa/acerca-casagri'));
