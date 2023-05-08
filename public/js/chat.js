@@ -1,6 +1,6 @@
 const url = ( window.location.hostname.includes('localhost') )
             ? 'http://localhost:8080/api/auth/'
-            : 'https://restserver-curso-fher.herokuapp.com/api/auth/';
+            : 'https://backend-casagri.vercel.app/api/auth/';
 
 let usuario = null;
 let socket  = null;
