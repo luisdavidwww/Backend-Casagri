@@ -4,7 +4,7 @@ const miFormulario = document.querySelector('form');
 
 const url = ( window.location.hostname.includes('localhost') )
             ? 'http://localhost:8080/api/auth/'
-            : 'https://restserver-curso-fher.herokuapp.com/api/auth/';
+            : 'https://casagribackend.netlify.app/api/auth/';
 
 
 
