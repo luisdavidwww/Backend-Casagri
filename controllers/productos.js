@@ -39,8 +39,7 @@ const obtenerProducto = async(req, res = response ) => {
 const obtenerProductoPorNombre = async(req, res = response ) => {
 
     let { nombre } = req.params;
-    let luis = nombre.replace(/-/g, " ")
-    const data = await Producto.findOne( { luis } )
+    const data = await Producto.findOne( { nombre } )
 
     res.json( {data} );
 
