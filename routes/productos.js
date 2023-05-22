@@ -6,6 +6,7 @@ const { validarJWT, validarCampos,validarArchivoSubir, esAdminRole } = require('
 const { crearProducto,
         obtenerProductos,
         obtenerProducto,
+        obtenerProductoPorNombre,
         obtenerProductoCategoria,
         actualizarProducto, 
         borrarProducto } = require('../controllers/productos');
@@ -22,11 +23,17 @@ const router = Router();
 router.get('/', obtenerProductos );
 
 // Obtener una categoria por id - publico
-router.get('/nombre/:CodigoProd',[
+router.get('/codigo/:CodigoProd',[
     //check('id', 'No es un id de Mongo válido').isMongoId(),
     //check('id').custom( existeProductoPorId ),
     //validarCampos,
 ], obtenerProducto );
+
+router.get('/nombreProducto/:nombre',[
+    //check('id', 'No es un id de Mongo válido').isMongoId(),
+    //check('id').custom( existeProductoPorId ),
+    //validarCampos,
+], obtenerProductoPorNombre );
 
 // Obtener producto por categoria
 router.get('/categoria/:id',[

@@ -36,6 +36,16 @@ const obtenerProducto = async(req, res = response ) => {
 
 }
 
+const obtenerProductoPorNombre = async(req, res = response ) => {
+
+    let { nombre } = req.params;
+    let luis = nombre.replace(/-/g, " ")
+    const data = await Producto.findOne( { luis } )
+
+    res.json( {data} );
+
+}
+
 const obtenerProductoCategoria = async(req, res = response ) => {
 
     const { id } = req.params;
@@ -122,6 +132,7 @@ module.exports = {
     crearProducto,
     obtenerProductos,
     obtenerProducto,
+    obtenerProductoPorNombre,
     obtenerProductoCategoria,
     actualizarProducto,
     borrarProducto
