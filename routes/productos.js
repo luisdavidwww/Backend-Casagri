@@ -29,10 +29,10 @@ router.get('/codigo/:CodigoProd',[
     //validarCampos,
 ], obtenerProducto );
 
-router.get('/nombreProducto/:nombre',[
+router.get('/nombreProducto/:nombre_interno',[
     //check('id', 'No es un id de Mongo válido').isMongoId(),
     //check('id').custom( existeProductoPorId ),
-    //validarCampos,
+    validarCampos,
 ], obtenerProductoPorNombre );
 
 // Obtener producto por categoria

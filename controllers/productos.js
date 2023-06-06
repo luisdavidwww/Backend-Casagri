@@ -36,10 +36,11 @@ const obtenerProducto = async(req, res = response ) => {
 
 }
 
+//Obtener Producto por Nombre
 const obtenerProductoPorNombre = async(req, res = response ) => {
 
-    let { nombre } = req.params;
-    const data = await Producto.findOne( { nombre } )
+    let { nombre_interno } = req.params;
+    const data = await Producto.findOne( { nombre_interno } )
 
     res.json( {data} );
 
@@ -82,7 +83,7 @@ const crearProducto = async(req, res = response ) => {
     }
 
     //asignamos el nombre interno
-    const nombre_interno = req.body.nombre.replace(/\s+/g, '');
+    const nombre_interno = req.body.nombre.replace(/\s+/g, '').replace(/%/g, "").replace(/[ / ]/g, "_");
 
 
     // Generar la data a guardar
