@@ -6,6 +6,7 @@ const { validarJWT, validarCampos,validarArchivoSubir, esAdminRole } = require('
 const { crearProducto,
         obtenerProductos,
         obtenerProducto,
+        proxyController,
         obtenerProductoPorNombre,
         obtenerProductoCategoria,
         actualizarProducto, 
@@ -21,6 +22,8 @@ const router = Router();
 
 //  Obtener todas las categorias - publico
 router.get('/', obtenerProductos );
+
+router.get('/proxy', proxyController );
 
 // Obtener una categoria por id - publico
 router.get('/codigo/:CodigoProd',[
