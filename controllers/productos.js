@@ -12,6 +12,119 @@ const http = require('http');
 const { createProxyMiddleware } = require('http-proxy-middleware');
 
 
+
+
+//-------------------------------------------------Metodos Api Casagri -----------------------------------//
+
+//Maestro Productos Casagri
+const maestroProductosCasagri = async (req, res) => {
+
+    let data = JSON.stringify({
+    "filters": [
+        {}
+    ]
+    });
+
+    let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: 'http://csgbqto.dyndns.org:6001/ctDynamicsSL/api/quickQuery/VW_VENTTU_PROD',
+    headers: { 
+        'Authorization': 'Basic REVWRUxPUEVSOkJCRjk5OTM5NDhFMw==', 
+        'CpnyID': '0010', 
+        'SiteID': 'LIVE', 
+        'Content-Type': 'application/json'
+    },
+    data : data
+    };
+
+    axios.request(config)
+    .then((response) => {
+    //console.log(JSON.stringify(response.data));
+        res.status(200).json(response.data);
+    })
+    .catch((error) => {
+        console.log(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+        //res.status(500).json(error);
+    });
+
+};
+
+//Diponibles Productos Casagri 
+const stockProductosCasagri = async (req, res) => {
+
+    let data = JSON.stringify({
+    "filters": [
+        {}
+    ]
+    });
+
+    let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: 'http://csgbqto.dyndns.org:6001/ctDynamicsSL/api/quickQuery/VW_VENTTU_STOCK',
+    headers: { 
+        'Authorization': 'Basic REVWRUxPUEVSOkJCRjk5OTM5NDhFMw==', 
+        'CpnyID': '0010', 
+        'SiteID': 'LIVE', 
+        'Content-Type': 'application/json'
+    },
+    data : data
+    };
+
+    axios.request(config)
+    .then((response) => {
+    //console.log(JSON.stringify(response.data));
+        res.status(200).json(response.data);
+    })
+    .catch((error) => {
+        console.log(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+        //res.status(500).json(error);
+    });
+
+};
+
+//Imagenes Productos Casagri
+const ImagenProductosCasagri = async (req, res) => {
+
+    let data = JSON.stringify({
+    "filters": [
+        {}
+    ]
+    });
+
+    let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: 'http://csgbqto.dyndns.org:6001/ctDynamicsSL/api/quickQuery/VW_VENTTU_PICTURES',
+    headers: { 
+        'Authorization': 'Basic REVWRUxPUEVSOkJCRjk5OTM5NDhFMw==', 
+        'CpnyID': '0010', 
+        'SiteID': 'LIVE', 
+        'Content-Type': 'application/json'
+    },
+    data : data
+    };
+
+    axios.request(config)
+    .then((response) => {
+    //console.log(JSON.stringify(response.data));
+        res.status(200).json(response.data);
+    })
+    .catch((error) => {
+        console.log(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+        //res.status(500).json(error);
+    });
+
+};
+
+
+
+
+
 const obtenerProductos = async(req, res = response ) => {
 
     const { limite = 5, desde = 0 } = req.query;
@@ -50,156 +163,6 @@ const obtenerProductoPorNombre = async(req, res = response ) => {
     res.json( {data} );
 
 }
-
-
- //res.json(data);
- //console.log("qui va"+data.json());
-  const proxyControllera = async (req, res = response) => {
-    try {
-
-      const url = 'http://csgbqto.dyndns.org:6001/ctDynamicsSL/api/quickQuery/VW_VENTTU_PROD'; 
-
-      const authorization = 'REVWRUxPUEVSOkJCRjk5OTM5NDhFMw==';
-      const encodedAuthorization = `Basic ${authorization}`;
-  
-      const data  = await fetch(url,  {
-        method: 'GET',
-        headers: {
-            "Content-Type": "application/json",
-            "Content-Length": "473", 
-            "Host": "csgbqto.dyndns.org",
-            "Accept": "*/*", 
-            "Accept-Encoding": "gzip, deflate, br", 
-            "Authorization": "Basic REVWRUxPUEVSOkJCRjk5OTM5NDhFMw==",
-            "Connection": "keep-alive",
-            "CpnyID": "0010", 
-            "SiteID": "LIVE"
-        }
-      });
-  
-     
-      if (data.ok) {
-        const tabla = await data.json();
-        console.log(tabla);
-        res.status(200).json(tabla); // Envía la respuesta al cliente
-      } else {
-        throw new Error('Error en la solicitud' + data.statusText);
-      }
-      
-      
-    } catch (error) {
-      console.error('Error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  };
-
-
-  const proxyControllerA = async (req, res = response) => {
-    const options = {
-        hostname: 'csgbqto.dyndns.org',
-        port: 6001,
-        path: '/ctDynamicsSL/api/quickQuery/VW_VENTTU_PROD',
-        method: 'GET',
-        headers: {
-            "Content-Type": "application/json",
-            "Content-Length": "268", 
-            //"Host": "csgbqto.dyndns.org",
-            "Accept": "*/*", 
-            "Accept-Encoding": "gzip, deflate, br", 
-            "Authorization": "Basic REVWRUxPUEVSOkJCRjk5OTM5NDhFMw==",
-            "Connection": "keep-alive",
-            "CpnyID": "0010", 
-            "SiteID": "LIVE"
-        },
-      };
-    
-      const proxyRequest = http.request(options, (proxyResponse) => {
-        let data = '';
-    
-        proxyResponse.on('data', (chunk) => {
-          data += chunk;
-        });
-    
-        proxyResponse.on('end', () => {
-          res.status(proxyResponse.statusCode).json(data);
-        });
-      });
-    
-      proxyRequest.on('error', (error) => {
-        console.error('Error:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-      });
-    
-      proxyRequest.end();
-  };
-
-
-
-  const proxyController = async (req, res) => {
-
-        let data = JSON.stringify({
-        "filters": [
-            {}
-        ]
-        });
-
-        let config = {
-        method: 'get',
-        maxBodyLength: Infinity,
-        url: 'http://csgbqto.dyndns.org:6001/ctDynamicsSL/api/quickQuery/VW_VENTTU_PROD',
-        headers: { 
-            'Authorization': 'Basic REVWRUxPUEVSOkJCRjk5OTM5NDhFMw==', 
-            'CpnyID': '0010', 
-            'SiteID': 'LIVE', 
-            'Content-Type': 'application/json'
-        },
-        data : data
-        };
-
-        axios.request(config)
-        .then((response) => {
-        //console.log(JSON.stringify(response.data));
-        res.status(200).json(response.data)
-        })
-        .catch((error) => {
-        console.log(error);
-        });
-
-};
-
-
-  const proxyControllerF = async (req, res = response) => {
-
-    const url = 'http://csgbqto.dyndns.org:6001/ctDynamicsSL/api/quickQuery/VW_VENTTU_PROD';
-    const options = {
-        method: 'GET',
-        headers: {
-            "Content-Type": "application/json",
-            "Content-Length": "268", 
-            "Host": "csgbqto.dyndns.org",
-            "Accept": "*/*", 
-            "Accept-Encoding": "gzip, deflate, br", 
-            "Authorization": "Basic REVWRUxPUEVSOkJCRjk5OTM5NDhFMw==",
-            "Connection": "keep-alive",
-            "CpnyID": "0010", 
-            "SiteID": "LIVE"
-        },
-        //timeout: 10000 
-        
-    };
-
-    axios(url, options)
-    .then(response => {
-        // Manejar la respuesta exitosa aquí
-        console.log(response.data);
-        res.status(200).json(response.data)
-    })
-    .catch(error => {
-        // Manejar el error aquí
-        console.error(error);
-        console.error("el error");
-    })
-};
 
 
 const obtenerProductoCategoria = async(req, res = response ) => {
@@ -284,13 +247,20 @@ const borrarProducto = async(req, res = response ) => {
 
 
 
+
+
+
+
 module.exports = {
     crearProducto,
     obtenerProductos,
     obtenerProducto,
-    proxyController,
     obtenerProductoPorNombre,
     obtenerProductoCategoria,
     actualizarProducto,
-    borrarProducto
+    borrarProducto,
+    //Metodos Proxy Productos 
+    maestroProductosCasagri,
+    stockProductosCasagri,
+    ImagenProductosCasagri,
 }

@@ -6,24 +6,37 @@ const { validarJWT, validarCampos,validarArchivoSubir, esAdminRole } = require('
 const { crearProducto,
         obtenerProductos,
         obtenerProducto,
-        proxyController,
         obtenerProductoPorNombre,
         obtenerProductoCategoria,
         actualizarProducto, 
-        borrarProducto } = require('../controllers/productos');
+        borrarProducto,
+        //Metodos Proxy Productos 
+        maestroProductosCasagri,
+        stockProductosCasagri,
+        ImagenProductosCasagri,
+    } = require('../controllers/productos');
 
 const { existeCategoriaPorId, existeProductoPorId } = require('../helpers/db-validators');
 
 const router = Router();
 
-/**
- * {{url}}/api/categorias
- */
+
+//obetener todos los productos Casagri
+router.get('/maestrosCasagri', maestroProductosCasagri );
+
+//obetener productos disponibles Casagri
+router.get('/stockCasagri', stockProductosCasagri );
+
+//obetener productos disponibles Casagri
+router.get('/imagenProductosCasagri', ImagenProductosCasagri );
+
+
+
+
+
 
 //  Obtener todas las categorias - publico
 router.get('/', obtenerProductos );
-
-router.get('/proxy', proxyController );
 
 // Obtener una categoria por id - publico
 router.get('/codigo/:CodigoProd',[
