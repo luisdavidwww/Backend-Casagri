@@ -9,7 +9,6 @@ const ArticuloSchema = Schema({
     },
     CodigoProd: { 
         type: String,
-        required: [true, 'El codigo es obligatorio']
     },
     ean: { 
         type: String,
@@ -91,8 +90,6 @@ const ArticuloSchema = Schema({
     ManejaLotes: {
         type: String,
     },
-
-
     LUpd_DateTime: {
         type: Date,
     },

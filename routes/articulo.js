@@ -5,7 +5,9 @@ const { validarJWT, validarCampos,validarArchivoSubir, esAdminRole } = require('
 
 const { 
     obtenerArticulos,
-    crearArticulo
+    crearArticulo,
+    crearArticuloListado,
+    actualizarArticuloDrop
         } = require('../controllers/articulo');
 
 const {  existeProductoPorId } = require('../helpers/db-validators');
@@ -26,6 +28,18 @@ router.post('/', [
     //validarArchivoSubir,
     //check('nombre','El nombre es obligatorio').not().isEmpty(),
 ], crearArticulo );
+
+router.post('/subirLoteArticulo', [ 
+    //validarJWT,
+    //validarArchivoSubir,
+    //check('nombre','El nombre es obligatorio').not().isEmpty(),
+], crearArticuloListado );
+
+router.post('/ProductosDisponibles', [ 
+    //validarJWT,
+    //validarArchivoSubir,
+    //check('nombre','El nombre es obligatorio').not().isEmpty(),
+], actualizarArticuloDrop );
 
 
 
