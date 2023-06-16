@@ -16,8 +16,9 @@ const Server   = require('./server');
 const Role     = require('./role');
 const Usuario  = require('./usuario');
 
-// PRODUCTO //
+// PRODUCTO  //
 const Producto = require('./producto');
+const ProductoR = require('./Productos/productoR');
 
 // BANNERS //
 const Banners  = require('./Banners/banners');
@@ -34,6 +35,7 @@ module.exports = {
     SubCategoria,
     ChatMensajes,
     Producto,
+    ProductoR,
     Role,
     Server,
     Usuario,
