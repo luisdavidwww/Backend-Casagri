@@ -8,6 +8,7 @@ const {
     crearProductoTotal,
     obtenerProductos,
     obtenerProductosPaginados,
+    obtenerCat1,
     actualizarProductoPorID,
     crearProductoConArchivoJSON,
     actualizarTodosLosProducto,
@@ -23,9 +24,10 @@ const router = Router();
  * {{url}}/api/categorias
  */
 
-//  Obtener todas las categorias - publico obtenerProductosPaginados
+//  Obtener todas las categorias - publico 
 router.get('/', obtenerProductos );
 router.get('/obtenerProductosPaginados', obtenerProductosPaginados );
+router.get('/Categoria/:categoria', obtenerCat1 );
 
 
 // Crear articulo

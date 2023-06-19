@@ -10,6 +10,13 @@ const ProductoMSchema = Schema({
     Nombre: {
         type: String,
     },
+    Nombre_interno: { 
+        type: String,
+    },
+    Descripcion: { 
+        type: String,
+        default: ""
+    },
     StockActual: { 
         type: Number,
     },

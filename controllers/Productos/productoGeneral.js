@@ -72,11 +72,16 @@ const crearProductoTotal = async(req, res = response ) => {
       const Marca           = maestro.find((p) => p.IdApi === IdApi)?.Marca || '';
       const Imagen          = image.find((p) => p.IdApi === IdApi)?.Imagen || '';
 
+      const Nombre_interno  = Disp.Nombre.replace(/\s+/g, '-').replace(/%/g, "%25").replace(/[ / ]/g, "_");
+      const Descripcion  = maestro.find((p) => p.IdApi === IdApi)?.Descripcion || '';
+
 
       productos.push({ 
         counter, 
         IdApi, 
-        Nombre, 
+        Nombre,
+        Nombre_interno, 
+        Descripcion,
         StockActual, 
         StockMinimo,
         cat1, 
@@ -150,6 +155,41 @@ const obtenerProductosPaginados = async (req, res) => {
     console.error('Error al obtener los productos paginados:', error.message);
     res.status(500).json({ error: 'Error al obtener los productos paginados' });
   }
+};
+
+//Agroindustrial
+const obtenerCat1 =  async(req, res) => {
+
+    const { page, limit } = req.query;
+    const pageNumber = parseInt(page) || 1;
+    const limitNumber = parseInt(limit) || 16;
+
+    let { categoria } = req.params;
+
+    // Calcula el índice de inicio y la cantidad de elementos a mostrar
+    const startIndex = (pageNumber - 1) * limitNumber;
+
+    const [ total, productos ] = await Promise.all([
+      ProductoMSchema.find({ cat1: categoria }).countDocuments(),
+      ProductoMSchema.find({ cat1: categoria })
+                      .skip(startIndex)
+                      .limit(limitNumber)
+    ]);
+
+    // Calcula el número total de páginas
+    const totalPages = Math.ceil(total / limitNumber);
+
+    // Construye el objeto de respuesta con los datos paginados y los metadatos
+    const response = {
+      total,
+      totalPages,
+      currentPage: pageNumber,
+      productos,
+    };
+
+    res.status(200).json(response);
+
+
 };
 
 
@@ -304,16 +344,62 @@ const actualizarStockLosProducto = async () => {
 const actualizarProductoDrop = async (req, res = response) => {
     try {
       // solicitud a la API
-      const respuesta = await disponiblesProductosCasagri();
+      const [maestroResp, disponibleResp, imageResp] = await Promise.all([
+        fetchAPI('http://csgbqto.dyndns.org:6001/ctDynamicsSL/api/quickQuery/VW_VENTTU_PROD'),
+        fetchAPI('http://csgbqto.dyndns.org:6001/ctDynamicsSL/api/quickQuery/VW_VENTTU_STOCK'),
+        fetchAPI('http://csgbqto.dyndns.org:6001/ctDynamicsSL/api/quickQuery/VW_VENTTU_PICTURES'),
+      ]);
   
-      // Guardo mi JSON
-      const registros = respuesta.data.myQueryResults.Table;
+      const maestro = maestroResp.data.myQueryResults.Table;
+      const disponible = disponibleResp.data.myQueryResults.Table;
+      const image = imageResp.data.myQueryResults.Table;
+  
+      const productos = [];
+  
+      // Combinar los datos de las tres APIs
+      for (const Disp of disponible) {
+        const counter         = Disp.counter;
+        const IdApi           = Disp.IdApi;
+        const Nombre          = Disp.Nombre;
+        const StockActual     = Disp.StockActual;
+        const StockMinimo     = Disp.StockMinimo;
+  
+        const cat1            = maestro.find((p) => p.IdApi === IdApi)?.cat1 || '';
+        const cat2            = maestro.find((p) => p.IdApi === IdApi)?.cat2 || '';
+        const Cat3            = maestro.find((p) => p.IdApi === IdApi)?.Cat3 || '';
+        const cat4            = maestro.find((p) => p.IdApi === IdApi)?.cat4 || '';
+        const cat5            = maestro.find((p) => p.IdApi === IdApi)?.cat5 || '';
+  
+        const Marca           = maestro.find((p) => p.IdApi === IdApi)?.Marca || '';
+        const Imagen          = image.find((p) => p.IdApi === IdApi)?.Imagen || '';
+  
+        const Nombre_interno  = Disp.Nombre.replace(/\s+/g, '-').replace(/%/g, "%25").replace(/[ / ]/g, "_");
+        const Descripcion  = maestro.find((p) => p.IdApi === IdApi)?.Descripcion || '';
+  
+  
+        productos.push({ 
+          counter, 
+          IdApi, 
+          Nombre,
+          Nombre_interno, 
+          Descripcion,
+          StockActual, 
+          StockMinimo,
+          cat1, 
+          cat2, 
+          Cat3, 
+          cat4, 
+          cat5, 
+          Marca, 
+          Imagen
+        });
+      }
   
       // Elimino los registros anteriores
       await ProductoMSchema.deleteMany({});
   
       // guardo todos losproductos actualizados
-      await ProductoMSchema.insertMany(registros);
+      await ProductoMSchema.insertMany(productos);
   
       console.log('Registros insertados en la base de datos correctamente');
     } catch (error) {
@@ -482,6 +568,7 @@ module.exports = {
   crearProductoTotal,
   obtenerProductos,
   obtenerProductosPaginados,
+  obtenerCat1,
   crearProductoConArchivoJSON,
   actualizarProductoPorID,
   actualizarTodosLosProducto,
