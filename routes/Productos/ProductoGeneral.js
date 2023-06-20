@@ -9,6 +9,9 @@ const {
     obtenerProductos,
     obtenerProductosPaginados,
     obtenerCat1,
+    obtenerCat2,
+    obtenerCat3,
+    obtenerCat4,
     actualizarProductoPorID,
     crearProductoConArchivoJSON,
     actualizarTodosLosProducto,
@@ -16,21 +19,63 @@ const {
     actualizarProductoDrop
         } = require('../../controllers/Productos/productoGeneral');
 
+
+const { 
+    otrosAgroquimicos,
+    semillas,
+    maizHibrido,
+    cercasAlambreyElectricas,
+    maquinarias,
+    bambasDeAgua,
+    analgesicosAntiinflamatorios,
+    antisepticosDesinfectantes,
+    antibioticos,
+    antidiarreicos,
+    bañosEctoparasitariosMatagusanos,
+    biologicos,
+    hemoparasiticidas,
+    hormonales,
+    vitaminasMinerales,
+    implementosVeterinarios
+        } = require('../../controllers/Productos/metodosfiltrado');
+
 const {  existeProductoPorId } = require('../../helpers/db-validators');
 
 const router = Router();
 
-/**
- * {{url}}/api/categorias
- */
 
-//  Obtener todas las categorias - publico 
+//------------------------------------- OBTENER PRODUCTOS -----------------------------------------//
+
 router.get('/', obtenerProductos );
 router.get('/obtenerProductosPaginados', obtenerProductosPaginados );
 router.get('/Categoria/:categoria', obtenerCat1 );
+router.get('/Categoria2/:categoria', obtenerCat2 );
+router.get('/Categoria3/:categoria', obtenerCat3 );
+router.get('/Categoria4/:categoria', obtenerCat4 );
 
 
-// Crear articulo
+//------------------------------------- FILTRAR PRODUCTOS -----------------------------------------//
+
+router.get('/CategoriaBuscar/OtrosAgroquimicos', otrosAgroquimicos );
+router.get('/CategoriaBuscar/Semillas', semillas );
+router.get('/CategoriaBuscar/Maiz', maizHibrido );
+router.get('/CategoriaBuscar/cercasAlambreyElectricas', cercasAlambreyElectricas );
+router.get('/CategoriaBuscar/maquinarias', maquinarias );
+router.get('/CategoriaBuscar/bambasDeAgua', bambasDeAgua );
+router.get('/CategoriaBuscar/analgesicosAntiinflamatorios', analgesicosAntiinflamatorios );
+router.get('/CategoriaBuscar/antisepticosDesinfectantes', antisepticosDesinfectantes );
+router.get('/CategoriaBuscar/antibioticos', antibioticos );
+router.get('/CategoriaBuscar/antidiarreicos', antidiarreicos );
+router.get('/CategoriaBuscar/banosEctoparasitariosMatagusanos', bañosEctoparasitariosMatagusanos );
+router.get('/CategoriaBuscar/biologicos', biologicos );
+router.get('/CategoriaBuscar/hemoparasiticidas', hemoparasiticidas );
+router.get('/CategoriaBuscar/hormonales', hormonales );
+router.get('/CategoriaBuscar/vitaminasMinerales', vitaminasMinerales );
+router.get('/CategoriaBuscar/implementosVeterinarios', implementosVeterinarios );
+
+
+//------------------------------------- CREAR PRODUCTOS -----------------------------------------//
+
 router.post('/', [ 
     //validarJWT,
     //validarArchivoSubir,
@@ -39,17 +84,14 @@ router.post('/', [
 
 
 router.post('/crearProductoTotal', [ 
-    //validarJWT,
-    //validarArchivoSubir,
-    //check('nombre','El nombre es obligatorio').not().isEmpty(),
 ], crearProductoTotal );
 
 router.post('/subirLoteArticulo', [ 
-    //validarJWT,
-    //validarArchivoSubir,
-    //check('nombre','El nombre es obligatorio').not().isEmpty(),
 ], crearProductoConArchivoJSON );
 
+
+
+//------------------------------------- ACTUALIZAR PRODUCTOS -----------------------------------------//
 
 router.post('/ActualizarProductoPorID/:productoId', [ 
 ], actualizarProductoPorID );

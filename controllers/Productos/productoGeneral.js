@@ -58,7 +58,7 @@ const crearProductoTotal = async(req, res = response ) => {
     // Combinar los datos de las tres APIs
     for (const Disp of disponible) {
       const counter         = Disp.counter;
-      const IdApi           = Disp.IdApi;
+      const IdApi           = Disp.IdApi.trim();//usamos elmetodo trim para eliminar los espacios vacios
       const Nombre          = Disp.Nombre;
       const StockActual     = Disp.StockActual;
       const StockMinimo     = Disp.StockMinimo;
@@ -157,7 +157,7 @@ const obtenerProductosPaginados = async (req, res) => {
   }
 };
 
-//Agroindustrial
+//Obtener todos los productos de la Categoria 1 Paginado
 const obtenerCat1 =  async(req, res) => {
 
     const { page, limit } = req.query;
@@ -172,6 +172,7 @@ const obtenerCat1 =  async(req, res) => {
     const [ total, productos ] = await Promise.all([
       ProductoMSchema.find({ cat1: categoria }).countDocuments(),
       ProductoMSchema.find({ cat1: categoria })
+                      //.sort({ Nombre: 1 })
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
@@ -191,6 +192,113 @@ const obtenerCat1 =  async(req, res) => {
 
 
 };
+
+//Obtener todos los productos de la Categoria 2 Paginado
+const obtenerCat2 =  async(req, res) => {
+
+  const { page, limit } = req.query;
+  const pageNumber = parseInt(page) || 1;
+  const limitNumber = parseInt(limit) || 16;
+
+  let { categoria } = req.params;
+
+  // Calcula el índice de inicio y la cantidad de elementos a mostrar
+  const startIndex = (pageNumber - 1) * limitNumber;
+
+  const [ total, productos ] = await Promise.all([
+    ProductoMSchema.find({ cat2: categoria }).countDocuments(),
+    ProductoMSchema.find({ cat2: categoria })
+                    .sort({ Nombre: 1 })
+                    .skip(startIndex)
+                    .limit(limitNumber)
+  ]);
+
+  // Calcula el número total de páginas
+  const totalPages = Math.ceil(total / limitNumber);
+
+  // Construye el objeto de respuesta con los datos paginados y los metadatos
+  const response = {
+    total,
+    totalPages,
+    currentPage: pageNumber,
+    productos,
+  };
+
+  res.status(200).json(response);
+
+
+};
+
+const obtenerCat3 =  async(req, res) => {
+
+  const { page, limit } = req.query;
+  const pageNumber = parseInt(page) || 1;
+  const limitNumber = parseInt(limit) || 16;
+
+  let { categoria } = req.params;
+
+  // Calcula el índice de inicio y la cantidad de elementos a mostrar
+  const startIndex = (pageNumber - 1) * limitNumber;
+
+  const [ total, productos ] = await Promise.all([
+    ProductoMSchema.find({ Cat3: categoria }).countDocuments(),
+    ProductoMSchema.find({ Cat3: categoria })
+                    //.sort({ Nombre: 1 })
+                    .skip(startIndex)
+                    .limit(limitNumber)
+  ]);
+
+  // Calcula el número total de páginas
+  const totalPages = Math.ceil(total / limitNumber);
+
+  // Construye el objeto de respuesta con los datos paginados y los metadatos
+  const response = {
+    total,
+    totalPages,
+    currentPage: pageNumber,
+    productos,
+  };
+
+  res.status(200).json(response);
+
+
+};
+
+const obtenerCat4 =  async(req, res) => {
+
+  const { page, limit } = req.query;
+  const pageNumber = parseInt(page) || 1;
+  const limitNumber = parseInt(limit) || 16;
+
+  let { categoria } = req.params;
+
+  // Calcula el índice de inicio y la cantidad de elementos a mostrar
+  const startIndex = (pageNumber - 1) * limitNumber;
+
+  const [ total, productos ] = await Promise.all([
+    ProductoMSchema.find({ cat4: categoria }).countDocuments(),
+    ProductoMSchema.find({ cat4: categoria })
+                    //.sort({ Nombre: 1 })
+                    .skip(startIndex)
+                    .limit(limitNumber)
+  ]);
+
+  // Calcula el número total de páginas
+  const totalPages = Math.ceil(total / limitNumber);
+
+  // Construye el objeto de respuesta con los datos paginados y los metadatos
+  const response = {
+    total,
+    totalPages,
+    currentPage: pageNumber,
+    productos,
+  };
+
+  res.status(200).json(response);
+
+
+};
+
 
 
 //------------------------------------- ACTUALIZAR PRODUCTOS -----------------------------------------/
@@ -569,6 +677,9 @@ module.exports = {
   obtenerProductos,
   obtenerProductosPaginados,
   obtenerCat1,
+  obtenerCat2,
+  obtenerCat3,
+  obtenerCat4,
   crearProductoConArchivoJSON,
   actualizarProductoPorID,
   actualizarTodosLosProducto,
