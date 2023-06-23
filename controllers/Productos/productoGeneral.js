@@ -449,7 +449,7 @@ const actualizarStockLosProducto = async () => {
 };
     
 //Eliminar todo y subir nuevos productos
-const actualizarProductoDrop = async (req, res = response) => {
+/*const actualizarProductoDrop = async (req, res = response) => {
     try {
       // solicitud a la API
       const [maestroResp, disponibleResp, imageResp] = await Promise.all([
@@ -467,7 +467,7 @@ const actualizarProductoDrop = async (req, res = response) => {
       // Combinar los datos de las tres APIs
       for (const Disp of disponible) {
         const counter         = Disp.counter;
-        const IdApi           = Disp.IdApi;
+        const IdApi           = Disp.IdApi.trim();//usamos elmetodo trim para eliminar los espacios vacios
         const Nombre          = Disp.Nombre;
         const StockActual     = Disp.StockActual;
         const StockMinimo     = Disp.StockMinimo;
@@ -513,7 +513,87 @@ const actualizarProductoDrop = async (req, res = response) => {
     } catch (error) {
       console.error('Error al obtener o insertar los datos:', error.message);
     }
+};*/
+
+
+const actualizarProductoDrop = async (req, res = response) => {
+  try {
+    // solicitud a la API
+    const [maestroResp, disponibleResp, imageResp] = await Promise.all([
+      fetchAPI('http://csgbqto.dyndns.org:6001/ctDynamicsSL/api/quickQuery/VW_VENTTU_PROD'),
+      fetchAPI('http://csgbqto.dyndns.org:6001/ctDynamicsSL/api/quickQuery/VW_VENTTU_STOCK'),
+      fetchAPI('http://csgbqto.dyndns.org:6001/ctDynamicsSL/api/quickQuery/VW_VENTTU_PICTURES'),
+    ]);
+
+    const maestro = maestroResp.data.myQueryResults.Table;
+    const disponible = disponibleResp.data.myQueryResults.Table;
+    const image = imageResp.data.myQueryResults.Table;
+
+    const productosMap = {};
+
+    // Combinar los datos de las tres APIs y sumar el StockActual de los productos con IdApi repetidos
+    for (const Disp of disponible) {
+      const counter = Disp.counter;
+      const IdApi = Disp.IdApi.trim();
+      const Nombre = Disp.Nombre;
+      const StockActual = Disp.StockActual;
+      const StockMinimo = Disp.StockMinimo;
+
+      const cat1 = maestro.find((p) => p.IdApi === IdApi)?.cat1 || '';
+      const cat2 = maestro.find((p) => p.IdApi === IdApi)?.cat2 || '';
+      const Cat3 = maestro.find((p) => p.IdApi === IdApi)?.Cat3 || '';
+      const cat4 = maestro.find((p) => p.IdApi === IdApi)?.cat4 || '';
+      const cat5 = maestro.find((p) => p.IdApi === IdApi)?.cat5 || '';
+
+      const Marca = maestro.find((p) => p.IdApi === IdApi)?.Marca || '';
+      const Imagen = image.find((p) => p.IdApi === IdApi)?.Imagen || '';
+
+      const Nombre_interno = Disp.Nombre.replace(/\s+/g, '-').replace(/%/g, "%25").replace(/[ / ]/g, "_");
+      const Descripcion = maestro.find((p) => p.IdApi === IdApi)?.Descripcion || '';
+
+      // Verificar si el producto ya existe en productosMap
+      if (productosMap[IdApi]) {
+        // Sumar el StockActual al producto existente
+        productosMap[IdApi].StockActual += StockActual;
+      } else {
+        // Agregar el producto al productosMap
+        productosMap[IdApi] = {
+          counter,
+          IdApi,
+          Nombre,
+          Nombre_interno,
+          Descripcion,
+          StockActual,
+          StockMinimo,
+          cat1,
+          cat2,
+          Cat3,
+          cat4,
+          cat5,
+          Marca,
+          Imagen
+        };
+      }
+      
+    }
+
+    // Convertir productosMap en un array
+    const productos = Object.values(productosMap);
+
+    // Eliminar los registros anteriores
+    await ProductoMSchema.deleteMany({});
+
+    // Guardar todos los productos actualizados
+    await ProductoMSchema.insertMany(productos);
+
+    console.log('Registros insertados en la base de datos correctamente');
+  } catch (error) {
+    console.error('Error al obtener o insertar los datos:', error.message);
+  }
 };
+
+
+
 
 //Crear nuevo listado de Productos mediante archivo JSON
 const crearProductoConArchivoJSON = async (req, res = response) => {
