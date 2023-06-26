@@ -24,6 +24,7 @@ const {
     otrosAgroquimicos,
     semillas,
     maizHibrido,
+    hortalizas,
     cercasAlambreyElectricas,
     maquinarias,
     bambasDeAgua,
@@ -59,6 +60,7 @@ router.get('/Categoria4/:categoria', obtenerCat4 );
 router.get('/CategoriaBuscar/OtrosAgroquimicos', otrosAgroquimicos );
 router.get('/CategoriaBuscar/Semillas', semillas );
 router.get('/CategoriaBuscar/Maiz', maizHibrido );
+router.get('/CategoriaBuscar/Hortalizas', hortalizas );
 router.get('/CategoriaBuscar/cercasAlambreyElectricas', cercasAlambreyElectricas );
 router.get('/CategoriaBuscar/maquinarias', maquinarias );
 router.get('/CategoriaBuscar/bambasDeAgua', bambasDeAgua );

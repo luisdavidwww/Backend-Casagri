@@ -280,7 +280,47 @@ const maizHibrido =  async(req, res) => {
 
 };
 
+const hortalizas =  async(req, res) => {
 
+  const { page, limit } = req.query;
+  const pageNumber = parseInt(page) || 1;
+  const limitNumber = parseInt(limit) || 16;
+
+
+  // Calcula el índice de inicio y la cantidad de elementos a mostrar
+  const startIndex = (pageNumber - 1) * limitNumber;
+
+  const [ total, productos ] = await Promise.all([
+    ProductoMSchema.find({ 
+      $or: [
+          { Cat3: "HORTALIZAS VARIEDADES" },
+          { Cat3: "HORTALIZAS HIBRIDOS" },
+        ]
+      }).countDocuments(),
+    ProductoMSchema.find({ 
+      $or: [
+          { Cat3: "HORTALIZAS VARIEDADES" },
+          { Cat3: "HORTALIZAS HIBRIDOS" },
+        ]
+      })
+                    .skip(startIndex)
+                    .limit(limitNumber)
+  ]);
+
+  // Calcula el número total de páginas
+  const totalPages = Math.ceil(total / limitNumber);
+
+  // Construye el objeto de respuesta con los datos paginados y los metadatos
+  const response = {
+    total,
+    totalPages,
+    currentPage: pageNumber,
+    productos,
+  };
+
+  res.status(200).json(response);
+
+};
 
   
 
@@ -747,6 +787,7 @@ const implementosVeterinarios =  async(req, res) => {
 module.exports = {
     otrosAgroquimicos,
     semillas,
+    hortalizas,
     maizHibrido,
     cercasAlambreyElectricas,
     maquinarias,
