@@ -42,6 +42,7 @@ const {
     implementosVeterinarios,
     ferreteriaAgricola,
     electricidad,
+    controlDePlaga,
         } = require('../../controllers/Productos/metodosfiltrado');
 
 const {  existeProductoPorId } = require('../../helpers/db-validators');
@@ -83,6 +84,7 @@ router.get('/CategoriaBuscar/implementosVeterinarios', implementosVeterinarios )
 //
 router.get('/CategoriaBuscar/ferreteriaAgricola', ferreteriaAgricola );
 router.get('/CategoriaBuscar/electricidad', electricidad );
+router.get('/CategoriaBuscar/controlDePlaga', controlDePlaga );
 
 
 //------------------------------------- CREAR PRODUCTOS -----------------------------------------//
