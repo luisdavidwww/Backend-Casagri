@@ -173,6 +173,7 @@ const obtenerProductoPorNombre = async(req, res = response ) => {
     const [ total, productos ] = await Promise.all([
       ProductoMSchema.find({ Nombre_interno: { $regex: nombre, $options: 'i' } }).countDocuments(),
       ProductoMSchema.find({ Nombre_interno: { $regex: nombre, $options: 'i' } })
+                      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
