@@ -193,6 +193,43 @@ const obtenerCat1 =  async(req, res) => {
 
 };
 
+  //Obtener todos los productos desde la A-Z de la Categoria 1 Paginado
+const obtenerCat1_A_Z =  async(req, res) => {
+
+  const { page, limit } = req.query;
+  const pageNumber = parseInt(page) || 1;
+  const limitNumber = parseInt(limit) || 16;
+
+  let { categoria } = req.params;
+
+  // Calcula el índice de inicio y la cantidad de elementos a mostrar
+  const startIndex = (pageNumber - 1) * limitNumber;
+
+  const [total, productos] = await Promise.all([
+    ProductoMSchema.find({ cat1: categoria }).countDocuments(),
+    ProductoMSchema.find({ cat1: categoria })
+      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
+      .skip(startIndex)
+      .limit(limitNumber),
+  ]);
+
+  // Calcula el número total de páginas
+  const totalPages = Math.ceil(total / limitNumber);
+
+  // Construye el objeto de respuesta con los datos paginados y los metadatos
+  const response = {
+    total,
+    totalPages,
+    currentPage: pageNumber,
+    productos,
+  };
+
+  res.status(200).json(response);
+
+
+};
+
+
 //Obtener todos los productos de la Categoria 2 Paginado
 const obtenerCat2 =  async(req, res) => {
 
@@ -757,6 +794,7 @@ module.exports = {
   obtenerProductos,
   obtenerProductosPaginados,
   obtenerCat1,
+  obtenerCat1_A_Z,
   obtenerCat2,
   obtenerCat3,
   obtenerCat4,

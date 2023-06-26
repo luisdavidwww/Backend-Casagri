@@ -9,6 +9,7 @@ const {
     obtenerProductos,
     obtenerProductosPaginados,
     obtenerCat1,
+    obtenerCat1_A_Z,
     obtenerCat2,
     obtenerCat3,
     obtenerCat4,
@@ -27,6 +28,7 @@ const {
     hortalizas,
     cercasAlambreyElectricas,
     maquinarias,
+    maquinariasTotal,
     bambasDeAgua,
     analgesicosAntiinflamatorios,
     antisepticosDesinfectantes,
@@ -50,6 +52,7 @@ const router = Router();
 router.get('/', obtenerProductos );
 router.get('/obtenerProductosPaginados', obtenerProductosPaginados );
 router.get('/Categoria/:categoria', obtenerCat1 );
+router.get('/CategoriaA-Z/:categoria', obtenerCat1_A_Z );
 router.get('/Categoria2/:categoria', obtenerCat2 );
 router.get('/Categoria3/:categoria', obtenerCat3 );
 router.get('/Categoria4/:categoria', obtenerCat4 );
@@ -62,6 +65,7 @@ router.get('/CategoriaBuscar/Semillas', semillas );
 router.get('/CategoriaBuscar/Maiz', maizHibrido );
 router.get('/CategoriaBuscar/Hortalizas', hortalizas );
 router.get('/CategoriaBuscar/cercasAlambreyElectricas', cercasAlambreyElectricas );
+router.get('/CategoriaBuscar/maquinariaTotal', maquinariasTotal );
 router.get('/CategoriaBuscar/maquinarias', maquinarias );
 router.get('/CategoriaBuscar/bambasDeAgua', bambasDeAgua );
 router.get('/CategoriaBuscar/analgesicosAntiinflamatorios', analgesicosAntiinflamatorios );
