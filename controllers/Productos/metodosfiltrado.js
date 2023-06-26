@@ -933,23 +933,14 @@ const controlDePlaga =  async(req, res) => {
   const [ total, productos ] = await Promise.all([
     ProductoMSchema.find({ 
         cat1: "SALUD PUBLICA" ,
-        cat2: "INSECTICIDAS",
-        cat2: "RODENTICIDAS (PRESENTACIONES M",
-        Cat3: { $nin: ["DESINFECTANTES"] },
           $or: [
-            { cat1: { $nin: ["AGROINDUSTRIAL"] } },
-            { cat2: { $nin: ["MANEJO E IDENTIFICACION"] } },
+            { Cat3: { $nin: ["DESINFECTANTES"] } },
         ]
-
       }).countDocuments(),
     ProductoMSchema.find({ 
-        cat1: "SALUD PUBLICA" ,
-        cat2: "INSECTICIDAS",
-        cat2: "RODENTICIDAS (PRESENTACIONES M",
-        Cat3: { $nin: ["DESINFECTANTES"] },
+          cat1: "SALUD PUBLICA" ,
           $or: [
-            { cat1: { $nin: ["AGROINDUSTRIAL"] } },
-            { cat2: { $nin: ["MANEJO E IDENTIFICACION"] } },
+            { Cat3: { $nin: ["DESINFECTANTES"] } },
         ]
       })
                     .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
