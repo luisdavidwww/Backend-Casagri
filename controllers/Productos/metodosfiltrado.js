@@ -397,8 +397,9 @@ const analgesicosAntiinflamatorios =  async(req, res) => {
                 { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
             ]
         })
-                      .skip(startIndex)
-                      .limit(limitNumber)
+        .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
+        .skip(startIndex)
+        .limit(limitNumber)
     ]);
 
     // Calcula el número total de páginas
@@ -440,6 +441,7 @@ const antisepticosDesinfectantes =  async(req, res) => {
                 { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
             ]
         })
+                      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
@@ -485,6 +487,7 @@ const antibioticos =  async(req, res) => {
                 { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
             ]
         })
+                      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
@@ -528,6 +531,7 @@ const antidiarreicos =  async(req, res) => {
                 { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
             ]
         })
+                      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
@@ -573,6 +577,7 @@ const bañosEctoparasitariosMatagusanos =  async(req, res) => {
                 { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
             ]
         })
+                      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
@@ -617,6 +622,7 @@ const biologicos =  async(req, res) => {
                 { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
             ]
         })
+                      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
@@ -660,6 +666,7 @@ const hemoparasiticidas =  async(req, res) => {
                 { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
             ]
         })
+                      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
@@ -704,6 +711,7 @@ const hormonales =  async(req, res) => {
                 { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
             ]
         })
+                      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
@@ -749,6 +757,7 @@ const vitaminasMinerales =  async(req, res) => {
                 { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
             ]
         })
+                      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
@@ -799,6 +808,7 @@ const implementosVeterinarios =  async(req, res) => {
                 { cat2: { $nin: ["MANEJO E IDENTIFICACION"] } }
             ]
         })
+                      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
