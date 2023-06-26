@@ -39,7 +39,9 @@ const {
     hemoparasiticidas,
     hormonales,
     vitaminasMinerales,
-    implementosVeterinarios
+    implementosVeterinarios,
+    ferreteriaAgricola,
+    electricidad,
         } = require('../../controllers/Productos/metodosfiltrado');
 
 const {  existeProductoPorId } = require('../../helpers/db-validators');
@@ -78,6 +80,9 @@ router.get('/CategoriaBuscar/hemoparasiticidas', hemoparasiticidas );
 router.get('/CategoriaBuscar/hormonales', hormonales );
 router.get('/CategoriaBuscar/vitaminasMinerales', vitaminasMinerales );
 router.get('/CategoriaBuscar/implementosVeterinarios', implementosVeterinarios );
+//
+router.get('/CategoriaBuscar/ferreteriaAgricola', ferreteriaAgricola );
+router.get('/CategoriaBuscar/electricidad', electricidad );
 
 
 //------------------------------------- CREAR PRODUCTOS -----------------------------------------//

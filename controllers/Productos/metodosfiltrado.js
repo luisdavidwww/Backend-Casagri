@@ -830,6 +830,93 @@ const implementosVeterinarios =  async(req, res) => {
 
 
 
+//------------------------------------- Fereteria Agrícoña -----------------------------------------//
+
+//VITAMINAS Y MINERALES
+const ferreteriaAgricola =  async(req, res) => {
+
+  const { page, limit } = req.query;
+  const pageNumber = parseInt(page) || 1;
+  const limitNumber = parseInt(limit) || 16;
+
+
+  // Calcula el índice de inicio y la cantidad de elementos a mostrar
+  const startIndex = (pageNumber - 1) * limitNumber;
+
+  const [ total, productos ] = await Promise.all([
+    ProductoMSchema.find({ 
+          cat1: "FERRETERIA",
+          $or: [
+              { cat2: { $nin: ["ELECTRICIDAD"] } }
+          ]
+      }).countDocuments(),
+    ProductoMSchema.find({ 
+          cat1: "FERRETERIA",
+          $or: [
+              { cat2: { $nin: ["ELECTRICIDAD"] } }
+          ]
+      })
+                    .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
+                    .skip(startIndex)
+                    .limit(limitNumber)
+  ]);
+
+  // Calcula el número total de páginas
+  const totalPages = Math.ceil(total / limitNumber);
+
+  // Construye el objeto de respuesta con los datos paginados y los metadatos
+  const response = {
+    total,
+    totalPages,
+    currentPage: pageNumber,
+    productos,
+  };
+
+  res.status(200).json(response);
+
+};
+
+
+//Electricidad
+const electricidad =  async(req, res) => {
+
+  const { page, limit } = req.query;
+  const pageNumber = parseInt(page) || 1;
+  const limitNumber = parseInt(limit) || 16;
+
+
+  // Calcula el índice de inicio y la cantidad de elementos a mostrar
+  const startIndex = (pageNumber - 1) * limitNumber;
+
+  const [ total, productos ] = await Promise.all([
+    ProductoMSchema.find({ 
+          cat2: "ELECTRICIDAD",
+      }).countDocuments(),
+    ProductoMSchema.find({ 
+          cat2: "ELECTRICIDAD",
+      })
+                    .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
+                    .skip(startIndex)
+                    .limit(limitNumber)
+  ]);
+
+  // Calcula el número total de páginas
+  const totalPages = Math.ceil(total / limitNumber);
+
+  // Construye el objeto de respuesta con los datos paginados y los metadatos
+  const response = {
+    total,
+    totalPages,
+    currentPage: pageNumber,
+    productos,
+  };
+
+  res.status(200).json(response);
+
+};
+
+
+
 
 
 
@@ -855,5 +942,7 @@ module.exports = {
     hemoparasiticidas,
     hormonales,
     vitaminasMinerales,
-    implementosVeterinarios
+    implementosVeterinarios,
+    ferreteriaAgricola,
+    electricidad,
 }
