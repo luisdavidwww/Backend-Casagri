@@ -157,6 +157,45 @@ const obtenerProductosPaginados = async (req, res) => {
   }
 };
 
+//Obtener Productos por Nombre
+const obtenerProductoPorNombre = async(req, res = response ) => {
+
+  try {
+    const { page, limit } = req.query;
+    const pageNumber = parseInt(page) || 1;
+    const limitNumber = parseInt(limit) || 16;
+
+    // Calcula el índice de inicio y la cantidad de elementos a mostrar
+    const startIndex = (pageNumber - 1) * limitNumber;
+
+    let { nombre } = req.params;
+
+    const [ total, productos ] = await Promise.all([
+      ProductoMSchema.find({ Nombre_interno: { $regex: nombre, $options: 'i' } }).countDocuments(),
+      ProductoMSchema.find({ Nombre_interno: { $regex: nombre, $options: 'i' } })
+                      .skip(startIndex)
+                      .limit(limitNumber)
+    ]);
+
+    // Calcula el número total de páginas
+    const totalPages = Math.ceil(total / limitNumber);
+
+    // Construye el objeto de respuesta con los datos paginados y los metadatos
+    const response = {
+      total,
+      totalPages,
+      currentPage: pageNumber,
+      productos,
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error('Error al obtener los productos paginados:', error.message);
+    res.status(500).json({ error: 'Error al obtener los productos paginados' });
+  }
+
+}
+
 //Obtener todos los productos de la Categoria 1 Paginado
 const obtenerCat1 =  async(req, res) => {
 
@@ -792,6 +831,7 @@ module.exports = {
   crearProducto,
   crearProductoTotal,
   obtenerProductos,
+  obtenerProductoPorNombre,
   obtenerProductosPaginados,
   obtenerCat1,
   obtenerCat1_A_Z,

@@ -7,6 +7,7 @@ const {
     crearProducto,
     crearProductoTotal,
     obtenerProductos,
+    obtenerProductoPorNombre,
     obtenerProductosPaginados,
     obtenerCat1,
     obtenerCat1_A_Z,
@@ -53,6 +54,7 @@ const router = Router();
 //------------------------------------- OBTENER PRODUCTOS -----------------------------------------//
 
 router.get('/', obtenerProductos );
+router.get('/Buscar/:nombre', obtenerProductoPorNombre );
 router.get('/obtenerProductosPaginados', obtenerProductosPaginados );
 router.get('/Categoria/:categoria', obtenerCat1 );
 router.get('/CategoriaA-Z/:categoria', obtenerCat1_A_Z );
