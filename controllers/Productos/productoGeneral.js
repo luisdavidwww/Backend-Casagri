@@ -223,9 +223,9 @@ const obtenerCat1 =  async(req, res) => {
     const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Obtén todos los componentes únicos componentes: componentesArray
-    const componentes = await ProductoMSchema.distinct('cat5',  { cat1: categoria });
+    const componentes = await ProductoMSchema.distinct('cat4',  { cat1: categoria });
     // Crea un arreglo de objetos para las marcas en el formato requerido
-    const componentesArray = componentes.map((component) => ({ cat5: component }));
+    const componentesArray = componentes.map((component) => ({ cat4: component }));
 
 
     // Calcula el número total de páginas
@@ -272,9 +272,9 @@ const obtenerCat1_A_Z =  async(req, res) => {
   const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
   // Obtén todos los componentes únicos- componentes: componentesArray
-  const componentes = await ProductoMSchema.distinct('cat5',  { cat1: categoria } );
+  const componentes = await ProductoMSchema.distinct('cat4',  { cat1: categoria } );
   // Crea un arreglo de objetos para las marcas en el formato requerido
-  const componentesArray = componentes.map((component) => ({ cat5: component }));
+  const componentesArray = componentes.map((component) => ({ cat4: component }));
 
   // Calcula el número total de páginas
   const totalPages = Math.ceil(total / limitNumber);
@@ -321,9 +321,9 @@ const obtenerCat2 =  async(req, res) => {
   const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
   // Obtén todos los componentes únicos- componentes: componentesArray
-  const componentes = await ProductoMSchema.distinct('cat5', { cat2: categoria });
+  const componentes = await ProductoMSchema.distinct('cat4', { cat2: categoria });
   // Crea un arreglo de objetos para las marcas en el formato requerido
-  const componentesArray = componentes.map((component) => ({ cat5: component }));
+  const componentesArray = componentes.map((component) => ({ cat4: component }));
 
   // Calcula el número total de páginas
   const totalPages = Math.ceil(total / limitNumber);
@@ -368,9 +368,9 @@ const obtenerCat3 =  async(req, res) => {
   const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
   // Obtén todos los componentes únicos- componentes: componentesArray
-  const componentes = await ProductoMSchema.distinct('cat5', { Cat3: categoria });
+  const componentes = await ProductoMSchema.distinct('cat4', { Cat3: categoria });
   // Crea un arreglo de objetos para las marcas en el formato requerido
-  const componentesArray = componentes.map((component) => ({ cat5: component }));
+  const componentesArray = componentes.map((component) => ({ cat4: component }));
 
   // Calcula el número total de páginas
   const totalPages = Math.ceil(total / limitNumber);
@@ -415,9 +415,9 @@ const obtenerCat4 =  async(req, res) => {
   const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
   // Obtén todos los componentes únicos- componentes: componentesArray
-  const componentes = await ProductoMSchema.distinct('cat5', { cat4: categoria });
+  const componentes = await ProductoMSchema.distinct('cat4', { cat4: categoria });
   // Crea un arreglo de objetos para las marcas en el formato requerido
-  const componentesArray = componentes.map((component) => ({ cat5: component }));
+  const componentesArray = componentes.map((component) => ({ cat4: component }));
 
   // Calcula el número total de páginas
   const totalPages = Math.ceil(total / limitNumber);
