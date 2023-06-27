@@ -233,7 +233,7 @@ const obtenerCat1 =  async(req, res) => {
 
 };
 
-  //Obtener todos los productos desde la A-Z de la Categoria 1 Paginado
+//Obtener todos los productos desde la A-Z de la Categoria 1 Paginado
 const obtenerCat1_A_Z =  async(req, res) => {
 
   const { page, limit } = req.query;
@@ -253,6 +253,9 @@ const obtenerCat1_A_Z =  async(req, res) => {
       .limit(limitNumber),
   ]);
 
+  // Obtén todas las marcas únicas de los productos
+  const marcas = await ProductoMSchema.distinct('Marca', { cat1: categoria });
+
   // Calcula el número total de páginas
   const totalPages = Math.ceil(total / limitNumber);
 
@@ -262,6 +265,7 @@ const obtenerCat1_A_Z =  async(req, res) => {
     totalPages,
     currentPage: pageNumber,
     productos,
+    marcas
   };
 
   res.status(200).json(response);
