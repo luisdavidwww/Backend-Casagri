@@ -168,11 +168,21 @@ const obtenerProductoPorNombre = async(req, res = response ) => {
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
+    //let { nombre } = req.params;
+
     let { nombre } = req.params;
 
+    const query = {
+      $or: [
+        { Nombre_interno: { $regex: nombre, $options: 'i' } },
+        { cat4: { $regex: nombre, $options: 'i' } },
+        { Marca: { $regex: nombre, $options: 'i' } }
+      ]
+    };
+
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ Nombre_interno: { $regex: nombre, $options: 'i' } }).countDocuments(),
-      ProductoMSchema.find({ Nombre_interno: { $regex: nombre, $options: 'i' } })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
                       .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
