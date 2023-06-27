@@ -2,11 +2,7 @@ const { response } = require('express');
 const ProductoMSchema = require('../../models/Productos/productoM');
 
 
-
-
 //------------------------------------- FILTRAR CATEGORIAS DE PRODUCTOS -----------------------------------------/
-
-
 
 
 //------------------------------------- Agroindustrial -----------------------------------------//
@@ -17,28 +13,31 @@ const otrosAgroquimicos =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+      $or: [
+        { Cat3: "FITORREGULADORES" },
+        { Cat3: "REGULADORES DE pH" },
+        { Cat3: "ADHERENTES-HUMECTANTES" }
+      ]
+    };
+
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ 
-        $or: [
-            { Cat3: "FITORREGULADORES" },
-            { Cat3: "REGULADORES DE pH" },
-            { Cat3: "ADHERENTES-HUMECTANTES" }
-          ]
-        }).countDocuments(),
-      ProductoMSchema.find({ 
-        $or: [
-            { Cat3: "FITORREGULADORES" },
-            { Cat3: "REGULADORES DE pH" },
-            { Cat3: "ADHERENTES-HUMECTANTES" }
-          ]
-        })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -49,6 +48,7 @@ const otrosAgroquimicos =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
@@ -62,26 +62,32 @@ const cercasAlambreyElectricas =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+      $or: [
+        { cat2: "CERCAS" },
+        { cat2: "MALLAS Y PLÁSTICOS DE USOS VAR" },
+      ]
+    };
+
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ 
-        $or: [
-            { cat2: "CERCAS" },
-            { cat2: "MALLAS Y PLÁSTICOS DE USOS VAR" },
-          ]
-        }).countDocuments(),
-      ProductoMSchema.find({ 
-        $or: [
-            { cat2: "CERCAS" },
-            { cat2: "MALLAS Y PLÁSTICOS DE USOS VAR" },
-          ]
-        })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
+                      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
+
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -92,6 +98,7 @@ const cercasAlambreyElectricas =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
@@ -105,34 +112,33 @@ const maquinarias =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+      $or: [
+        { Cat3: "MOTOCULTORES" },
+        { cat2: "MAQUINAS PARA LA SIEMBRA" },
+        { cat2: "MAQUINARIA PARA LA RECOLECCION" },
+        { cat2: "MAQUINAS PARA EL ABONO Y FERTI" },
+        { cat2: "MAQUINARIA PROCESAMIENTO MATER" },
+        { cat2: "EQUIPOS DE FUMIGACIÓN" },
+      ],
+    };
+
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ 
-        $or: [
-            { Cat3: "MOTOCULTORES" },
-            { cat2: "MAQUINAS PARA LA SIEMBRA" },
-            { cat2: "MAQUINARIA PARA LA RECOLECCION" },
-            { cat2: "MAQUINAS PARA EL ABONO Y FERTI" },
-            { cat2: "MAQUINARIA PROCESAMIENTO MATER" },
-            { cat2: "EQUIPOS DE FUMIGACIÓN" },
-          ]
-        }).countDocuments(),
-      ProductoMSchema.find({ 
-        $or: [
-            { Cat3: "MOTOCULTORES" },
-            { cat2: "MAQUINAS PARA LA SIEMBRA" },
-            { cat2: "MAQUINARIA PARA LA RECOLECCION" },
-            { cat2: "MAQUINAS PARA EL ABONO Y FERTI" },
-            { cat2: "MAQUINARIA PROCESAMIENTO MATER" },
-            { cat2: "EQUIPOS DE FUMIGACIÓN" },
-          ]
-        })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -143,6 +149,7 @@ const maquinarias =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
@@ -156,26 +163,30 @@ const maquinariasTotal =  async(req, res) => {
   const pageNumber = parseInt(page) || 1;
   const limitNumber = parseInt(limit) || 16;
 
+  //Condiciones para el filtro
+  const query = {
+    $or: [
+      { cat1: "MAQUINARIA E IMPLEMENTOS" },
+      { Cat3: "ASPERJADORAS" },
+    ]
+  };
+
 
   // Calcula el índice de inicio y la cantidad de elementos a mostrar
   const startIndex = (pageNumber - 1) * limitNumber;
 
   const [ total, productos ] = await Promise.all([
-    ProductoMSchema.find({ 
-      $or: [
-          { cat1: "MAQUINARIA E IMPLEMENTOS" },
-          { Cat3: "ASPERJADORAS" },
-        ]
-      }).countDocuments(),
-    ProductoMSchema.find({ 
-      $or: [
-        { cat1: "MAQUINARIA E IMPLEMENTOS" },
-        { Cat3: "ASPERJADORAS" },
-        ]
-      })
+    ProductoMSchema.find(query).countDocuments(),
+    ProductoMSchema.find(query)
                     .skip(startIndex)
                     .limit(limitNumber)
   ]);
+
+
+  // Obtén todas las marcas únicas de los productos
+  const marcas = await ProductoMSchema.distinct('Marca', query);
+  // Crea un arreglo de objetos para las marcas en el formato requerido
+  const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
   // Calcula el número total de páginas
   const totalPages = Math.ceil(total / limitNumber);
@@ -186,6 +197,7 @@ const maquinariasTotal =  async(req, res) => {
     totalPages,
     currentPage: pageNumber,
     productos,
+    marcas: marcasArray
   };
 
   res.status(200).json(response);
@@ -199,25 +211,28 @@ const bambasDeAgua =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+      $or: [
+        { Cat3: "BOMBAS DE AGUA USO DOMESTICO" },
+        { Cat3: "BOMBAS DE AGUA PORTATILES" }
+      ]
+    };
+
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ 
-        $or: [
-            { Cat3: "BOMBAS DE AGUA USO DOMESTICO" },
-            { Cat3: "BOMBAS DE AGUA PORTATILES" }
-          ]
-        }).countDocuments(),
-      ProductoMSchema.find({ 
-        $or: [
-            { Cat3: "BOMBAS DE AGUA USO DOMESTICO" },
-            { Cat3: "BOMBAS DE AGUA PORTATILES" }
-          ]
-        })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -228,6 +243,7 @@ const bambasDeAgua =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
@@ -245,26 +261,29 @@ const semillas =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+      cat2: "SEMILLAS",
+        $or: [
+            { cat4: { $nin: ["BOLSAS", "BANDEJAS"] } }
+          ]
+      };
+
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({
-        cat2: "SEMILLAS",
-        $or: [
-            { cat4: { $nin: ["BOLSAS", "BANDEJAS"] } }
-          ]
-      }).countDocuments(),
-      ProductoMSchema.find({
-        cat2: "SEMILLAS",
-        $or: [
-            { cat4: { $nin: ["BOLSAS", "BANDEJAS"] } }
-          ]
-      })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -275,6 +294,7 @@ const semillas =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
@@ -287,26 +307,29 @@ const maizHibrido =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+      $or: [
+        { cat4: "MAIZ AMARILLO" },
+        { cat4: "MAIZ BLANCO" },
+      ]
+    };
+
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ 
-        $or: [
-            { cat4: "MAIZ AMARILLO" },
-            { cat4: "MAIZ BLANCO" },
-          ]
-        }).countDocuments(),
-      ProductoMSchema.find({ 
-        $or: [
-            { cat4: "MAIZ AMARILLO" },
-            { cat4: "MAIZ BLANCO" },
-          ]
-        })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -317,6 +340,7 @@ const maizHibrido =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
@@ -329,26 +353,28 @@ const hortalizas =  async(req, res) => {
   const pageNumber = parseInt(page) || 1;
   const limitNumber = parseInt(limit) || 16;
 
+  //Condiciones para el filtro
+  const query = {
+    $or: [
+      { Cat3: "HORTALIZAS VARIEDADES" },
+      { Cat3: "HORTALIZAS HIBRIDOS" },
+    ]
+  };
 
   // Calcula el índice de inicio y la cantidad de elementos a mostrar
   const startIndex = (pageNumber - 1) * limitNumber;
 
   const [ total, productos ] = await Promise.all([
-    ProductoMSchema.find({ 
-      $or: [
-          { Cat3: "HORTALIZAS VARIEDADES" },
-          { Cat3: "HORTALIZAS HIBRIDOS" },
-        ]
-      }).countDocuments(),
-    ProductoMSchema.find({ 
-      $or: [
-          { Cat3: "HORTALIZAS VARIEDADES" },
-          { Cat3: "HORTALIZAS HIBRIDOS" },
-        ]
-      })
+    ProductoMSchema.find(query).countDocuments(),
+    ProductoMSchema.find(query)
                     .skip(startIndex)
                     .limit(limitNumber)
   ]);
+
+  // Obtén todas las marcas únicas de los productos
+  const marcas = await ProductoMSchema.distinct('Marca', query);
+  // Crea un arreglo de objetos para las marcas en el formato requerido
+  const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
   // Calcula el número total de páginas
   const totalPages = Math.ceil(total / limitNumber);
@@ -359,6 +385,7 @@ const hortalizas =  async(req, res) => {
     totalPages,
     currentPage: pageNumber,
     productos,
+    marcas: marcasArray
   };
 
   res.status(200).json(response);
@@ -376,31 +403,32 @@ const analgesicosAntiinflamatorios =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+      Cat3: "ANALGESICO Y ANTIINFLAMATORIO" ,
+      Cat3: "ANTIDOTOS, ANTITOXICOS Y PARAS" ,
+      Cat3: "ANTITIMPÀNICO", 
+      $or: [
+          { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
+        ]
+    };
+
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ 
-            Cat3: "ANALGESICO Y ANTIINFLAMATORIO" ,
-            Cat3: "ANTIDOTOS, ANTITOXICOS Y PARAS" ,
-            Cat3: "ANTITIMPÀNICO", 
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        }).countDocuments(),
-      ProductoMSchema.find({ 
-            Cat3: "ANALGESICO Y ANTIINFLAMATORIO" ,
-            Cat3: "ANTIDOTOS, ANTITOXICOS Y PARAS" ,
-            Cat3: "ANTITIMPÀNICO", 
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
         .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
         .skip(startIndex)
         .limit(limitNumber)
     ]);
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -411,6 +439,7 @@ const analgesicosAntiinflamatorios =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
@@ -424,27 +453,30 @@ const antisepticosDesinfectantes =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+      Cat3: "ANTISEPTICOS-DESINFECTANTES",
+            $or: [
+                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
+            ]
+    };
+
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ 
-            Cat3: "ANTISEPTICOS-DESINFECTANTES",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        }).countDocuments(),
-      ProductoMSchema.find({ 
-            Cat3: "ANTISEPTICOS-DESINFECTANTES",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
                       .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -455,6 +487,7 @@ const antisepticosDesinfectantes =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
@@ -468,29 +501,31 @@ const antibioticos =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+            Cat3: "ANTIBIOTICOS",
+            Cat3: "ANTIMASTITICOS",
+            $or: [
+                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
+            ]
+    };
+
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ 
-            Cat3: "ANTIBIOTICOS",
-            Cat3: "ANTIMASTITICOS",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        }).countDocuments(),
-      ProductoMSchema.find({ 
-            Cat3: "ANTIBIOTICOS",
-            Cat3: "ANTIMASTITICOS",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
                       .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -501,6 +536,7 @@ const antibioticos =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
@@ -514,27 +550,30 @@ const antidiarreicos =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+            Cat3: "ANTIDIARREICOS",
+            $or: [
+                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
+            ]
+    };
+
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ 
-            Cat3: "ANTIDIARREICOS",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        }).countDocuments(),
-      ProductoMSchema.find({ 
-            Cat3: "ANTIDIARREICOS",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
                       .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -545,11 +584,13 @@ const antidiarreicos =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
 
 };
+
 
 //BAÑOS, ECTOPARASITARIOS Y MATAGUSANOS
 const bañosEctoparasitariosMatagusanos =  async(req, res) => {
@@ -558,29 +599,31 @@ const bañosEctoparasitariosMatagusanos =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+          Cat3: "ANTIPARASITARIO EXTERNO (BAÑOS",
+          Cat3: "TOPICO ANTIPARASITARIO",
+          $or: [
+              { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
+          ]
+      };
+
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ 
-            Cat3: "ANTIPARASITARIO EXTERNO (BAÑOS",
-            Cat3: "TOPICO ANTIPARASITARIO",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        }).countDocuments(),
-      ProductoMSchema.find({ 
-            Cat3: "ANTIPARASITARIO EXTERNO (BAÑOS",
-            Cat3: "TOPICO ANTIPARASITARIO",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
                       .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -591,6 +634,7 @@ const bañosEctoparasitariosMatagusanos =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
@@ -605,27 +649,30 @@ const biologicos =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+            Cat3: "VACUNAS Y BACTERINAS",
+            $or: [
+                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
+            ]
+    };
+
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ 
-            Cat3: "VACUNAS Y BACTERINAS",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        }).countDocuments(),
-      ProductoMSchema.find({ 
-            Cat3: "VACUNAS Y BACTERINAS",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
                       .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -636,6 +683,7 @@ const biologicos =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
@@ -649,27 +697,30 @@ const hemoparasiticidas =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+            Cat3: "HEMOPARASITICIDA",
+            $or: [
+                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
+            ]
+    };
+
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ 
-            Cat3: "HEMOPARASITICIDA",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        }).countDocuments(),
-      ProductoMSchema.find({ 
-            Cat3: "HEMOPARASITICIDA",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
                       .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -680,6 +731,7 @@ const hemoparasiticidas =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
@@ -694,27 +746,30 @@ const hormonales =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+            Cat3: "HORMONALES PARA REPRODUCCION",
+            $or: [
+                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
+            ]
+    };
+
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ 
-            Cat3: "HORMONALES PARA REPRODUCCION",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        }).countDocuments(),
-      ProductoMSchema.find({ 
-            Cat3: "HORMONALES PARA REPRODUCCION",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
                       .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -725,6 +780,7 @@ const hormonales =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
@@ -738,29 +794,31 @@ const vitaminasMinerales =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+            Cat3: "RECONSTITUYENTES, REHIDRATANTE",
+            Cat3: "VITAMINAS",
+            $or: [
+                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
+            ]
+    };
+
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ 
-            Cat3: "RECONSTITUYENTES, REHIDRATANTE",
-            Cat3: "VITAMINAS",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        }).countDocuments(),
-      ProductoMSchema.find({ 
-            Cat3: "RECONSTITUYENTES, REHIDRATANTE",
-            Cat3: "VITAMINAS",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
-        })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
                       .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -771,6 +829,7 @@ const vitaminasMinerales =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
@@ -791,27 +850,30 @@ const implementosVeterinarios =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
+    //Condiciones para el filtro
+    const query = {
+            cat2: "IMPLEMENTOS VETERINARIOS",
+            $or: [
+                { cat2: { $nin: ["MANEJO E IDENTIFICACION"] } }
+            ]
+    };
+
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find({ 
-            cat2: "IMPLEMENTOS VETERINARIOS",
-            $or: [
-                { cat2: { $nin: ["MANEJO E IDENTIFICACION"] } }
-            ]
-        }).countDocuments(),
-      ProductoMSchema.find({ 
-            cat2: "IMPLEMENTOS VETERINARIOS",
-            $or: [
-                { cat2: { $nin: ["MANEJO E IDENTIFICACION"] } }
-            ]
-        })
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
                       .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+    // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -822,6 +884,7 @@ const implementosVeterinarios =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray
     };
 
     res.status(200).json(response);
@@ -839,27 +902,30 @@ const ferreteriaAgricola =  async(req, res) => {
   const pageNumber = parseInt(page) || 1;
   const limitNumber = parseInt(limit) || 16;
 
+  //Condiciones para el filtro
+  const query = {
+          cat1: "FERRETERIA",
+          $or: [
+              { cat2: { $nin: ["ELECTRICIDAD"] } }
+          ]
+            };
+
 
   // Calcula el índice de inicio y la cantidad de elementos a mostrar
   const startIndex = (pageNumber - 1) * limitNumber;
 
   const [ total, productos ] = await Promise.all([
-    ProductoMSchema.find({ 
-          cat1: "FERRETERIA",
-          $or: [
-              { cat2: { $nin: ["ELECTRICIDAD"] } }
-          ]
-      }).countDocuments(),
-    ProductoMSchema.find({ 
-          cat1: "FERRETERIA",
-          $or: [
-              { cat2: { $nin: ["ELECTRICIDAD"] } }
-          ]
-      })
+    ProductoMSchema.find(query).countDocuments(),
+    ProductoMSchema.find(query)
                     .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                     .skip(startIndex)
                     .limit(limitNumber)
   ]);
+
+  // Obtén todas las marcas únicas de los productos
+  const marcas = await ProductoMSchema.distinct('Marca', query);
+  // Crea un arreglo de objetos para las marcas en el formato requerido
+  const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
   // Calcula el número total de páginas
   const totalPages = Math.ceil(total / limitNumber);
@@ -870,6 +936,7 @@ const ferreteriaAgricola =  async(req, res) => {
     totalPages,
     currentPage: pageNumber,
     productos,
+    marcas: marcasArray
   };
 
   res.status(200).json(response);
@@ -884,21 +951,26 @@ const electricidad =  async(req, res) => {
   const pageNumber = parseInt(page) || 1;
   const limitNumber = parseInt(limit) || 16;
 
+  //Condiciones para el filtro
+  const query = {cat2: "ELECTRICIDAD"};
+
+
 
   // Calcula el índice de inicio y la cantidad de elementos a mostrar
   const startIndex = (pageNumber - 1) * limitNumber;
 
   const [ total, productos ] = await Promise.all([
-    ProductoMSchema.find({ 
-          cat2: "ELECTRICIDAD",
-      }).countDocuments(),
-    ProductoMSchema.find({ 
-          cat2: "ELECTRICIDAD",
-      })
+    ProductoMSchema.find(query).countDocuments(),
+    ProductoMSchema.find(query)
                     .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                     .skip(startIndex)
                     .limit(limitNumber)
   ]);
+
+  // Obtén todas las marcas únicas de los productos
+  const marcas = await ProductoMSchema.distinct('Marca', query);
+  // Crea un arreglo de objetos para las marcas en el formato requerido
+  const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
   // Calcula el número total de páginas
   const totalPages = Math.ceil(total / limitNumber);
@@ -909,6 +981,7 @@ const electricidad =  async(req, res) => {
     totalPages,
     currentPage: pageNumber,
     productos,
+    marcas: marcasArray
   };
 
   res.status(200).json(response);
@@ -926,27 +999,30 @@ const controlDePlaga =  async(req, res) => {
   const pageNumber = parseInt(page) || 1;
   const limitNumber = parseInt(limit) || 16;
 
+  //Condiciones para el filtro
+  const query = {
+    cat1: "SALUD PUBLICA" ,
+          $or: [
+            { Cat3: { $nin: ["DESINFECTANTES"] } },
+        ]
+      };
+
 
   // Calcula el índice de inicio y la cantidad de elementos a mostrar
   const startIndex = (pageNumber - 1) * limitNumber;
 
   const [ total, productos ] = await Promise.all([
-    ProductoMSchema.find({ 
-        cat1: "SALUD PUBLICA" ,
-          $or: [
-            { Cat3: { $nin: ["DESINFECTANTES"] } },
-        ]
-      }).countDocuments(),
-    ProductoMSchema.find({ 
-          cat1: "SALUD PUBLICA" ,
-          $or: [
-            { Cat3: { $nin: ["DESINFECTANTES"] } },
-        ]
-      })
+    ProductoMSchema.find(query).countDocuments(),
+    ProductoMSchema.find(query)
                     .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                     .skip(startIndex)
                     .limit(limitNumber)
   ]);
+
+  // Obtén todas las marcas únicas de los productos
+  const marcas = await ProductoMSchema.distinct('Marca', query);
+  // Crea un arreglo de objetos para las marcas en el formato requerido
+  const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
   // Calcula el número total de páginas
   const totalPages = Math.ceil(total / limitNumber);
@@ -957,6 +1033,7 @@ const controlDePlaga =  async(req, res) => {
     totalPages,
     currentPage: pageNumber,
     productos,
+    marcas: marcasArray
   };
 
   res.status(200).json(response);
