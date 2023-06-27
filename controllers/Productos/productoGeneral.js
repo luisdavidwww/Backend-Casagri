@@ -217,6 +217,9 @@ const obtenerCat1 =  async(req, res) => {
                       .limit(limitNumber)
     ]);
 
+     // Obtén todas las marcas únicas de los productos
+    const marcas = await ProductoMSchema.distinct('Marca', { cat1: categoria });
+
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
 
@@ -226,6 +229,7 @@ const obtenerCat1 =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas,
     };
 
     res.status(200).json(response);
@@ -294,6 +298,9 @@ const obtenerCat2 =  async(req, res) => {
                     .limit(limitNumber)
   ]);
 
+  // Obtén todas las marcas únicas de los productos
+  const marcas = await ProductoMSchema.distinct('Marca', { cat2: categoria });
+
   // Calcula el número total de páginas
   const totalPages = Math.ceil(total / limitNumber);
 
@@ -303,6 +310,7 @@ const obtenerCat2 =  async(req, res) => {
     totalPages,
     currentPage: pageNumber,
     productos,
+    marcas
   };
 
   res.status(200).json(response);
@@ -329,6 +337,9 @@ const obtenerCat3 =  async(req, res) => {
                     .limit(limitNumber)
   ]);
 
+  // Obtén todas las marcas únicas de los productos
+  const marcas = await ProductoMSchema.distinct('Marca', { Cat3: categoria });
+
   // Calcula el número total de páginas
   const totalPages = Math.ceil(total / limitNumber);
 
@@ -338,6 +349,7 @@ const obtenerCat3 =  async(req, res) => {
     totalPages,
     currentPage: pageNumber,
     productos,
+    marcas,
   };
 
   res.status(200).json(response);
