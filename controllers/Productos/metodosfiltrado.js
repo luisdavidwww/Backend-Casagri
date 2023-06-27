@@ -39,6 +39,11 @@ const otrosAgroquimicos =  async(req, res) => {
     // Crea un arreglo de objetos para las marcas en el formato requerido
     const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
+    // Obtén todos los componentes únicos 
+    const componentes = await ProductoMSchema.distinct('cat5', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const componentesArray = componentes.map((component) => ({ cat5: component }));
+
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
 
@@ -48,7 +53,8 @@ const otrosAgroquimicos =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
-      marcas: marcasArray
+      marcas: marcasArray,
+      componentes: componentesArray
     };
 
     res.status(200).json(response);
@@ -430,6 +436,12 @@ const analgesicosAntiinflamatorios =  async(req, res) => {
     // Crea un arreglo de objetos para las marcas en el formato requerido
     const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
+
+    // Obtén todos los componentes únicos 
+    const componentes = await ProductoMSchema.distinct('cat5', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const componentesArray = componentes.map((component) => ({ cat5: component }));
+
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
 
@@ -439,7 +451,8 @@ const analgesicosAntiinflamatorios =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
-      marcas: marcasArray
+      marcas: marcasArray,
+      componentes: componentesArray
     };
 
     res.status(200).json(response);
@@ -478,6 +491,11 @@ const antisepticosDesinfectantes =  async(req, res) => {
     // Crea un arreglo de objetos para las marcas en el formato requerido
     const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
+    // Obtén todos los componentes únicos 
+    const componentes = await ProductoMSchema.distinct('cat5', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const componentesArray = componentes.map((component) => ({ cat5: component }));
+
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
 
@@ -487,10 +505,12 @@ const antisepticosDesinfectantes =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
-      marcas: marcasArray
+      marcas: marcasArray,
+      componentes: componentesArray
     };
 
     res.status(200).json(response);
+    
 
 };
 
@@ -527,6 +547,11 @@ const antibioticos =  async(req, res) => {
     // Crea un arreglo de objetos para las marcas en el formato requerido
     const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
+    // Obtén todos los componentes únicos 
+    const componentes = await ProductoMSchema.distinct('cat5', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const componentesArray = componentes.map((component) => ({ cat5: component }));
+
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
 
@@ -536,7 +561,8 @@ const antibioticos =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
-      marcas: marcasArray
+      marcas: marcasArray,
+      componentes: componentesArray
     };
 
     res.status(200).json(response);
@@ -575,6 +601,11 @@ const antidiarreicos =  async(req, res) => {
     // Crea un arreglo de objetos para las marcas en el formato requerido
     const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
+    // Obtén todos los componentes únicos 
+    const componentes = await ProductoMSchema.distinct('cat5', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const componentesArray = componentes.map((component) => ({ cat5: component }));
+
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
 
@@ -584,7 +615,8 @@ const antidiarreicos =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
-      marcas: marcasArray
+      marcas: marcasArray,
+      componentes: componentesArray
     };
 
     res.status(200).json(response);
@@ -625,6 +657,11 @@ const bañosEctoparasitariosMatagusanos =  async(req, res) => {
     // Crea un arreglo de objetos para las marcas en el formato requerido
     const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
+    // Obtén todos los componentes únicos 
+    const componentes = await ProductoMSchema.distinct('cat5', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const componentesArray = componentes.map((component) => ({ cat5: component }));
+
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
 
@@ -634,7 +671,8 @@ const bañosEctoparasitariosMatagusanos =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
-      marcas: marcasArray
+      marcas: marcasArray,
+      componentes: componentesArray
     };
 
     res.status(200).json(response);
@@ -674,6 +712,11 @@ const biologicos =  async(req, res) => {
     // Crea un arreglo de objetos para las marcas en el formato requerido
     const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
+    // Obtén todos los componentes únicos 
+    const componentes = await ProductoMSchema.distinct('cat5', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const componentesArray = componentes.map((component) => ({ cat5: component }));
+
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
 
@@ -683,7 +726,8 @@ const biologicos =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
-      marcas: marcasArray
+      marcas: marcasArray,
+      componentes: componentesArray
     };
 
     res.status(200).json(response);
@@ -722,6 +766,11 @@ const hemoparasiticidas =  async(req, res) => {
     // Crea un arreglo de objetos para las marcas en el formato requerido
     const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
+    // Obtén todos los componentes únicos 
+    const componentes = await ProductoMSchema.distinct('cat5', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const componentesArray = componentes.map((component) => ({ cat5: component }));
+
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
 
@@ -731,7 +780,8 @@ const hemoparasiticidas =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
-      marcas: marcasArray
+      marcas: marcasArray,
+      componentes: componentesArray
     };
 
     res.status(200).json(response);
@@ -771,6 +821,11 @@ const hormonales =  async(req, res) => {
     // Crea un arreglo de objetos para las marcas en el formato requerido
     const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
+    // Obtén todos los componentes únicos 
+    const componentes = await ProductoMSchema.distinct('cat5', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const componentesArray = componentes.map((component) => ({ cat5: component }));
+
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
 
@@ -780,7 +835,8 @@ const hormonales =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
-      marcas: marcasArray
+      marcas: marcasArray,
+      componentes: componentesArray
     };
 
     res.status(200).json(response);
@@ -820,6 +876,11 @@ const vitaminasMinerales =  async(req, res) => {
     // Crea un arreglo de objetos para las marcas en el formato requerido
     const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
+    // Obtén todos los componentes únicos 
+    const componentes = await ProductoMSchema.distinct('cat5', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const componentesArray = componentes.map((component) => ({ cat5: component }));
+
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
 
@@ -829,7 +890,8 @@ const vitaminasMinerales =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
-      marcas: marcasArray
+      marcas: marcasArray,
+      componentes: componentesArray
     };
 
     res.status(200).json(response);
@@ -875,6 +937,11 @@ const implementosVeterinarios =  async(req, res) => {
     // Crea un arreglo de objetos para las marcas en el formato requerido
     const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
+    // Obtén todos los componentes únicos 
+    const componentes = await ProductoMSchema.distinct('cat5', query);
+    // Crea un arreglo de objetos para las marcas en el formato requerido
+    const componentesArray = componentes.map((component) => ({ cat5: component }));
+
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
 
@@ -884,7 +951,8 @@ const implementosVeterinarios =  async(req, res) => {
       totalPages,
       currentPage: pageNumber,
       productos,
-      marcas: marcasArray
+      marcas: marcasArray,
+      componentes: componentesArray
     };
 
     res.status(200).json(response);
@@ -927,6 +995,11 @@ const ferreteriaAgricola =  async(req, res) => {
   // Crea un arreglo de objetos para las marcas en el formato requerido
   const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
+  // Obtén todos los componentes únicos 
+  const componentes = await ProductoMSchema.distinct('cat5', query);
+  // Crea un arreglo de objetos para las marcas en el formato requerido
+  const componentesArray = componentes.map((component) => ({ cat5: component }));
+
   // Calcula el número total de páginas
   const totalPages = Math.ceil(total / limitNumber);
 
@@ -936,7 +1009,8 @@ const ferreteriaAgricola =  async(req, res) => {
     totalPages,
     currentPage: pageNumber,
     productos,
-    marcas: marcasArray
+    marcas: marcasArray,
+    componentes: componentesArray
   };
 
   res.status(200).json(response);
@@ -972,6 +1046,11 @@ const electricidad =  async(req, res) => {
   // Crea un arreglo de objetos para las marcas en el formato requerido
   const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
+  // Obtén todos los componentes únicos 
+  const componentes = await ProductoMSchema.distinct('cat5', query);
+  // Crea un arreglo de objetos para las marcas en el formato requerido
+  const componentesArray = componentes.map((component) => ({ cat5: component }));
+
   // Calcula el número total de páginas
   const totalPages = Math.ceil(total / limitNumber);
 
@@ -981,7 +1060,8 @@ const electricidad =  async(req, res) => {
     totalPages,
     currentPage: pageNumber,
     productos,
-    marcas: marcasArray
+    marcas: marcasArray,
+    componentes: componentesArray
   };
 
   res.status(200).json(response);
@@ -1024,6 +1104,11 @@ const controlDePlaga =  async(req, res) => {
   // Crea un arreglo de objetos para las marcas en el formato requerido
   const marcasArray = marcas.map((marca) => ({ Marca: marca }));
 
+  // Obtén todos los componentes únicos 
+  const componentes = await ProductoMSchema.distinct('cat5', query);
+  // Crea un arreglo de objetos para las marcas en el formato requerido
+  const componentesArray = componentes.map((component) => ({ cat5: component }));
+
   // Calcula el número total de páginas
   const totalPages = Math.ceil(total / limitNumber);
 
@@ -1033,7 +1118,8 @@ const controlDePlaga =  async(req, res) => {
     totalPages,
     currentPage: pageNumber,
     productos,
-    marcas: marcasArray
+    marcas: marcasArray,
+    componentes: componentesArray
   };
 
   res.status(200).json(response);
