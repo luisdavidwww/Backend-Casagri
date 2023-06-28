@@ -1130,6 +1130,65 @@ const controlDePlaga =  async(req, res) => {
 
 
 
+//------------------------------------- Busqueda por Marca -----------------------------------------//
+
+
+const ProductoPorMarca = async(req, res = response ) => {
+
+  try {
+    const { page, limit } = req.query;
+    const pageNumber = parseInt(page) || 1;
+    const limitNumber = parseInt(limit) || 16;
+
+    // Calcula el índice de inicio y la cantidad de elementos a mostrar
+    const startIndex = (pageNumber - 1) * limitNumber;
+
+    //let { nombre } = req.params;
+
+    let { marca } = req.params;
+
+    /*const query = {
+      $or: [
+         { Marca: { $regex: marca, $options: 'i' } }
+      ]
+    };*/
+
+    const query = { Marca: marca };
+
+    const [ total, productos ] = await Promise.all([
+      ProductoMSchema.find(query).countDocuments(),
+      ProductoMSchema.find(query)
+                      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
+                      .skip(startIndex)
+                      .limit(limitNumber)
+    ]);
+
+    // Calcula el número total de páginas
+    const totalPages = Math.ceil(total / limitNumber);
+
+    // Construye el objeto de respuesta con los datos paginados y los metadatos
+    const response = {
+      total,
+      totalPages,
+      currentPage: pageNumber,
+      productos,
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error('Error al obtener los productos paginados:', error.message);
+    res.status(500).json({ error: 'Error al obtener los productos paginados' });
+  }
+
+}
+
+
+
+
+
+
+
+
 
 module.exports = {
     otrosAgroquimicos,
@@ -1153,4 +1212,5 @@ module.exports = {
     ferreteriaAgricola,
     electricidad,
     controlDePlaga,
+    ProductoPorMarca
 }
