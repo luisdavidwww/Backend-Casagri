@@ -411,12 +411,14 @@ const analgesicosAntiinflamatorios =  async(req, res) => {
 
     //Condiciones para el filtro
     const query = {
-      Cat3: "ANALGESICO Y ANTIINFLAMATORIO" ,
-      Cat3: "ANTIDOTOS, ANTITOXICOS Y PARAS" ,
-      Cat3: "ANTITIMPÀNICO", 
       $or: [
-          { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-        ]
+        {Cat3: "ANALGESICO Y ANTIINFLAMATORIO" },
+        {Cat3: "ANTIDOTOS, ANTITOXICOS Y PARAS" },
+        {Cat3: "ANTITIMPÀNICO"},
+      ],
+      
+      cat2: { $nin: ["MEDICINA MASCOTAS"] } 
+
     };
 
 
