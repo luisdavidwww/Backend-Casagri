@@ -416,9 +416,7 @@ const analgesicosAntiinflamatorios =  async(req, res) => {
         {Cat3: "ANTIDOTOS, ANTITOXICOS Y PARAS" },
         {Cat3: "ANTITIMPÀNICO"},
       ],
-      
       cat2: { $nin: ["MEDICINA MASCOTAS"] } 
-
     };
 
 
@@ -525,11 +523,11 @@ const antibioticos =  async(req, res) => {
 
     //Condiciones para el filtro
     const query = {
-            Cat3: "ANTIBIOTICOS",
-            Cat3: "ANTIMASTITICOS",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
+      $or: [
+        {Cat3: "ANTIBIOTICOS" },
+        {Cat3: "ANTIMASTITICOS" },
+      ],
+      cat2: { $nin: ["MEDICINA MASCOTAS"] } 
     };
 
 
@@ -634,12 +632,12 @@ const bañosEctoparasitariosMatagusanos =  async(req, res) => {
     const limitNumber = parseInt(limit) || 16;
 
     //Condiciones para el filtro
-    const query = {
-          Cat3: "ANTIPARASITARIO EXTERNO (BAÑOS",
-          Cat3: "TOPICO ANTIPARASITARIO",
-          $or: [
-              { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-          ]
+      const query = {
+        $or: [
+          {Cat3: "ANTIPARASITARIO EXTERNO (BAÑOS"},
+          {Cat3: "TOPICO ANTIPARASITARIO"},
+        ],
+        cat2: { $nin: ["MEDICINA MASCOTAS"] } 
       };
 
 
@@ -854,11 +852,11 @@ const vitaminasMinerales =  async(req, res) => {
 
     //Condiciones para el filtro
     const query = {
-            Cat3: "RECONSTITUYENTES, REHIDRATANTE",
-            Cat3: "VITAMINAS",
-            $or: [
-                { cat2: { $nin: ["MEDICINA MASCOTAS"] } }
-            ]
+      $or: [
+        {Cat3: "RECONSTITUYENTES, REHIDRATANTE"},
+        {Cat3: "VITAMINAS"},
+      ],
+      cat2: { $nin: ["MEDICINA MASCOTAS"] } 
     };
 
 
