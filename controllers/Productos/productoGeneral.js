@@ -176,7 +176,7 @@ const obtenerProductoPorNombre = async(req, res = response ) => {
       $or: [
         { Nombre_interno: { $regex: nombre, $options: 'i' } },
         { cat4: { $regex: nombre, $options: 'i' } },
-        { Marca: { $regex: nombre, $options: 'i' } }
+        /*{ Marca: { $regex: nombre, $options: 'i' } }*/
       ]
     };
 
