@@ -172,10 +172,15 @@ const obtenerProductoPorNombre = async(req, res = response ) => {
 
     let { nombre } = req.params;
 
+    // const escapedNombre = nombre.replace(/\s/g, '\\s'); replace(/\s+/g, '-')
+    const escapedNombre = nombre.replace(/\s+/g, '-')
+                                .replace(/%/g, "%25")
+                                .replace(/[ / ]/g, "_");
+
     const query = {
       $or: [
-        { Nombre_interno: { $regex: nombre, $options: 'i' } },
-        { cat4: { $regex: nombre, $options: 'i' } },
+        { Nombre_interno: { $regex: escapedNombre, $options: 'i' } },
+        { cat4: { $regex: escapedNombre, $options: 'i' } },
         /*{ Marca: { $regex: nombre, $options: 'i' } }*/
       ]
     };
