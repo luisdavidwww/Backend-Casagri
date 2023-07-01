@@ -212,6 +212,94 @@ const obtenerProductoPorNombre = async(req, res = response ) => {
 
 }
 
+//Buscar Producto Unico
+const obtenerProductoDetalle = async(req, res = response ) => {
+
+  try {
+    const { page, limit } = req.query;
+    const pageNumber = parseInt(page) || 1;
+    const limitNumber = parseInt(limit) || 16;
+
+    // Calcula el índice de inicio y la cantidad de elementos a mostrar
+    const startIndex = (pageNumber - 1) * limitNumber;
+
+    //let { nombre } = req.params;
+
+    let { Nombre_interno } = req.params;
+
+
+
+    const [ total, productos ] = await Promise.all([
+      ProductoMSchema.findOne({Nombre_interno}).countDocuments(),
+      ProductoMSchema.findOne({Nombre_interno})
+                      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
+                      .skip(startIndex)
+                      .limit(limitNumber)
+    ]);
+
+    // Calcula el número total de páginas
+    const totalPages = Math.ceil(total / limitNumber);
+
+    // Construye el objeto de respuesta con los datos paginados y los metadatos
+    const response = {
+      total,
+      totalPages,
+      currentPage: pageNumber,
+      productos,
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error('Error al obtener los productos paginados:', error.message);
+    res.status(500).json({ error: 'Error al obtener los productos paginados' });
+  }
+
+}
+
+//Buscar Productos
+const obtenerProductoRecomendado = async (req, res = response) => {
+  try {
+    const { page, limit } = req.query;
+    const pageNumber = parseInt(page) || 1;
+    const limitNumber = parseInt(limit) || 16;
+
+    // Calcula el índice de inicio y la cantidad de elementos a mostrar
+    const startIndex = (pageNumber - 1) * limitNumber;
+
+    // Se busca el producto principal
+    let { Nombre_interno } = req.params;
+
+    //busqueda del producto 
+    const productoBase = await ProductoMSchema.findOne({ Nombre_interno });
+
+    const query = {
+      $or: [{ Cat3: { $regex: productoBase.Cat3, $options: 'i' } }],
+    };
+
+    // Obtiene 4 productos al azar de la categoría
+    const productos = await ProductoMSchema.aggregate([
+      { $match: query },
+      { $sample: { size: 4 } },
+      { $sort: { Nombre: 1 } },
+      { $skip: startIndex },
+      { $limit: limitNumber },
+    ]);
+
+
+    // Construye el objeto de respuesta con los datos paginados y los metadatos
+    const response = {
+      productos,
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error('Error al obtener los productos paginados:', error.message);
+    res.status(500).json({ error: 'Error al obtener los productos paginados' });
+  }
+};
+
+
+
 //Obtener todos los productos de la Categoria 1 Paginado
 const obtenerCat1 =  async(req, res) => {
 
@@ -909,6 +997,8 @@ module.exports = {
   crearProductoTotal,
   obtenerProductos,
   obtenerProductoPorNombre,
+  obtenerProductoDetalle,
+  obtenerProductoRecomendado,
   obtenerProductosPaginados,
   obtenerCat1,
   obtenerCat1_A_Z,

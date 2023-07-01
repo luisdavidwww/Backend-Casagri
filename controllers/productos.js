@@ -181,7 +181,7 @@ const obtenerProductoCategoria = async(req, res = response ) => {
 
 }
 
-const crearProducto = async(req, res = response ) => {
+const crearProducto = async(req, res = response ) => { 
 
     const { ...body } = req.body;
 
