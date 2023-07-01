@@ -227,12 +227,11 @@ const obtenerProductoDetalle = async(req, res = response ) => {
 
     let { Nombre_interno } = req.params;
 
-
+    //DELTA-+-2.5%25-X-1-L
 
     const [ total, productos ] = await Promise.all([
       ProductoMSchema.findOne({Nombre_interno}).countDocuments(),
       ProductoMSchema.findOne({Nombre_interno})
-                      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
@@ -789,7 +788,7 @@ const actualizarProductoDrop = async (req, res = response) => {
       const Marca = maestro.find((p) => p.IdApi === IdApi)?.Marca || '';
       const Imagen = image.find((p) => p.IdApi === IdApi)?.Imagen || '';
 
-      const Nombre_interno = Disp.Nombre.replace(/\s+/g, '-').replace(/%/g, "%25").replace(/[ / ]/g, "_");
+      const Nombre_interno = Disp.Nombre.replace(/\s+/g, '-').replace(/%/g, '-fiporif-').replace(/[ / ]/g, "_");
       const Descripcion = maestro.find((p) => p.IdApi === IdApi)?.Descripcion || '';
 
       // Verificar si el producto ya existe en productosMap
