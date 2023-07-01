@@ -272,7 +272,7 @@ const obtenerProductoRecomendado = async (req, res = response) => {
     const productoBase = await ProductoMSchema.findOne({ Nombre_interno });
 
     const query = {
-      $or: [{ Cat3: { $regex: productoBase.Cat3, $options: 'i' } }],
+      $or: [{ Marca: { $regex: productoBase.Marca, $options: 'i' } }],
     };
 
     // Obtiene 4 productos al azar de la categoría
