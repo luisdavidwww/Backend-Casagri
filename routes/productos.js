@@ -4,6 +4,7 @@ const { check } = require('express-validator');
 const { validarJWT, validarCampos,validarArchivoSubir, esAdminRole } = require('../middlewares');
 
 const { crearProducto,
+        crearMultiplesProducto,
         obtenerProductos,
         obtenerProducto,
         obtenerProductoPorNombre,
@@ -67,6 +68,15 @@ router.post('/', [
     //check('categoria').custom( existeCategoriaPorId ),
     //validarCampos
 ], crearProducto );
+
+
+router.post('/crearMultipleProducto', [ 
+    validarArchivoSubir,
+    //check('nombre','El nombre es obligatorio').not().isEmpty(),
+], crearMultiplesProducto );
+
+
+
 
 // Actualizar - privado - cualquiera con token válido
 router.put('/:id',[

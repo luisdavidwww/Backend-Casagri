@@ -5,19 +5,6 @@ const ProductoSchema = Schema({
         type: String,
         required: [true, 'El codigo es obligatorio']
     },
-    nombre: {
-        type: String,
-        required: [true, 'El nombre es obligatorio']
-    },
-    nombre_interno: { 
-        type: String,
-    },
-    CodigoProd: { 
-        type: String,
-    },
-    descripcion: {
-        type: String,
-    },
     imagen_principal: {
         type: String,
         required: [true, 'La imagen es obligatoria'],

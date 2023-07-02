@@ -219,6 +219,68 @@ const crearProducto = async(req, res = response ) => {
 
 }
 
+
+const crearMultiplesProducto = async (req, res = response) => {
+    try {
+        const { ...body } = req.body;
+  
+      // Verificar si los productos ya existen en la base de datos
+      const productosExistentes = await Promise.all(
+        body.map(async (producto) => {
+          const productoDB = await Producto.findOne({ CodigoProd: producto.CodigoProd });
+          if (productoDB) {
+            return productoDB.CodigoProd;
+          }
+          return null;
+        })
+      );
+
+      const productosDuplicados = productosExistentes.filter((CodigoProd) => CodigoProd !== null);
+  
+      if (productosDuplicados.length > 0) {
+        return res.status(400).json({
+          msg: `Los siguientes productos ya existen: ${productosDuplicados.join(", ")}`,
+        });
+      }
+  
+      // Procesar cada producto
+      const productosGuardados = await Promise.all(
+        body.map(async (producto) => {
+            
+          let imagen_principal = null;
+  
+          // Cargar el archivo de imagen si se proporciona
+          if (req.files && req.files.archivo) {
+            const { tempFilePath } = req.files.archivo;
+            const { secure_url } = await cloudinary.uploader.upload(tempFilePath);
+            imagen_principal = secure_url;
+          }
+    
+  
+          // Generar la data a guardar
+          const data = {
+            ...producto,
+            imagen_principal,
+          };
+  
+          const nuevoProducto = new Producto(data);
+          await nuevoProducto.save();
+  
+          return nuevoProducto;
+        })
+      );
+  
+      res.status(201).json({ productos: productosGuardados });
+    } catch (error) {
+      console.log("Error:", error);
+      res.status(500).json({ msg: "Ocurrió un error al crear los productos" });
+    }
+  };
+
+
+
+
+
 const actualizarProducto = async( req, res = response ) => {
 
     const { id } = req.params;
@@ -253,6 +315,7 @@ const borrarProducto = async(req, res = response ) => {
 
 module.exports = {
     crearProducto,
+    crearMultiplesProducto,
     obtenerProductos,
     obtenerProducto,
     obtenerProductoPorNombre,
