@@ -983,6 +983,30 @@ const fetchAPI = async (url) => {
 
 };
   
+//esta esuna prueba paraver si se actualiza el backend
+const fetchAPI2 = async (url) => {
+
+  let data = JSON.stringify({
+    filters: [{}],
+  });
+
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: url,
+    headers: {
+      Authorization: 'Basic REVWRUxPUEVSOkJCRjk5OTM5NDhFMw==',
+      CpnyID: '0010',
+      SiteID: 'LIVE',
+      'Content-Type': 'application/json',
+    },
+    data: data,
+  };
+
+  return axios.request(config);
+
+};
+  
   
   
   
