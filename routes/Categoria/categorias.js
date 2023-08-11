@@ -37,7 +37,7 @@ router.post('/', [
 //-------------------- ACTUALIZAR CATEGORIA ---------------------------//
 router.put('/:id',[
     //validarJWT,
-    validarArchivoSubir,
+    validarArchivoSubirPrincipal,
     check('nombre','El nombre de la categoria es obligatorio').not().isEmpty(),
     check('id').custom( existeCategoriaPorId ),
     //check('nombre').custom( existeCategoriaPorNombre ),

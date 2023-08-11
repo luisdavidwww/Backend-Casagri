@@ -15,6 +15,7 @@ class Server {
         this.io     = require('socket.io')(this.server)
 
         this.paths = {
+            home:             '/home',
             auth:             '/api/auth',
             buscar:           '/api/buscar',
             categorias:       '/api/categorias',
@@ -72,7 +73,7 @@ class Server {
     }
 
     routes() {
-        
+        this.app.use( this.paths.home, require('../routes/Categoria/categorias'));
         this.app.use( this.paths.auth, require('../routes/auth'));
         this.app.use( this.paths.buscar, require('../routes/buscar'));
         this.app.use( this.paths.categorias, require('../routes/Categoria/categorias'));

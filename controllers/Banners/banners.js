@@ -126,7 +126,7 @@ const bannersPublicitariosGet = async(req = request, res = response) => {
 }
 
 //-------------------- OBTENER BANNERS HOME ---------------------------//
-const bannersPrincipalGet = async(req = request, res = response) => {
+const bannersPrincipalGet2 = async(req = request, res = response) => {
 
     const { limite = 6, desde = 0 } = req.query;
     const query = { descripcion: "Home" };
@@ -142,6 +142,35 @@ const bannersPrincipalGet = async(req = request, res = response) => {
         data
     });
 }
+
+const bannersPrincipalGet = async (req = request, res = response) => {
+    try {
+      const { limite = 6, desde = 0 } = req.query;
+      const query = { descripcion: "Home" };
+  
+      const [total, data] = await Promise.all([
+        Banners.countDocuments(query),
+        Banners.find(query)
+          .skip(Number(desde))
+          .limit(Number(limite))
+      ]);
+  
+      if (data.length === 0) {
+        // No se encontraron datos, enviar un código de estado 404
+        return res.status(404).json({
+          error: 'No se encontraron banners'
+        });
+      }
+  
+      // Enviar la respuesta con los datos obtenidos
+      res.status(200).json({ data });
+    } catch (error) {
+      // Si ocurre algún error durante la petición, enviar un código de estado 500 (error del servidor) junto con el mensaje de error.
+      res.status(500).json({
+        error: 'Ocurrió un error en el servidor'
+      });
+    }
+  }
 
 
 //-------------------- OBTENER 1 BANNER POR NOMBRE ---------------------------//

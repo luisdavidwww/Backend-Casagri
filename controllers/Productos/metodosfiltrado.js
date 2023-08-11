@@ -734,6 +734,66 @@ const biologicos =  async(req, res) => {
 
 };
 
+
+
+//DESPARASITANTES
+const desparasitantes =  async(req, res) => {
+
+  const { page, limit } = req.query;
+  const pageNumber = parseInt(page) || 1;
+  const limitNumber = parseInt(limit) || 16;
+
+  //Condiciones para el filtro
+  const query = {
+        $or: [
+          {Cat3: "ANTIPARASITARIO INTERNO"},
+          {Cat3: "ENDECTOCIDA"},
+        ],
+        cat2: { $nin: ["MEDICINA MASCOTAS"] } 
+  };
+
+
+  // Calcula el índice de inicio y la cantidad de elementos a mostrar
+  const startIndex = (pageNumber - 1) * limitNumber;
+
+  const [ total, productos ] = await Promise.all([
+    ProductoMSchema.find(query).countDocuments(),
+    ProductoMSchema.find(query)
+                    .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
+                    .skip(startIndex)
+                    .limit(limitNumber)
+  ]);
+
+  // Obtén todas las marcas únicas de los productos
+  const marcas = await ProductoMSchema.distinct('Marca', query);
+  // Crea un arreglo de objetos para las marcas en el formato requerido
+  const marcasArray = marcas.map((marca) => ({ Marca: marca }));
+
+  // Obtén todos los componentes únicos 
+  const componentes = await ProductoMSchema.distinct('cat4', query);
+  // Crea un arreglo de objetos para las marcas en el formato requerido
+  const componentesArray = componentes.map((component) => ({ cat4: component }));
+
+  // Calcula el número total de páginas
+  const totalPages = Math.ceil(total / limitNumber);
+
+  // Construye el objeto de respuesta con los datos paginados y los metadatos
+  const response = {
+    total,
+    totalPages,
+    currentPage: pageNumber,
+    productos,
+    marcas: marcasArray,
+    componentes: componentesArray
+  };
+
+  res.status(200).json(response);
+
+};
+
+
+
+
 //HEMOPARASITICIDAS
 const hemoparasiticidas =  async(req, res) => {
 
@@ -1205,6 +1265,7 @@ module.exports = {
     antidiarreicos,
     bañosEctoparasitariosMatagusanos,
     biologicos,
+    desparasitantes,
     hemoparasiticidas,
     hormonales,
     vitaminasMinerales,
