@@ -7,6 +7,7 @@ const path = require('path');
 const fs   = require('fs');
 const cloudinary = require('cloudinary').v2
 cloudinary.config( process.env.CLOUDINARY_URL );
+const cron = require('node-cron');
 
 
 
@@ -181,7 +182,10 @@ const obtenerProductoPorNombre = async(req, res = response ) => {
       $or: [
         { Nombre_interno: { $regex: escapedNombre, $options: 'i' } },
         { cat4: { $regex: escapedNombre, $options: 'i' } },
-        /*{ Marca: { $regex: nombre, $options: 'i' } }*/
+        { cat1: { $regex: nombre, $options: 'i' } },
+        { cat2: { $regex: nombre, $options: 'i' } },
+        { Cat3: { $regex: nombre, $options: 'i' } },//
+        { cat5: { $regex: nombre, $options: 'i' } },
       ]
     };
 
@@ -756,8 +760,15 @@ const actualizarStockLosProducto = async () => {
 };*/
 
 
+
+//Funcion Para Actualizar los productos Casagri
 const actualizarProductoDrop = async (req, res = response) => {
   try {
+
+    // Formatea la hora actual
+    const currentTime = new Date();
+    const formattedTime = currentTime.toLocaleTimeString(); 
+
     // solicitud a la API
     const [maestroResp, disponibleResp, imageResp] = await Promise.all([
       fetchAPI('http://csgbqto.dyndns.org:6001/ctDynamicsSL/api/quickQuery/VW_VENTTU_PROD'),
@@ -768,6 +779,7 @@ const actualizarProductoDrop = async (req, res = response) => {
     const maestro = maestroResp.data.myQueryResults.Table;
     const disponible = disponibleResp.data.myQueryResults.Table;
     const image = imageResp.data.myQueryResults.Table;
+    
 
     const productosMap = {};
 
@@ -826,11 +838,25 @@ const actualizarProductoDrop = async (req, res = response) => {
     // Guardar todos los productos actualizados
     await ProductoMSchema.insertMany(productos);
 
-    console.log('Registros insertados en la base de datos correctamente');
+    console.log(`Registros insertados en la base de datos correctamente a las ${formattedTime}`);
   } catch (error) {
     console.error('Error al obtener o insertar los datos:', error.message);
   }
 };
+
+
+cron.schedule('0 * * * *', async () => {
+  try {
+    await actualizarProductoDrop();
+    console.log('Finalizada la Carga de Productos!');
+  } catch (error) {
+    console.error('Error al ejecutar actualizarProductoDrop:', error.message);
+  }
+});
+
+
+
+
 
 
 
@@ -961,6 +987,30 @@ const ImagenProductosCasagri = () => {
   
 
 const fetchAPI = async (url) => {
+
+  let data = JSON.stringify({
+    filters: [{}],
+  });
+
+  let config = {
+    method: 'get',
+    maxBodyLength: Infinity,
+    url: url,
+    headers: {
+      Authorization: 'Basic REVWRUxPUEVSOkJCRjk5OTM5NDhFMw==',
+      CpnyID: '0010',
+      SiteID: 'LIVE',
+      'Content-Type': 'application/json',
+    },
+    data: data,
+  };
+
+  return axios.request(config);
+
+};
+  
+//esta esuna prueba paraver si se actualiza el backend
+const fetchAPI2 = async (url) => {
 
   let data = JSON.stringify({
     filters: [{}],

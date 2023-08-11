@@ -39,6 +39,7 @@ const {
     antidiarreicos,
     bañosEctoparasitariosMatagusanos,
     biologicos,
+    desparasitantes,
     hemoparasiticidas,
     hormonales,
     vitaminasMinerales,
@@ -84,6 +85,7 @@ router.get('/CategoriaBuscar/antibioticos', antibioticos );
 router.get('/CategoriaBuscar/antidiarreicos', antidiarreicos );
 router.get('/CategoriaBuscar/banosEctoparasitariosMatagusanos', bañosEctoparasitariosMatagusanos );
 router.get('/CategoriaBuscar/biologicos', biologicos );
+router.get('/CategoriaBuscar/desparasitantes', desparasitantes );
 router.get('/CategoriaBuscar/hemoparasiticidas', hemoparasiticidas );
 router.get('/CategoriaBuscar/hormonales', hormonales );
 router.get('/CategoriaBuscar/vitaminasMinerales', vitaminasMinerales );
