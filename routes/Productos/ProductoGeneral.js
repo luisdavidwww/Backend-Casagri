@@ -26,6 +26,7 @@ const {
 
 const { 
     otrosAgroquimicos,
+    fertlizantes,
     semillas,
     maizHibrido,
     hortalizas,
@@ -72,6 +73,7 @@ router.get('/Categoria4/:categoria', obtenerCat4 );
 //------------------------------------- FILTRAR PRODUCTOS -----------------------------------------//
 
 router.get('/CategoriaBuscar/OtrosAgroquimicos', otrosAgroquimicos );
+router.get('/CategoriaBuscar/Fertilizantes', fertlizantes );
 router.get('/CategoriaBuscar/Semillas', semillas );
 router.get('/CategoriaBuscar/Maiz', maizHibrido );
 router.get('/CategoriaBuscar/Hortalizas', hortalizas );

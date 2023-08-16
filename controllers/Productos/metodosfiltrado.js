@@ -61,6 +61,58 @@ const otrosAgroquimicos =  async(req, res) => {
 
 };
 
+const fertlizantes =  async(req, res) => {
+
+  const { page, limit } = req.query;
+  const pageNumber = parseInt(page) || 1;
+  const limitNumber = parseInt(limit) || 16;
+
+  //Condiciones para el filtro
+  const query = {
+    $or: [
+      { cat2: "FERTILIZANTES Y SUSTRATOS" },
+      { cat2: "FERTILIZANTES QUIMICOS" },
+    ]
+  };
+
+
+  // Calcula el índice de inicio y la cantidad de elementos a mostrar
+  const startIndex = (pageNumber - 1) * limitNumber;
+
+  const [ total, productos ] = await Promise.all([
+    ProductoMSchema.find(query).countDocuments(),
+    ProductoMSchema.find(query)
+                    .skip(startIndex)
+                    .limit(limitNumber)
+  ]);
+
+
+  // Obtén todas las marcas únicas de los productos
+  const marcas = await ProductoMSchema.distinct('Marca', query);
+  // Crea un arreglo de objetos para las marcas en el formato requerido
+  const marcasArray = marcas.map((marca) => ({ Marca: marca }));
+
+  // Obtén todos los componentes únicos 
+  const componentes = await ProductoMSchema.distinct('cat4', query);
+  // Crea un arreglo de objetos para las marcas en el formato requerido
+  const componentesArray = componentes.map((component) => ({ cat4: component }));
+
+  // Calcula el número total de páginas
+  const totalPages = Math.ceil(total / limitNumber);
+
+  // Construye el objeto de respuesta con los datos paginados y los metadatos
+  const response = {
+    total,
+    totalPages,
+    currentPage: pageNumber,
+    productos,
+    marcas: marcasArray,
+    componentes: componentesArray
+  };
+
+  res.status(200).json(response);
+
+};
 
 const cercasAlambreyElectricas =  async(req, res) => {
 
@@ -1252,6 +1304,7 @@ const ProductoPorMarca = async(req, res = response ) => {
 
 module.exports = {
     otrosAgroquimicos,
+    fertlizantes,
     semillas,
     hortalizas,
     maizHibrido,
