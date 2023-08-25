@@ -158,18 +158,22 @@ const obtenerProductosPaginados = async (req, res) => {
   }
 };
 
-//Buscar Productos
+//Buscar Productos por el Buscador
 const obtenerProductoPorNombre = async(req, res = response ) => {
 
   try {
-    const { page, limit } = req.query;
+    const { page, limit, orderBy } = req.query;
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
-    //let { nombre } = req.params;
+    //Método para Ordenar 
+    let sorting = { Nombre: 1 }; // Orden ascendente por defecto
+    if (orderBy === "desc") {
+      sorting = { Nombre: -1 }; // Orden descendente si se especifica "desc" en el parámetro
+    }
 
     let { nombre } = req.params;
 
@@ -192,7 +196,7 @@ const obtenerProductoPorNombre = async(req, res = response ) => {
     const [ total, productos ] = await Promise.all([
       ProductoMSchema.find(query).countDocuments(),
       ProductoMSchema.find(query)
-                      .sort({ Nombre: 1 }) // Ordena alfabéticamente por el campo "Nombre"
+                      .sort(sorting) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
@@ -306,7 +310,7 @@ const obtenerProductoRecomendado = async (req, res = response) => {
 //Obtener todos los productos de la Categoria 1 Paginado
 const obtenerCat1 =  async(req, res) => {
 
-    const { page, limit } = req.query;
+  const { page, limit, orderBy, marca } = req.query;
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
@@ -315,10 +319,20 @@ const obtenerCat1 =  async(req, res) => {
     // Calcula el índice de inicio y la cantidad de elementos a mostrar
     const startIndex = (pageNumber - 1) * limitNumber;
 
+    //Método para Ordenar 
+    let sorting = { Nombre: 1 }; // Orden ascendente por defecto
+    if (orderBy === "desc") {
+      sorting = { Nombre: -1 }; // Orden descendente si se especifica "desc" en el parámetro
+    }
+    if (marca === "si") {
+      sorting = { Marca: 1 }; // Ordenar por marcas
+    }
+  
+
     const [ total, productos ] = await Promise.all([
       ProductoMSchema.find({ cat1: categoria }).countDocuments(),
       ProductoMSchema.find({ cat1: categoria })
-                      //.sort({ Nombre: 1 })
+                      .sort(sorting)
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
@@ -404,7 +418,7 @@ const obtenerCat1_A_Z =  async(req, res) => {
 //Obtener todos los productos de la Categoria 2 Paginado
 const obtenerCat2 =  async(req, res) => {
 
-  const { page, limit } = req.query;
+  const { page, limit, orderBy, marca } = req.query;
   const pageNumber = parseInt(page) || 1;
   const limitNumber = parseInt(limit) || 16;
 
@@ -413,10 +427,20 @@ const obtenerCat2 =  async(req, res) => {
   // Calcula el índice de inicio y la cantidad de elementos a mostrar
   const startIndex = (pageNumber - 1) * limitNumber;
 
+  //Método para Ordenar 
+  let sorting = { Nombre: 1 }; // Orden ascendente por defecto
+  if (orderBy === "desc") {
+    sorting = { Nombre: -1 }; // Orden descendente si se especifica "desc" en el parámetro
+  }
+  if (marca === "si") {
+    sorting = { Marca: 1 }; // Ordenar por marcas
+  }
+
+
   const [ total, productos ] = await Promise.all([
     ProductoMSchema.find({ cat2: categoria }).countDocuments(),
     ProductoMSchema.find({ cat2: categoria })
-                    .sort({ Nombre: 1 })
+                    .sort(sorting)
                     .skip(startIndex)
                     .limit(limitNumber)
   ]);
@@ -451,7 +475,7 @@ const obtenerCat2 =  async(req, res) => {
 
 const obtenerCat3 =  async(req, res) => {
 
-  const { page, limit } = req.query;
+  const { page, limit, orderBy, marca } = req.query;
   const pageNumber = parseInt(page) || 1;
   const limitNumber = parseInt(limit) || 16;
 
@@ -460,10 +484,19 @@ const obtenerCat3 =  async(req, res) => {
   // Calcula el índice de inicio y la cantidad de elementos a mostrar
   const startIndex = (pageNumber - 1) * limitNumber;
 
+  //Método para Ordenar 
+  let sorting = { Nombre: 1 }; // Orden ascendente por defecto
+  if (orderBy === "desc") {
+    sorting = { Nombre: -1 }; // Orden descendente si se especifica "desc" en el parámetro
+  }
+  if (marca === "si") {
+    sorting = { Marca: 1 }; // Ordenar por marcas
+  }
+
   const [ total, productos ] = await Promise.all([
     ProductoMSchema.find({ Cat3: categoria }).countDocuments(),
     ProductoMSchema.find({ Cat3: categoria })
-                    //.sort({ Nombre: 1 })
+                    .sort(sorting)
                     .skip(startIndex)
                     .limit(limitNumber)
   ]);
@@ -498,7 +531,7 @@ const obtenerCat3 =  async(req, res) => {
 
 const obtenerCat4 =  async(req, res) => {
 
-  const { page, limit } = req.query;
+  const { page, limit, orderBy, marca } = req.query;
   const pageNumber = parseInt(page) || 1;
   const limitNumber = parseInt(limit) || 16;
 
@@ -507,10 +540,20 @@ const obtenerCat4 =  async(req, res) => {
   // Calcula el índice de inicio y la cantidad de elementos a mostrar
   const startIndex = (pageNumber - 1) * limitNumber;
 
+  //Método para Ordenar 
+  let sorting = { Nombre: 1 }; // Orden ascendente por defecto
+  if (orderBy === "desc") {
+    sorting = { Nombre: -1 }; // Orden descendente si se especifica "desc" en el parámetro
+  }
+  if (marca === "si") {
+    sorting = { Marca: 1 }; // Ordenar por marcas
+  }
+
+
   const [ total, productos ] = await Promise.all([
     ProductoMSchema.find({ cat4: categoria }).countDocuments(),
     ProductoMSchema.find({ cat4: categoria })
-                    //.sort({ Nombre: 1 })
+                    .sort(sorting)
                     .skip(startIndex)
                     .limit(limitNumber)
   ]);
