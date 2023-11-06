@@ -179,16 +179,18 @@ const obtenerProductoPorNombre = async(req, res = response ) => {
 
     // const escapedNombre = nombre.replace(/\s/g, '\\s'); replace(/\s+/g, '-')
     const escapedNombre = nombre.replace(/\s+/g, '-')
-                                .replace(/%/g, "%25")
+                                .replace(/%/g, "-fiporif-")
                                 .replace(/[ / ]/g, "_");
+
 
     const query = {
       $or: [
-        { Nombre_interno: { $regex: escapedNombre, $options: 'i' } },
+        //{ Nombre_interno: { $regex: escapedNombre, $options: 'i' } },
+        { Nombre_interno: nombre },
         { cat4: { $regex: escapedNombre, $options: 'i' } },
         { cat1: { $regex: nombre, $options: 'i' } },
         { cat2: { $regex: nombre, $options: 'i' } },
-        { Cat3: { $regex: nombre, $options: 'i' } },//
+        { Cat3: { $regex: nombre, $options: 'i' } },
         { cat5: { $regex: nombre, $options: 'i' } },
       ]
     };
@@ -828,6 +830,7 @@ const actualizarProductoDrop = async (req, res = response) => {
 
     // Combinar los datos de las tres APIs y sumar el StockActual de los productos con IdApi repetidos
     for (const Disp of disponible) {
+      console.log("cargando...")
       const counter = Disp.counter;
       const IdApi = Disp.IdApi.trim();
       const Nombre = Disp.Nombre;
@@ -887,7 +890,7 @@ const actualizarProductoDrop = async (req, res = response) => {
   }
 };
 
-
+/*
 cron.schedule('0 * * * *', async () => {
   try {
     await actualizarProductoDrop();
@@ -895,7 +898,7 @@ cron.schedule('0 * * * *', async () => {
   } catch (error) {
     console.error('Error al ejecutar actualizarProductoDrop:', error.message);
   }
-});
+});*/
 
 
 

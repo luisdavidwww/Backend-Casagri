@@ -36,7 +36,7 @@ const usuariosPost = async(req, res = response) => {
     const { nombre, correo, password, rol } = req.body;
 
 
-    if (req.files.archivo)
+    if (req.files)
     {
         const { tempFilePath } = req.files.archivo
         const { secure_url } = await cloudinary.uploader.upload( tempFilePath );

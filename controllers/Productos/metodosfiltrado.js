@@ -1139,11 +1139,14 @@ const vitaminasMinerales =  async(req, res) => {
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
-    //Condiciones para el filtro
+    //Condiciones para el filtro 
     const query = {
       $or: [
+
+        {cat2: "ALIMENTOS ANIMALES DE PRODUCCI"},
         {Cat3: "RECONSTITUYENTES, REHIDRATANTE"},
         {Cat3: "VITAMINAS"},
+        
       ],
       cat2: { $nin: ["MEDICINA MASCOTAS"] } 
     };

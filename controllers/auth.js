@@ -17,14 +17,14 @@ const login = async(req, res = response) => {
         const usuario = await Usuario.findOne({ correo });
         if ( !usuario ) {
             return res.status(400).json({
-                msg: 'Usuario / Password no son correctos - correo'
+                msg: '¡Error de autenticación!. Las credenciales que ingresaste no son las correctas. ¿Puedes intentarlo de nuevo?'
             });
         }
 
         // SI el usuario está activo
         if ( !usuario.estado ) {
             return res.status(400).json({
-                msg: 'Usuario / Password no son correctos - estado: false'
+                msg: 'Acceso denegado. Por favor, verifica tu correo y contraseña para continuar.'
             });
         }
 
@@ -32,7 +32,7 @@ const login = async(req, res = response) => {
         const validPassword = bcryptjs.compareSync( password, usuario.password );
         if ( !validPassword ) {
             return res.status(400).json({
-                msg: 'Usuario / Password no son correctos - password'
+                msg: 'Acceso denegado. Por favor, verifica tu correo y contraseña para continuar.'
             });
         }
 
