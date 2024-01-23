@@ -563,6 +563,7 @@ const analgesicosAntiinflamatorios =  async(req, res) => {
         {Cat3: "ANALGESICO Y ANTIINFLAMATORIO" },
         {Cat3: "ANTIDOTOS, ANTITOXICOS Y PARAS" },
         {Cat3: "ANTITIMPÀNICO"},
+        {Cat3: "ANTIINFLAMATORIOS ESTEROIDEOS"},
       ],
       cat2: { $nin: ["MEDICINA MASCOTAS"] } 
     };
