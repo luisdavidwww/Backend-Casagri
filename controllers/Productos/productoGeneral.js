@@ -887,18 +887,19 @@ const actualizarProductoStock = async (req, res = response) => {
 
 
 
-//---------------------------------------Metodo que actualiza los productos cada Hora-------------------------//
-/*
-cron.schedule('0 * * * *', async () => {
+//---------------------------------------Metodo que actualiza los productos cada 24horas-------------------------//
+cron.schedule('0 0 * * *', async () => {
   try {
     await actualizarProductoDrop();
     console.log('Finalizada la Carga de Productos!');
   } catch (error) {
     console.error('Error al ejecutar actualizarProductoDrop:', error.message);
   }
-});*/
+});
 
-cron.schedule('*/2 * * * *', async () => {
+
+//---------------------------------------Metodo que actualiza los productos cada 3 Horas-------------------------//
+cron.schedule('0 */3 * * *', async () => {
   try {
     await actualizarProductoStock();
     console.log('Finalizada la Carga de Productos!');

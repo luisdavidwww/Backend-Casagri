@@ -3,7 +3,6 @@ const { response, request } = require('express');
 const AcercaCasagri = require('../../models/Empresa/acerca-casagri');
 
 
-
 //--------------------OBTENER REGISTRO---------------------------//
 const acercaCasagriGet = async(req = request, res = response) => {
 

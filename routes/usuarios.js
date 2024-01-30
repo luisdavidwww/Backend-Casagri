@@ -18,6 +18,8 @@ const { usuariosGet,
         usuariosDelete,
         usuariosPatch } = require('../controllers/usuarios');
 
+const { QrGeneratorDore } = require('../controllers/GeneratorQR/QrGenerator');
+
 const router = Router();
 
 
@@ -53,6 +55,10 @@ router.patch('/', usuariosPatch );
 
 
 
+//Generar QR
+router.post('/generarQR',[
+    validarCampos
+], QrGeneratorDore );
 
 
 module.exports = router;
