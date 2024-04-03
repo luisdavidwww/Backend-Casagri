@@ -23,6 +23,8 @@ const ProductoR = require('./Productos/productoR');
 // BANNERS //
 const Banners  = require('./Banners/banners');
 
+const Documento         = require('./Documentos/documento');
+
 
 const ChatMensajes = require('./chat-mensajes')
 
@@ -43,5 +45,6 @@ module.exports = {
     Nosotros,
     Trayectoria,
     Banners,
+    Documento
 }
 

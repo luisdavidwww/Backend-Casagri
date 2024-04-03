@@ -909,6 +909,17 @@ cron.schedule('0 */3 * * *', async () => {
 });
 
 
+//---------------------------------------Metodo que actualiza libreria dinamica de Sugerencias por Nombre de Productos-------------------------//
+cron.schedule('0 */3 * * *', async () => {
+  try {
+    await actualizarProductoStock();
+    console.log('Finalizada la Carga de Productos!');
+  } catch (error) {
+    console.error('Error al ejecutar actualizarProductoDrop:', error.message);
+  }
+});
+
+
 
 
 

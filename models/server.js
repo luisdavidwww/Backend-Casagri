@@ -29,6 +29,7 @@ class Server {
             nosotros:         '/api/nosotros',
             trayectoria:      '/api/trayectoria',
             banners:          '/api/banners',
+            documentos:       '/api/documentos',
         }
 
         //this.app.use( '/public', express.static(`${__dirname}/storage/banners`));
@@ -87,6 +88,7 @@ class Server {
         this.app.use( this.paths.nosotros, require('../routes/Empresa/nosotros'));
         this.app.use( this.paths.trayectoria, require('../routes/Empresa/trayectoria'));
         this.app.use( this.paths.banners, require('../routes/Banners/banners'));
+        this.app.use( this.paths.documentos, require('../routes/Documentos/documentos'));
         
     }
 

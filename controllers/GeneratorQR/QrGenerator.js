@@ -1,7 +1,7 @@
 const { response, request } = require('express');
 const qrcode = require('qrcode');
 const { vCard } = require('vcard-generator');
-
+const { createCanvas, loadImage } = require('canvas');
 
 
 //-------------------- GENERAR QR ---------------------------//
@@ -105,6 +105,81 @@ END:VCARD`;
     }
 };
 
+
+const QrEnlaceDescargableCalbosProductosA = async (req = request, res = response) => {
+    try {
+        // URL a la que se dirigirá el código QR
+        const enlace = "http://localhost:3000/informacion-calbo";
+
+        // Generar el código QR usando la URL
+        qrcode.toDataURL(enlace, (err, qrCodeUrl) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('Internal Server Error');
+            }
+            // Enviar respuesta JSON con el código QR
+            res.json({ qrCodeUrl });
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+const QrEnlaceDescargableCalbosProductosF = async (req, res) => {
+    try {
+        const enlace = "http://generator-code-qr.casagri-group.com/";
+
+        // Generar el código QR usando la URL
+        const qrCodeData = await qrcode.toDataURL(enlace);
+
+        // Crear un lienzo (canvas) para manipular la imagen
+        const canvas = createCanvas(200, 200);
+        const ctx = canvas.getContext('2d');
+
+        // Cargar la imagen del código QR en el lienzo
+        const qrImage = await loadImage(qrCodeData);
+        ctx.drawImage(qrImage, 0, 0);
+
+        // Cargar el logotipo
+        const logo = await loadImage('images/casagri-logo-01.svg'); // Ruta al logotipo
+        // Superponer el logotipo en el centro del código QR
+        const logoSize = 50; // Tamaño del logotipo
+        const qrSize = 150; // Tamaño del código QR
+        const x = (qrSize - logoSize) / 2;
+        const y = (qrSize - logoSize) / 2;
+        ctx.drawImage(logo, x, y, logoSize, logoSize);
+
+        // Convertir el lienzo a una imagen base64
+        const decoratedQrCodeUrl = canvas.toDataURL('image/png');
+
+        // Enviar respuesta JSON con la imagen decorada del código QR
+        res.json({ qrCodeUrl: decoratedQrCodeUrl });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
+const QrEnlaceDescargableCalbosProductos = async (req = request, res = response) => {
+    try {
+        // URL a la que se dirigirá el código QR
+        const enlace = "https://www.casagri-group.com/informacion-calbo";
+
+        // Generar el código QR usando la URL
+        const qrCodeUrl = await qrcode.toDataURL(enlace);
+
+        // Enviar respuesta JSON con el código QR
+        res.json({ qrCodeUrl });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
 module.exports = {
-    QrGeneratorDore
+    QrGeneratorDore,
+    QrEnlaceDescargableCalbosProductos
 }
