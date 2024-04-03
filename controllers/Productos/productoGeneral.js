@@ -76,8 +76,10 @@ const crearProductoTotal = async(req, res = response ) => {
       const cat4            = maestro.find((p) => p.IdApi === IdApi)?.cat4 || '';
       const cat5            = maestro.find((p) => p.IdApi === IdApi)?.cat5 || '';*/
 
-      const Marca           = maestro.find((p) => p.IdApi === IdApi)?.Marca || '';
-      const Imagen          = image.find((p) => p.IdApi === IdApi)?.Imagen || '';
+      //const Marca           = maestro.find((p) => p.IdApi === IdApi)?.Marca || '';
+      const Marca           = maestro.find((p) => p.IdApi === IdApi) ? maestro.find((p) => p.IdApi === IdApi).Marca : '';
+      const Imagen          = image.find((p) => p.IdApi === IdApi) ? maestro.find((p) => p.IdApi === IdApi).Imagen : '';
+      //const Imagen          = image.find((p) => p.IdApi === IdApi)?.Imagen || '';
 
       const Nombre_interno  = Disp.Nombre.replace(/\s+/g, '-').replace(/%/g, "%25").replace(/[ / ]/g, "_");
       const Descripcion  = maestro.find((p) => p.IdApi === IdApi)?.Descripcion || '';
