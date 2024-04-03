@@ -82,7 +82,9 @@ const crearProductoTotal = async(req, res = response ) => {
       //const Imagen          = image.find((p) => p.IdApi === IdApi)?.Imagen || '';
 
       const Nombre_interno  = Disp.Nombre.replace(/\s+/g, '-').replace(/%/g, "%25").replace(/[ / ]/g, "_");
-      const Descripcion  = maestro.find((p) => p.IdApi === IdApi)?.Descripcion || '';
+      //const Descripcion  = maestro.find((p) => p.IdApi === IdApi)?.Descripcion || '';
+      const descripcionItem = maestro.find((p) => p.IdApi === IdApi);
+      const Descripcion = descripcionItem ? descripcionItem.Descripcion : '';
 
 
       productos.push({ 
