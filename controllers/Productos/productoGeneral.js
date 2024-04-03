@@ -64,11 +64,17 @@ const crearProductoTotal = async(req, res = response ) => {
       const StockActual     = Disp.StockActual;
       const StockMinimo     = Disp.StockMinimo;
 
-      const cat1            = maestro.find((p) => p.IdApi === IdApi)?.cat1 || '';
+      const cat1            = maestro.find((p) => p.IdApi === IdApi) ? maestro.find((p) => p.IdApi === IdApi).cat1 : '';
+      const cat2            = maestro.find((p) => p.IdApi === IdApi) ? maestro.find((p) => p.IdApi === IdApi).cat2 : '';
+      const Cat3            = maestro.find((p) => p.IdApi === IdApi) ? maestro.find((p) => p.IdApi === IdApi).Cat3 : '';
+      const cat4            = maestro.find((p) => p.IdApi === IdApi) ? maestro.find((p) => p.IdApi === IdApi).cat4 : '';
+      const cat5            = maestro.find((p) => p.IdApi === IdApi) ? maestro.find((p) => p.IdApi === IdApi).cat5 : '';
+
+    /*const cat1            = maestro.find((p) => p.IdApi === IdApi)?.cat1 || '';
       const cat2            = maestro.find((p) => p.IdApi === IdApi)?.cat2 || '';
       const Cat3            = maestro.find((p) => p.IdApi === IdApi)?.Cat3 || '';
       const cat4            = maestro.find((p) => p.IdApi === IdApi)?.cat4 || '';
-      const cat5            = maestro.find((p) => p.IdApi === IdApi)?.cat5 || '';
+      const cat5            = maestro.find((p) => p.IdApi === IdApi)?.cat5 || '';*/
 
       const Marca           = maestro.find((p) => p.IdApi === IdApi)?.Marca || '';
       const Imagen          = image.find((p) => p.IdApi === IdApi)?.Imagen || '';
