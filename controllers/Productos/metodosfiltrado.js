@@ -381,7 +381,7 @@ const bambasDeAgua =  async(req, res) => {
 
 const semillas =  async(req, res) => {
 
-    const { page, limit, orderBy, marca } = req.query;
+    const { page, limit, orderBy, marca, componente } = req.query;
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
@@ -406,9 +406,32 @@ const semillas =  async(req, res) => {
       sorting = { Marca: 1 }; // Ordenar por marcas
     }
 
+   // Construir la query para filtrar por marca
+   let marcaFilter = {};
+   if (marca && marca !== "si") {
+     marcaFilter = { Marca: marca };
+   }
+   // Condición para filtrar cuando marca es null
+   if (marca === "null") {
+     marcaFilter = null;
+   }
+   
+   // Construir la query para filtrar por Componente
+   let componenteFilter = {};
+   if (componente && componente !== "") {
+     componenteFilter = { cat4: componente };
+     
+   }
+   // Condición para filtrar cuando componente es null
+   if (componente === "null") {
+     componenteFilter = null;
+   }
+
+
+
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find(query).countDocuments(),
-      ProductoMSchema.find(query)
+      ProductoMSchema.find({ ...query,  ...marcaFilter, ...componenteFilter  }).countDocuments(),
+      ProductoMSchema.find({ ...query,  ...marcaFilter, ...componenteFilter })
                       .sort(sorting)
                       .skip(startIndex)
                       .limit(limitNumber)
@@ -942,7 +965,7 @@ const biologicos =  async(req, res) => {
 //DESPARASITANTES
 const desparasitantes =  async(req, res) => {
 
-  const { page, limit, orderBy, marca } = req.query;
+  const { page, limit, orderBy, marca, componente } = req.query;
   const pageNumber = parseInt(page) || 1;
   const limitNumber = parseInt(limit) || 16;
 
@@ -968,9 +991,22 @@ const desparasitantes =  async(req, res) => {
     sorting = { Marca: 1 }; // Ordenar por marcas
   }
 
+  // Construir la query para filtrar por marca
+  let marcaFilter = {};
+  if (marca && marca !== "si") {
+    marcaFilter = { Marca: marca };
+  }
+
+  // Construir la query para filtrar por Componente
+  let componenteFilter = {};
+  if (componente && componente !== "") {
+    componenteFilter = { cat4: componente };
+  }
+
+
   const [ total, productos ] = await Promise.all([
-    ProductoMSchema.find(query).countDocuments(),
-    ProductoMSchema.find(query)
+    ProductoMSchema.find({ ...query, ...marcaFilter, ...componenteFilter }).countDocuments(),
+    ProductoMSchema.find({ ...query, ...marcaFilter, ...componenteFilter })
                     .sort(sorting) // Ordena alfabéticamente por el campo "Nombre"
                     .skip(startIndex)
                     .limit(limitNumber)
