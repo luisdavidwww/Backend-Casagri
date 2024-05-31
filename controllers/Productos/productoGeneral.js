@@ -554,6 +554,12 @@ const obtenerCat3 =  async(req, res) => {
   if (marca === "si") {
     sorting = { Marca: 1 }; // Ordenar por marcas
   }
+
+  // Construir la query para filtrar por marca
+  let marcaFilter = {};
+  if (marca && marca !== "si") {
+    marcaFilter = { Marca: marca };
+  }
    // Condición para filtrar cuando marca es null
    if (marca === "null") {
     marcaFilter = null;
@@ -636,7 +642,6 @@ const obtenerCat4 =  async(req, res) => {
       marcaFilter = null;
     }
     
-  
     // Construir la query para filtrar por Componente
     let componenteFilter = {};
     if (componente && componente !== "") {
