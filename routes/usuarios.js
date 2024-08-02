@@ -18,7 +18,7 @@ const { usuariosGet,
         usuariosDelete,
         usuariosPatch } = require('../controllers/usuarios');
 
-const { QrGeneratorDore, QrEnlaceDescargableCalbosProductos } = require('../controllers/GeneratorQR/QrGenerator');
+const { QrGeneratorDore, QrEnlaceDescargableCalbosProductos, QrLinkTreCasagri } = require('../controllers/GeneratorQR/QrGenerator');
 
 const router = Router();
 
@@ -65,6 +65,12 @@ router.post('/generarQR',[
 router.post('/generarQRDescargableCalbos',[
     //validarCampos
 ], QrEnlaceDescargableCalbosProductos );
+
+
+//Generar QR LinkTree
+router.post('/link-Casagri',[
+    //validarCampos
+], QrLinkTreCasagri );
 
 
 

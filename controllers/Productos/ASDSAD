@@ -1,0 +1,78 @@
+//Obtener todos los productos de la Categoria 2 Paginado
+const obtenerCat2 =  async(req, res) => {
+
+  const { page, limit, orderBy, marca, componente } = req.query;
+  const pageNumber = parseInt(page) || 1;
+  const limitNumber = parseInt(limit) || 16;
+
+  let { categoria } = req.params;
+
+  // Calcula el índice de inicio y la cantidad de elementos a mostrar
+  const startIndex = (pageNumber - 1) * limitNumber;
+
+  //Método para Ordenar 
+  let sorting = { Nombre: 1 }; // Orden ascendente por defecto
+  if (orderBy === "desc") {
+    sorting = { Nombre: -1 }; // Orden descendente si se especifica "desc" en el parámetro
+  }
+  if (marca === "si") {
+    sorting = { Marca: 1 }; // Ordenar por marcas
+  }
+
+  // Construir la query para filtrar por marca
+  let marcaFilter = {};
+  if (marca && marca !== "si") {
+    marcaFilter = { Marca: marca };
+  }
+  // Condición para filtrar cuando marca es null
+  if (marca === "null") {
+    marcaFilter = null;
+  }
+  
+
+  // Construir la query para filtrar por Componente
+  let componenteFilter = {};
+  if (componente && componente !== "") {
+    componenteFilter = { cat4: componente };
+  }
+  // Condición para filtrar cuando componente es null
+  if (componente === "null") {
+    componenteFilter = null;
+  }
+
+
+  const [ total, productos ] = await Promise.all([
+    ProductoMSchema.find({ cat2: categoria, ...marcaFilter, ...componenteFilter }).countDocuments(),
+    ProductoMSchema.find({ cat2: categoria, ...marcaFilter, ...componenteFilter })
+                    .sort(sorting)
+                    .skip(startIndex)
+                    .limit(limitNumber)
+  ]);
+
+  // Obtén todas las marcas únicas de los productos - marcas: marcasArray,
+  const marcas = await ProductoMSchema.distinct('Marca', query);
+  // Crea un arreglo de objetos para las marcas en el formato requerido
+  const marcasArray = marcas.map((marca) => ({ Marca: marca }));
+
+  // Obtén todos los componentes únicos- componentes: componentesArray
+  const componentes = await ProductoMSchema.distinct('cat4', query);
+  // Crea un arreglo de objetos para las marcas en el formato requerido
+  const componentesArray = componentes.map((component) => ({ cat4: component }));
+
+  // Calcula el número total de páginas
+  const totalPages = Math.ceil(total / limitNumber);
+
+  // Construye el objeto de respuesta con los datos paginados y los metadatos
+  const response = {
+    total,
+    totalPages,
+    currentPage: pageNumber,
+    productos,
+    marcas: marcasArray,
+    componentes: componentesArray
+  };
+
+  res.status(200).json(response);
+
+
+};

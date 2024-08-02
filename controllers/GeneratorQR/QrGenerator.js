@@ -179,7 +179,25 @@ const QrEnlaceDescargableCalbosProductos = async (req = request, res = response)
 };
 
 
+const QrLinkTreCasagri = async (req = request, res = response) => {
+    try {
+        // URL a la que se dirigirá el código QR
+        const enlace = "https://linktr.ee/casagri.ve";
+
+        // Generar el código QR usando la URL
+        const qrCodeUrl = await qrcode.toDataURL(enlace);
+
+        // Enviar respuesta JSON con el código QR
+        res.json({ qrCodeUrl });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+};
+
+
 module.exports = {
     QrGeneratorDore,
-    QrEnlaceDescargableCalbosProductos
+    QrEnlaceDescargableCalbosProductos,
+    QrLinkTreCasagri
 }

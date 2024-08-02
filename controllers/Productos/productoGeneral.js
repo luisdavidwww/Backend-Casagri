@@ -170,11 +170,11 @@ const obtenerProductosPaginados = async (req, res) => {
 };
 
 
-//Buscar Productos por el Buscador
+//Buscar Productos por el Buscador FINAL
 const obtenerProductoPorNombre = async(req, res = response ) => {
 
   try {
-    const { page, limit, orderBy } = req.query;
+    const { page, limit, orderBy, marca, componente } = req.query;
     const pageNumber = parseInt(page) || 1;
     const limitNumber = parseInt(limit) || 16;
 
@@ -187,7 +187,30 @@ const obtenerProductoPorNombre = async(req, res = response ) => {
       sorting = { Nombre: -1 }; // Orden descendente si se especifica "desc" en el parámetro
     }
 
+    // Construir la query para filtrar por marca
+    let marcaFilter = {};
+    if (marca && marca !== "si") {
+      marcaFilter = { Marca: marca };
+    }
+    // Condición para filtrar cuando marca es null
+    if (marca === "null") {
+      marcaFilter = null;
+    }
+    
+
+    // Construir la query para filtrar por Componente
+    let componenteFilter = {};
+    if (componente && componente !== "") {
+      componenteFilter = { cat4: componente };
+    }
+    // Condición para filtrar cuando componente es null
+    if (componente === "null") {
+      componenteFilter = null;
+    }
+
     let { nombre } = req.params;
+
+
 
     //escapedNombre, lo hago apra igualar a  Nombre_interno (link de cada producto)
     //Reemplaza todos los espacios en blanco con guiones -  
@@ -217,12 +240,22 @@ const obtenerProductoPorNombre = async(req, res = response ) => {
     };
 
     const [ total, productos ] = await Promise.all([
-      ProductoMSchema.find(query).countDocuments(),
-      ProductoMSchema.find(query)
+      ProductoMSchema.find({ ...query, ...marcaFilter, ...componenteFilter } ).countDocuments(),
+      ProductoMSchema.find({ ...query, ...marcaFilter, ...componenteFilter })
                       .sort(sorting) // Ordena alfabéticamente por el campo "Nombre"
                       .skip(startIndex)
                       .limit(limitNumber)
     ]);
+
+      // Obtén todas las marcas únicas de los productos - marcas: marcasArray,
+      const marcas = await ProductoMSchema.distinct('Marca', query);
+      // Crea un arreglo de objetos para las marcas en el formato requerido
+      const marcasArray = marcas.map((marca) => ({ Marca: marca }));
+
+      // Obtén todos los componentes únicos- componentes: componentesArray
+      const componentes = await ProductoMSchema.distinct('cat4', query);
+      // Crea un arreglo de objetos para las marcas en el formato requerido
+      const componentesArray = componentes.map((component) => ({ cat4: component }));
 
     // Calcula el número total de páginas
     const totalPages = Math.ceil(total / limitNumber);
@@ -233,6 +266,8 @@ const obtenerProductoPorNombre = async(req, res = response ) => {
       totalPages,
       currentPage: pageNumber,
       productos,
+      marcas: marcasArray,
+      componentes: componentesArray
     };
 
     res.status(200).json(response);
